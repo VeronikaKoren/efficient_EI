@@ -42,7 +42,7 @@ kappa1=zeros(ntr,1);
 sc1=zeros(ntr,1);
 for ii=1:ntr
 
-    [xhat,f,r] =network_1pop_fun(N,s,dt,tau,beta,sigmav);
+    [xhat,f,r] =network_1ct_fun(N,s,dt,tau,beta,sigmav);
    
     kappa1(ii)=sqrt(mean(sum(f.^2,1))); 
     rmse1(ii)=sqrt(mean(mean((x-xhat).^2,2)));

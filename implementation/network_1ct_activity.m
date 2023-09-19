@@ -36,7 +36,7 @@ tau_x=10;
 %% simulate network activity
   
 T=nsec*1000/dt;
-[xhat,f,r] =network_1pop_fun(N,s,dt,tau,beta,sigmav);
+[xhat,f,r] =network_1ct_fun(N,s,dt,tau,beta,sigmav);
 
 frate=sum(sum(f))/(N*nsec);           % average nb.spikes/sec
 rmse=sqrt(mean(sum((x-xhat).^2,2)./T));        % mean squared error

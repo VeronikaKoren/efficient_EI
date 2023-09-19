@@ -1,13 +1,14 @@
 
 clear all
 
-addpath([cd,'/function/'])
-saveres=1;
-showfig=1;
-type=2;         % type 2 or 3
+namet={'normal','perm_full'};
+type=1;                         
 
-namet={'noiseC','perm_full','perm_partial','non_rectified','disorder','perm_full2','perm_partial2'};
 disp(['computing correlation of membrane potentials with ',namet{type}]);
+
+addpath([cd,'/function/'])
+saveres=0;
+showfig=1;
 
 %% parameters
 
@@ -36,16 +37,18 @@ d=3;                                   % ratio of weight amplitudes I to E
 sigma_s=2;
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
-[s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
 mu_s=[0,0,0]';    
 
+typep=1;                        
+namep={'shared','independent'};
+
  %% compute correlation in membrane potentials with specific perturbation
-tic
+
+ntr=5;
 
 Ni=N/q;
 np=cat(1,(N^2-N)/2,(Ni^2-Ni)/2);
-Ct={'I to I','E to I','I to E','all'}; % those that are permuted
-ntr=5;
+Ct={'I to I','E to I','I to E','all'};      % J matrix that is permuted
 
 fvec=[2,3,4,5];
 
@@ -56,16 +59,12 @@ for g=1:n
 
     f=fvec(g);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    if type==4
-        [w,C] = w_nonrectified_fun(M,N,q,d,f);
-    elseif or(type==1,type==5)
-        [w,C] = w_disorder_fun(M,N,q,d,type,f);
-    elseif or(type==2,type==3)
-        [w,C] = w_perm13_fun(M,N,q,d,type,f);
-    elseif or(type==6,type==7)
-        [w,C] = w_perm2_fun(M,N,q,d,type,f);
+    
+    if type==1
+        [w,J] = w_fun(M,N,q,d);
+    else
+        [w,J] = w_structure_fun(M,N,q,d,2,f);
     end
-
     [dp] = dot_prod_fun(w);
     dpn(g,:)=cellfun(@(x) x./max(x),dp,'UniformOutput',false);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -74,7 +73,7 @@ for g=1:n
     rVm_I=zeros(ntr,np(2));
 
     for tr=1:ntr
-        [~,~,~,rVm] = net_fun_V2(dt,sigmav,beta,tau_vec,w,C,1,nsec,tau_s,mu_s);
+        [~,~,~,rVm] = net_fun_V2(dt,sigmav,beta,tau_vec,w,J,typep,nsec,tau_s,mu_s);
         rVm_E(tr,:)=rVm{1};
         rVm_I(tr,:)=rVm{2};
     end
@@ -83,7 +82,7 @@ for g=1:n
     rV_all{g,2}=nanmean(rVm_I);
 
 end
-toc
+
 %%
 order=[4,2,1,3];
 dpo=dpn(order,:);
@@ -91,10 +90,11 @@ Co=Ct(order);
 rV=rV_all(order,:);
 %%
 if showfig==1
-    
-    
-    
-    col={'r','b','g','c'};
+    if type==1
+        col={'k','k','k','k'};
+    else
+        col={'r','b','g','c'};
+    end
     figure
     
     for g=1:n
@@ -127,7 +127,7 @@ if saveres==1
     parameters={{N},{M},{tau_s},{b},{c},{tau_vec},{q},{dt},{nsec},{ntr}};
     
     savefile='result/connectivity/';
-    savename=['corrV_',namet{type}];
+    savename=['corrV_',namep{type}];
     save([savefile,savename],'dpo','rV','Co','parameters','param_name')
 end
 

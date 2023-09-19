@@ -1,4 +1,4 @@
-function [I_E,I_I,r,rmse,CV,fr] = current_fun(dt,sigmav,beta,tau_vec,s,N,q,d,x)
+function [I_E,I_I,r,mse,CV,fr,kappa,varV] = current_fun_unstructured(dt,sigmav,beta,tau_vec,s,N,q,d,x,f,type)
 % compute performance measures, CV and E-I balance measures
 
 M=size(s,1);
@@ -9,12 +9,15 @@ lambda_i=1/tau_vec(3);
 lambda_re=1/tau_vec(4);
 lambda_ri=1/tau_vec(5);
 
-delta_e=lambda_e-lambda_re;            % in front of homeostatic current in E 
-delta_i=lambda_i-lambda_ri;            % in I 
+beta_e=lambda_e-lambda_re;            % in front of homeostatic current in E 
+beta_i=lambda_i-lambda_ri;            % in I 
 
 %% weights
-
-[w,J] = w_fun(M,N,q,d);
+if type==1
+    [w,J] = w_perturbation_fun(M,N,q,d,f);
+elseif or(type==2,type==3)
+    [w,J] = w_structure_fun(M,N,q,d,type,f);
+end
 Ni=round(N/q);
 %%
 
@@ -25,7 +28,7 @@ Jei=J{4};
 threse=diag(w{1}'*w{1})/2+beta/2;            % firing threshold E neurons
 thresi=diag(w{2}'*w{2})/2+beta/2;            % firing threshold I neurons
 
-%% precompute to speed up the integration
+%% to speed up the integration
 
 leak_pfe=1-lambda_e*dt;   % for leak current in E  
 leak_pfi=1-lambda_i*dt;   % for leak current in I
@@ -36,8 +39,8 @@ Di=sigmav*sqrt((2*dt)/tau_vec(3)); % noise prefactor I neurons
 noise_e=De.*randn(N,T);
 noise_i=Di.*randn(Ni,T);
 
-alpha_e=beta*delta_e;
-alpha_i=beta*delta_i;
+beta_pfe=beta*beta_e;
+beta_pfi=beta*beta_i;
 
 ffe=w{1}'*s*dt;
 
@@ -63,11 +66,11 @@ for t=1:T-1
     
     %% excitatory neurons
    
-    Ve(:,t+1)=leak_pfe*Ve(:,t)+ ffe(:,t) - Jei*fi(:,t) - alpha_e*re(:,t)- beta.*fe(:,t) + noise_e(:,t);
+    Ve(:,t+1)=leak_pfe*Ve(:,t)+ ffe(:,t) - Jei*fi(:,t) - beta_pfe*re(:,t)- beta.*fe(:,t) + noise_e(:,t);
     Iei(:,t+1)= - Jei*fi(:,t);    
     %% inhibitory neurons
     
-    Vi(:,t+1)=leak_pfi*Vi(:,t) + Jie*fe(:,t) - Jii*fi(:,t) - alpha_i*ri(:,t)-beta*fi(:,t)+ noise_i(:,t);
+    Vi(:,t+1)=leak_pfi*Vi(:,t) + Jie*fe(:,t) - Jii*fi(:,t) - beta_pfi*ri(:,t)-beta*fi(:,t)+ noise_i(:,t);
     Iie(:,t+1)=Jie*fe(:,t);
     Iii(:,t+1)=- Jii*fi(:,t); 
     
@@ -96,11 +99,15 @@ fre=mean(sum(fe,2))./nsec;
 fri=mean(sum(fi,2))./nsec;
 
 fr=cat(1,fre,fri);
+%%
+
+varV=cell(2,1);
+varV{1}=var(Ve,0,2);
+varV{2}=var(Vi,0,2);
 
 %%
-ff=w{1}'*s;         % feed-forward current
-ff_time=mean(ff,2); % average across time
-FF=mean(ff_time);   % average across time and neurons
+ff_time=mean(ffe./dt,2);
+FF=mean(ff_time);
 
 % inhibitory current in E neurons
 I_EI=mean(mean(Iei))./dt;
@@ -113,21 +120,22 @@ I_E=cat(1,FF,I_EI);                   % currents in E neurons [ff, Inh]
 I_I=cat(1,I_IE,I_II);                 % currents in I neurons [Exc, Inh]  
 
 %% temporal correlation of E and I currents 
+% in E neurons
 
-corr_e=balance_ff_fun(ff,Iei,dt);   % in E neurons
-corr_i = balance_fun(Iie,Iii,dt);   % in I neurons    
+corr_e=balance_ff_fun(ffe./dt,Iei,dt);
+corr_i = balance_fun(Iie,Iii,dt);
 
 r=cat(1,corr_e,corr_i);
-%% performance 
+%% performance measures
 
-[rmse] = performance_fun(x,xhat_e,xhat_i,re,ri);
+[mse,kappa] = performance_fun(x,xhat_e,xhat_i,re,ri);
 
 %% Coefficient of variation
 
 fe=int8(fe); % integer format
 fi=int8(fi);
 
-f1e=sum(reshape(fe,N,T*dt,1/dt),3); % bin the spike trains in 1ms bins
+f1e=sum(reshape(fe,N,T*dt,1/dt),3); % bin in 1ms bins
 f1i=sum(reshape(fi,Ni,T*dt,1/dt),3);
 
 [CV] = cv_fun(f1e,f1i);

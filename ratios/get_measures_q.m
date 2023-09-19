@@ -1,9 +1,8 @@
 
 clear all
 
-addpath([cd,'/code/function/'])
-saveres=1;
-showfig=0;
+addpath([cd,'/function/'])
+saveres=0;
 
 disp('computing measures as a function of q=ratio of E to I neurons');
 %% parameters
@@ -23,20 +22,21 @@ tau_ri=10;                             % t. constant firing rate of I neurons
    
 b=1;
 c=33;
-mu=b*log(N);                           % quadratic cost constant
+beta=b*log(N);                           % quadratic cost constant
 sigmav=c/log(N);                       % standard deviation of the noise
 
 dt=0.02;                               % time step in ms     
 d=3.00;                                   % ratio of weight amplitudes I to E 
 
+sigma_s=2;
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
-[s,x]=signal_fun(tau_s,tau_x,M,nsec,dt);
+
 
 %% compute measures
 
 ntr=100;
 qvec=1:0.25:8;
-%ntr=3
+%ntr=3 % for testing
 %qvec=1:2:5
 n=length(qvec);
 
@@ -61,14 +61,15 @@ for g=1:n
 
     fr_tr=zeros(ntr,2);
     CV_tr=zeros(ntr,2);
-    mse_tr=zeros(ntr,2);
+    rmse_tr=zeros(ntr,2);
     ratio_tr=zeros(ntr,2);
     
     for ii=1:ntr
         
-        [I_E,I_I,r,mse,ratio,CV,fr] = current_fun_1g(dt,sigmav,mu,tau_vec,s,N,q,d,x);
+        [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
+        [I_E,I_I,r,rmse,CV,fr] = current_fun_1g(dt,sigmav,beta,tau_vec,s,N,q,d,x);
         
-        mse_tr(ii,:)=mse;
+        rmse_tr(ii,:)=rmse;
         ratio_tr(ii,:)=ratio;
         
         currE_tr(ii,:)=I_E;
@@ -87,7 +88,7 @@ for g=1:n
     frate(g,:)=mean(fr_tr);
     CVs(g,:)=mean(CV_tr);
 
-    ms(g,:)=mean(mse_tr);
+    ms(g,:)=mean(rmse_tr);
     ratios(g,:)=mean(ratio_tr);
    
 end

@@ -12,7 +12,7 @@ lambda_ri=1/tau_vec(5);
 delta_e=lambda_e-lambda_re;            % in front of homeostatic current in E 
 delta_i=lambda_i-lambda_ri;            % in I 
 
-%% weights
+%% selectivity w and synaptic weights J
 
 [w,J] = w_fun(M,N,q,d);
 Ni=round(N/q);

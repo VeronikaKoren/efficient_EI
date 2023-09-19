@@ -1,4 +1,4 @@
-function [xhat,f,r] = network_1pop_fun(N,s,dt,tau,beta,sigmav)
+function [xhat,f,r] = network_1ct_fun(N,s,dt,tau,beta,sigmav)
 
 %% 
 

@@ -1,4 +1,4 @@
-function [] = plt_1pop_network(x,xhat,y,r,dt,tau,pos_vec,savefig,savefile,figname)
+function [] = plt_1ct_network(x,xhat,y,r,dt,tau,pos_vec,savefig,savefile,figname)
  % plot the signal and estimate, spike train and firing rate
 
 %%

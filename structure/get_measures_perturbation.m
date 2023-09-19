@@ -1,23 +1,23 @@
 
 clear all
 
-saveres=1;
-showfig=0;
-type=2;
+type=1;
 
-addpath([cd,'/code/function/'])
+addpath([cd,'/function/'])
 
-namet={'','perm_full','perm_partial'};
-disp(['computing variance in V with ',namet{type}]);
+saveres=0;
+namet={'perturbation','perm_full','perm_partial'};
+disp(['computing measures of dynamics and performance with ',namet{type}]);
 
 %% parameters
 tic
-ntr=5;
+ntr=150;
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
 nsec=1;                                % duration of the trial in seconds 
 
+sigma_s=2;
 tau_s=10;
 tau_x=10;                              % time constant of the signal  
 
@@ -36,58 +36,71 @@ dt=0.02;                               % time step in ms
 q=4;
 d=3;                                   % ratio of weight amplitudes I to E 
 
+%%
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
-[s,x]=signal_fun(tau_s,tau_x,M,nsec,dt);
+[s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
+
+Ct={'I to I','E to I','I to E','all'}; % those that are permuted
 
 %% compute performance with noise in the connectivity
 
-Ct={'I to I','E to I','I to E','all'}; % those that are permuted
-fvec=[2,3,4,5];
+if type==1                  % noise proportional to the average C matrix
+    fvec=0:0.025:0.6;
+else
+    fvec=[2,3,4,5];
+end
+
 n=length(fvec);
-stdV=cell(n,2);
+
+frate=zeros(n,2);
+CVs=zeros(n,2);
+
+ms=zeros(n,2);
+
+r_ei=zeros(n,2);
+meanE=zeros(n,2);
+meanI=zeros(n,2);
 
 for g=1:n
-    
     disp(n-g)
+    
     f=fvec(g);
+    
+    r_tr=zeros(ntr,2);
+    currE_tr=zeros(ntr,2);
+    currI_tr=zeros(ntr,2);
 
-    stdV_tr_E=zeros(ntr,N);
-    stdV_tr_I=zeros(ntr,N/q);
-
+    fr_tr=zeros(ntr,2);
+    CV_tr=zeros(ntr,2);
+    rmse_tr=zeros(ntr,2);
+    
     for ii=1:ntr
+        
+        [I_E,I_I,r,rmse,CV,fr] = current_fun_unstructured(dt,sigmav,mu,tau_vec,s,N,q,d,x,f,type);
+        
+        rmse_tr(ii,:)=rmse;
+        
+        currE_tr(ii,:)=I_E;
+        currI_tr(ii,:)=I_I;
 
-        [~,~,~,~,~,~,~,~,varV] = current_fun_1g_noise(dt,sigmav,mu,tau_vec,s,N,q,d,x,f,type);
-
-        stdV_tr_E(ii,:)=sqrt(varV{1});
-        stdV_tr_I(ii,:)=sqrt(varV{2});
-
+        r_tr(ii,:)=r;
+        CV_tr(ii,:)=CV;
+        fr_tr(ii,:)=fr;
+        
     end
+    
+    r_ei(g,:)=mean(r_tr);
+    meanE(g,:)=mean(currE_tr);
+    meanI(g,:)=mean(currI_tr);
 
-    stdV{g,1}=mean(stdV_tr_E);
-    stdV{g,2}=mean(stdV_tr_I);
+    frate(g,:)=mean(fr_tr);
+    CVs(g,:)=mean(CV_tr);
+
+    ms(g,:)=mean(rmse_tr);
+   
 end
 toc
 
-%%
-
-if showfig==1
-    
-    figure()
-    subplot(2,1,1)
-    hold on
-    for g=1:n
-        ksdensity(stdV{g,1})
-    end
-    hold off
-
-    subplot(2,1,2)
-    hold on
-    for g=1:n
-        ksdensity(stdV{g,2})
-    end
-    hold off
-    
-end
 %%
 
 if saveres==1
@@ -96,8 +109,8 @@ if saveres==1
     parameters={{N},{M},{tau_s},{b},{c},{tau_vec},{q},{dt},{nsec},{ntr}};
     
     savefile='result/connectivity/';
-    savename=['stdV_',namet{type}];
-    save([savefile,savename],'stdV','Ct','parameters','param_name')
+    savename=['measures_',namet{type}];
+    save([savefile,savename],'fvec','frate','CVs','ms','ratios','r_ei','meanE','meanI','Ct','C2','parameters','param_name')
 end
 
 

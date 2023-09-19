@@ -1,9 +1,8 @@
 
 clear all
 
-addpath([cd,'/code/function/'])
-saveres=1;
-showfig=0;
+addpath([cd,'/function/'])
+saveres=0;
 
 disp('computing measures as a function of d=ratio of sigma of decoding weights');
 %% parameters
@@ -23,14 +22,14 @@ tau_ri=10;                             % t. constant firing rate of I neurons
    
 b=1;
 c=33;
-mu=b*log(N);                           % quadratic cost constant
+beta=b*log(N);                           % quadratic cost constant
 sigmav=c/log(N);                       % standard deviation of the noise
 
 dt=0.02;                               % time step in ms     
 q=4;                                   % ratio of weight amplitudes I to E 
 
+sigma_s=2;
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
-[s,x]=signal_fun(tau_s,tau_x,M,nsec,dt);
 
 %% compute measures
 
@@ -62,16 +61,16 @@ for g=1:n
 
     fr_tr=zeros(ntr,2);
     CV_tr=zeros(ntr,2);
-    mse_tr=zeros(ntr,2);
+    rmse_tr=zeros(ntr,2);
     ratio_tr=zeros(ntr,2);
     
     for ii=1:ntr
         
-        [I_E,I_I,r,mse,ratio,CV,fr] = current_fun_1g(dt,sigmav,mu,tau_vec,s,N,q,d,x);
+        [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
+        [I_E,I_I,r,rmse,CV,fr] = current_fun(dt,sigmav,beta,tau_vec,s,N,q,d,x);
         
-        mse_tr(ii,:)=mse;
-        ratio_tr(ii,:)=ratio;
-        
+        rmse_tr(ii,:)=rmse;
+       
         currE_tr(ii,:)=I_E;
         currI_tr(ii,:)=I_I;
 
@@ -88,74 +87,11 @@ for g=1:n
     frate(g,:)=mean(fr_tr);
     CVs(g,:)=mean(CV_tr);
 
-    ms(g,:)=mean(mse_tr);
+    ms(g,:)=mean(rmse_tr);
     ratios(g,:)=mean(ratio_tr);
    
 end
 
-%%
-
-if showfig==1
-    
-    figure('units','centimeters','position',[0,0,16,20])
-    subplot(4,1,1)
-    hold on
-    plot(dvec,frate(:,1),'r')
-    plot(dvec,frate(:,2),'b')
-    hold off
-    ylabel('spikes/sec')
-
-    subplot(4,1,2)
-    plot(dvec,CVs(:,1),'r')
-    hold on
-    plot(dvec,CVs(:,2),'b')
-    line([dvec(1) dvec(end)],[1 1])
-    hold off
-    ylabel('CV')
-    box off
-    
-    subplot(4,1,3)
-    plot(dvec,ms(:,1),'r')
-    hold on
-    plot(dvec,ms(:,2),'b')
-    ylabel('MSE')
-    box off
-    
-    subplot(4,1,4)
-    plot(dvec,ratios(:,1),'r')
-    hold on
-    plot(dvec,ratios(:,2),'b')
-    line([dvec(1) dvec(end)],[1 1])
-    hold off
-    ylabel('ratio variance')
-    box off
-    
-        
-    figure()
-    subplot(3,1,1)
-    hold on
-    plot(dvec,meanE(:,1),'k')
-    plot(dvec,meanE(:,2),'b')
-    hold off
-    grid on
-    ylabel('mean E current')
-    
-    subplot(3,1,2)
-    hold on
-    plot(dvec,meanI(:,1),'r')
-    plot(dvec,meanI(:,2),'b')
-    hold off
-    grid on
-    ylabel('mean I current')
-    
-    subplot(3,1,3)
-    plot(dvec,r_ei(:,1),'r')
-    plot(dvec,r_ei(:,2),'b')
-    ylabel('balance E-I currents')
-    ylim([-1,1])
-    xlabel('noise intensity')
-    
-end
 %%
 
 if saveres==1
