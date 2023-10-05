@@ -3,10 +3,10 @@ close all
 
 savefig=0;
 
-figname='mse_ei_1pop'
+figname='mse_ei_1pop';
 savefile=[cd,'/figure/implementation/'];
 
-addpath('result/connectivity/')
+addpath('/Users/vkoren/ei_net/result/connectivity/')
 
 %% E-I net
 
