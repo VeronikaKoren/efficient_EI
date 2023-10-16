@@ -13,8 +13,8 @@ figname3='currents_d';
 figname4='rho_d';
 
 
-addpath('result/connectivity/')
-savefile=[cd,'/figure/'];
+addpath('/Users/vkoren/ei_net/result/connectivity/')
+savefile='/Users/vkoren/ei_net/figure/ratios/d_ratio/';
 
 loadname='measures_all_d';
 load(loadname)
@@ -271,20 +271,20 @@ end
 %% plot correlation of E-I currents
 
 pos_vec=plt1;
-yt=-0.5:0.25:0;
+yt=0.1:0.2:0.5;
 H4=figure('name',figname4,'visible',vis{4});
 hold on
-plot(xvec,r_ei(:,1),'color',red,'linewidth',lw);
-plot(xvec,r_ei(:,2),'color',blue,'linewidth',lw);
+plot(xvec,abs(r_ei(:,1)),'color',red,'linewidth',lw);
+plot(xvec,abs(r_ei(:,2)),'color',blue,'linewidth',lw);
 hold off
 
 ylabel('correlation currents','fontsize',fs)
-ylim([-0.5,0])
+ylim([0.1,0.5])
 xlim([xvec(1),xvec(end)])
 box off
 
-text(0.1,0.9,'in Exc','fontsize',fs,'units','normalized','color',red)
-text(0.1,0.75,'in Inh','fontsize',fs,'units','normalized','color',blue)
+text(0.7,0.9,'in Exc','fontsize',fs,'units','normalized','color',red)
+text(0.7,0.75,'in Inh','fontsize',fs,'units','normalized','color',blue)
 
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
