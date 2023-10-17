@@ -4,7 +4,7 @@ close all
 
 addpath([cd,'/function/'])
 saveres=1;
-showfig=0;
+showfig=1;
 
 disp('computing measures as a function of the metabolic constant');
 
@@ -39,8 +39,8 @@ tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 %% compute measures
 
 ntr=100;
-beta_vec=0:1:36;                       
-%beta_vec=[0,6,12];
+%beta_vec=0:1:36;                       
+beta_vec=[0,6,12];
 n=length(beta_vec);
 
 rms=zeros(n,2);

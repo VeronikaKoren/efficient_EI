@@ -49,8 +49,7 @@ g=0.5;
 error=g.*rms(:,1)+ (1-g).*rms(:,2);
 [~,idx]=min(error);
 optimal_param=xvec(idx);
-display(optimal_param,'best sigma')
-
+display(optimal_param,'best param')
 
 %% CV
 

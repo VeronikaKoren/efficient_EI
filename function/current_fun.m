@@ -1,4 +1,4 @@
-function [I_E,I_I,r,rmse,CV,fr] = current_fun(dt,sigmav,beta,tau_vec,s,N,q,d,x)
+function [I_E,I_I,r,rmse,kappa,CV,fr] = current_fun(dt,sigmav,beta,tau_vec,s,N,q,d,x)
 % compute performance measures, CV and E-I balance measures
 
 M=size(s,1);
@@ -120,7 +120,7 @@ corr_i = balance_fun(Iie,Iii,dt);   % in I neurons
 r=cat(1,corr_e,corr_i);
 %% performance 
 
-[rmse] = performance_fun(x,xhat_e,xhat_i,re,ri);
+[rmse,kappa] = performance_fun(x,xhat_e,xhat_i,re,ri);
 
 %% Coefficient of variation
 
