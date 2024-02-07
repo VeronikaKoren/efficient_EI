@@ -4,31 +4,31 @@ clc
 
 
 savefig=0;
-figname='influence_tuning';
 
-savefile=[cd,'/figure/lateral/'];
+
+savefile=[cd,'/figure/lateral/EI/'];
 addpath([cd,'/result/perturbation/'])
 
 %% load result
+Ap=1.0;
+figname=['influence_tuning_',sprintf('%1.0i',Ap*10)];
 
+F=cell(2,1);
+phi=cell(2,1);
+loadname=['perturbation_spont_Ap',sprintf('%1.0i',Ap*10)];
+load(loadname,'infE','infI','phi_veci','phi_vec','namepop')
 
-apvec=[0.4,0.8];
+F{1}=infI;
+F{2}=infE;
 
-F=zeros(2,400);
-phi_target=zeros(2,400)
-for ii=1:2
-    Ap=apvec(ii)
-    loadname=['perturbation_spont_Ap',sprintf('%1.0i',Ap*10)];
-    load(loadname,'inf','phi_vec','namepop')
-    F(ii,:)=inf;
-    phi_target(ii,:)=phi_vec;
+phi{1}=phi_veci;
+phi{2}=phi_vec;
 
-end
 %% prepare fig.
 
 plt1=[0,0,12,14];
 
-fs=13;
+fs=14;
 msize=6;
 lw=1.2;
 lwa=1;
@@ -41,6 +41,7 @@ darkgray=[0.5,0.5,0.5];
 col={gray,green};                               % for "different", "similar"
 coltxt={darkgray,olive};
 
+titles={'I neurons','E neurons'};
 xt=-0.003:0.003:0.003;
 %%
 
@@ -49,22 +50,22 @@ H=figure('name',figname);
 for ii=1:2
     subplot(2,1,ii)
     
-    plot(F(ii,:),phi_target(ii,:),'kx')
+    plot(F{ii},phi{ii},'kx')
     line([0,0],[-1,1],'color','r','LineStyle','-')
-    %hls=lsline
-    %hls.Color='m'
+    hls=lsline
+    hls.Color='m'
     box off
 
-    title(['perturbation strength Ap = ',sprintf('%0.1f',apvec(ii))])
+    title(titles{ii},'Fontsize',fs)
     xlim([xt(1),xt(end)])
     ylim([-1.1,1.1])
     set(gca,'XTick',xt)
     if ii==1
         set(gca,'XTickLabel',[])
     else
-        set(gca,'XTickLabel',xt)
+        set(gca,'XTickLabel',xt,'Fontsize',fs)
     end
-    set(gca,'YTick',-1:1:1)
+    set(gca,'YTick',-1:1:1,'Fontsize',fs)
 
     set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
     set(gca,'TickDir','out')
@@ -75,8 +76,8 @@ end
 
 axes
 
-h1 = xlabel ('influence','units','normalized','Position',[0.5,-0.07,0]);
-h2 = ylabel ('tuning similarity','units','normalized','Position',[-0.05,0.5,0]);
+h1 = xlabel ('influence','units','normalized','Position',[0.5,-0.07,0],'Fontsize',fs);
+h2 = ylabel ('tuning similarity','units','normalized','Position',[-0.05,0.5,0],'Fontsize',fs);
 set(gca,'Visible','off')
 set(h1,'visible','on')
 set(h2,'visible','on')
@@ -87,3 +88,17 @@ set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[plt1(3
 if savefig==1
     print(H,[savefile,figname],'-dpng','-r300');
 end
+
+%% correlation coefficient
+
+r=zeros(2,1);
+for ii=1:2
+    
+    x=F{ii}';
+    y=phi{ii}';
+    x(100)=[];
+    y(100)=[];
+    r(ii)=corr(x,y);
+
+end
+display(r,'correlation coefficient')

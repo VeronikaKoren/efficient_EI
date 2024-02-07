@@ -1,15 +1,15 @@
 
 clear all
 
-type=1;
-
-addpath([cd,'/function/'])
-
-saveres=0;
+type=2;
 namet={'perturbation','perm_full','perm_partial'};
+saveres=1;
+
+addpath([cd,'/code/function/'])
 disp(['computing measures of dynamics and performance with ',namet{type}]);
 
 %% parameters
+
 tic
 ntr=150;
 
@@ -46,6 +46,7 @@ Ct={'I to I','E to I','I to E','all'}; % those that are permuted
 
 if type==1                  % noise proportional to the average C matrix
     fvec=0:0.025:0.6;
+    %fvec=[0,0.5]
 else
     fvec=[2,3,4,5];
 end
@@ -56,6 +57,7 @@ frate=zeros(n,2);
 CVs=zeros(n,2);
 
 ms=zeros(n,2);
+cost=zeros(n,2);
 
 r_ei=zeros(n,2);
 meanE=zeros(n,2);
@@ -73,13 +75,15 @@ for g=1:n
     fr_tr=zeros(ntr,2);
     CV_tr=zeros(ntr,2);
     rmse_tr=zeros(ntr,2);
+    kappa_tr=zeros(ntr,2);
     
     for ii=1:ntr
         
-        [I_E,I_I,r,rmse,CV,fr] = current_fun_unstructured(dt,sigmav,mu,tau_vec,s,N,q,d,x,f,type);
+        [I_E,I_I,r,rmse,CV,fr,kappa] = current_fun_unstructured(dt,sigmav,mu,tau_vec,s,N,q,d,x,f,type);
         
         rmse_tr(ii,:)=rmse;
-        
+        kappa_tr(ii,:)=kappa;
+
         currE_tr(ii,:)=I_E;
         currI_tr(ii,:)=I_I;
 
@@ -97,9 +101,26 @@ for g=1:n
     CVs(g,:)=mean(CV_tr);
 
     ms(g,:)=mean(rmse_tr);
+    cost(g,:)=mean(kappa_tr);
    
 end
 toc
+
+%%
+%{
+figure()
+subplot(2,1,1)
+plot(fvec,cost(:,1))
+hold on
+plot(fvec,cost(:,2))
+hold off
+
+subplot(2,1,1)
+plot(fvec,frate(:,1))
+hold on
+plot(fvec,frate(:,2))
+hold off
+%}
 
 %%
 
@@ -109,8 +130,8 @@ if saveres==1
     parameters={{N},{M},{tau_s},{b},{c},{tau_vec},{q},{dt},{nsec},{ntr}};
     
     savefile='result/connectivity/';
-    savename=['measures_',namet{type}];
-    save([savefile,savename],'fvec','frate','CVs','ms','ratios','r_ei','meanE','meanI','Ct','C2','parameters','param_name')
+    savename=['measures_new_',namet{type}];
+    save([savefile,savename],'fvec','frate','CVs','ms','cost','r_ei','meanE','meanI','Ct','parameters','param_name')
 end
 
 

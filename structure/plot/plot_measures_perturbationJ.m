@@ -7,17 +7,22 @@ savefig1=0;
 savefig2=0;
 savefig3=0;
 
-namec='perturbation';             
+cases=2;
 
-figname1=['CV_',namec];
-figname2=['rmse_fr_',namec];
-figname3=['EI-balance_',namec];
+namec={'noise','disorder'};             % noise or noise proportional to synaptic strength 
 
-addpath('/Users/vkoren/ei_net/result/connectivity/' )
-%addpath('result/connectivity/')
-savefile=[cd,'/figure/'];
+figname1=['CV_',namec{cases}];
+figname2=['rmse_fr_',namec{cases}];
+figname3=['EI-balance_',namec{cases}];
 
-loadname=['measures_',namec];
+addpath('result/connectivity/')
+savefile=[cd,'/figure/weights_J/',namec{cases},'J/'];
+
+if cases==1
+    loadname='Cnoise_factor_measures';
+else
+    loadname='measures_disorder_coarse';
+end
 load(loadname)
 %%
 xvec=fvec;

@@ -2,7 +2,7 @@
 clear all
 close all
 
-addpath([cd,'/code/function/'])
+addpath([cd,'/function/'])
 saveres=1;
 showfig=0;
 
@@ -39,9 +39,13 @@ tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
 ntr=100;
 sigmas_vec=0.25:0.25:8;                      % time constant of input features    
+%ntr=2;
+%sigmas_vec=[0.25,5]
 n=length(sigmas_vec);
 
 rms=zeros(n,2);
+cost=zeros(n,2);
+
 frate=zeros(n,2);
 CVs=zeros(n,2);
 
@@ -61,22 +65,29 @@ for g=1:n
 
     fr_tr=zeros(ntr,2);
     CV_tr=zeros(ntr,2);
+    
     rmse_tr=zeros(ntr,2);
+    kappa_tr=zeros(ntr,2);
     
     for ii=1:ntr
         [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
-        [I_E,I_I,r,rmse,CV,fr] = current_fun_1g(dt,sigmav,mu,tau_vec,s,N,q,d,x);
+        [I_E,I_I,r,rmse,kappa,CV,fr] = current_fun(dt,sigmav,mu,tau_vec,s,N,q,d,x);
         
+        rmse_tr(ii,:)=rmse;
+        kappa_tr(ii,:)=kappa;
+
         currE_tr(ii,:)=I_E;
         currI_tr(ii,:)=I_I;
         r_tr(ii,:)=r;
-        rmse_tr(ii,:)=rmse;
+        
         CV_tr(ii,:)=CV;
         fr_tr(ii,:)=fr;
         
     end
     
     rms(g,:)=mean(rmse_tr);
+    cost(g,:)=mean(kappa_tr);
+    
     frate(g,:)=mean(fr_tr);
     CVs(g,:)=mean(CV_tr);
 
@@ -94,8 +105,8 @@ if saveres==1
     parameters={{N},{M},{tau_s},{b},{c},{tau_vec},{q},{dt},{nsec},{ntr}};
     
     savefile='result/stimulus/';
-    savename='measures_all_sigmas';
-    save([savefile,savename],'sigmas_vec','rms','frate','CVs','meanE','meanI','r_ei','parameters','param_name')
+    savename='measures_sigmas';
+    save([savefile,savename],'sigmas_vec','rms','cost','frate','CVs','meanE','meanI','r_ei','parameters','param_name')
 end
 
 %%
@@ -112,10 +123,10 @@ if showfig==1
 
     subplot(4,1,2)
     hold on
-    plot(sigmas_vec,frate(:,1),'r')
-    plot(sigmas_vec,frate(:,2),'b')
+    plot(sigmas_vec,cost(:,1),'r')
+    plot(sigmas_vec,cost(:,2),'b')
     hold off
-    ylabel('firing rate')
+    ylabel('cost')
     
     subplot(4,1,3)
     plot(sigmas_vec,CVs(:,1),'r')
@@ -124,7 +135,6 @@ if showfig==1
     hold off
     ylabel('CV')
     box off
-    
     
     subplot(4,1,4)
     hold on
@@ -135,24 +145,7 @@ if showfig==1
     xlabel(vari)
     
         
-    figure()
-    subplot(2,1,1)
-    hold on
-    plot(sigmas_vec,meanE(:,1),'k')
-    plot(sigmas_vec,meanE(:,2),'b')
-    plot(sigmas_vec,mean(meanE,2),'g')
-    hold off
-    ylabel('mean currents E')
     
-    subplot(2,1,2)
-    hold on
-    plot(sigmas_vec,meanI(:,1),'r')
-    plot(sigmas_vec,meanI(:,2),'b')
-    plot(sigmas_vec,mean(meanI,2),'g')
-    hold off
-    ylabel('mean currents I')
-    xlabel(vari)
-
 end
 %%
 

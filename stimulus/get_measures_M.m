@@ -2,7 +2,7 @@
 clear all
 close all
 
-addpath([cd,'/code/function/'])
+addpath([cd,'/function/'])
 saveres=1;
 showfig=0;
 
@@ -13,6 +13,7 @@ disp('computing measures as a function of M');
 N=400;                                 % number of E neurons   
 nsec=1;                                % duration of the trial in seconds 
 
+sigma_s=2;
 tau_s=10;
 tau_x=10;                              % time constant of the signal  
 
@@ -33,14 +34,17 @@ d=3;
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
-
 %% compute measures
 
 ntr=100;
 Mvec=[[1:10],[12:2:20],[25:5:100]];                      % number of input variables    
+%ntr=2
+%Mvec=[1,5]
 n=length(Mvec);
 
 rms=zeros(n,2);
+cost=zeros(n,2);
+
 frate=zeros(n,2);
 CVs=zeros(n,2);
 
@@ -54,28 +58,34 @@ for g=1:n
     
     M=Mvec(g);
     
+    rmse_tr=zeros(ntr,2);
+    kappa_tr=zeros(ntr,2);
+
     r_tr=zeros(ntr,2);
     currE_tr=zeros(ntr,2);
     currI_tr=zeros(ntr,2);
 
     fr_tr=zeros(ntr,2);
     CV_tr=zeros(ntr,2);
-    rmse_tr=zeros(ntr,2);
     
     for ii=1:ntr
-        [s,x]=signal_fun(tau_s,tau_x,M,nsec,dt);
-        [I_E,I_I,r,rmse,CV,fr] = current_fun_1g(dt,sigmav,mu,tau_vec,s,N,q,d,x);
+        [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
+        [I_E,I_I,r,rmse,kappa,CV,fr] = current_fun(dt,sigmav,mu,tau_vec,s,N,q,d,x);
         
+        rmse_tr(ii,:)=rmse;
+        kappa_tr(ii,:)=kappa;
+
         currE_tr(ii,:)=I_E;
         currI_tr(ii,:)=I_I;
         r_tr(ii,:)=r;
-        rmse_tr(ii,:)=rmse;
+
         CV_tr(ii,:)=CV;
         fr_tr(ii,:)=fr;
         
     end
     
     rms(g,:)=mean(rmse_tr);
+    cost(g,:)=mean(kappa_tr);
 
     frate(g,:)=mean(fr_tr);
     CVs(g,:)=mean(CV_tr);
@@ -93,9 +103,9 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'b'},{'c'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{tau_s},{b},{c},{tau_vec},{q},{dt},{nsec},{ntr}};
     
-    savefile='result/dimensionality/';
-    savename='measures_all_M';
-    save([savefile,savename],'Mvec','rms','frate','CVs','meanE','meanI','r_ei','parameters','param_name')
+    savefile='result/stimulus/';
+    savename='measures_M';
+    save([savefile,savename],'Mvec','rms','cost','frate','CVs','meanE','meanI','r_ei','parameters','param_name')
 end
 
 %%
@@ -112,10 +122,10 @@ if showfig==1
 
     subplot(4,1,2)
     hold on
-    plot(Mvec,frate(:,1),'r')
-    plot(Mvec,frate(:,2),'b')
+    plot(Mvec,cost(:,1),'r')
+    plot(Mvec,cost(:,2),'b')
     hold off
-    ylabel('spikes/sec')
+    ylabel('cost')
     
     subplot(4,1,3)
     plot(Mvec,CVs(:,1),'r')
@@ -134,24 +144,7 @@ if showfig==1
     ylim([-1,0])
     xlabel('number input variables')
     
-        
-    figure()
-    subplot(2,1,1)
-    hold on
-    plot(Mvec,meanE(:,1),'k')
-    plot(Mvec,meanE(:,2),'b')
-    plot(Mvec,mean(meanE,2),'g')
-    hold off
-    ylabel('mean currents E')
     
-    subplot(2,1,2)
-    hold on
-    plot(Mvec,meanI(:,1),'r')
-    plot(Mvec,meanI(:,2),'b')
-    plot(Mvec,mean(meanI,2),'g')
-    hold off
-    ylabel('mean currents I')
-    xlabel('number input variables')
 
 end
 %%

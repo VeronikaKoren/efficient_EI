@@ -1,4 +1,4 @@
-function [ye,yi,xhat_e,xhat_i,fe,fi] = net_fun_complete(dt,sigmav,beta,tau_vec,s,w,J)
+function [fe,fi,xhat_e,xhat_i,re,ri] = net_fun_complete(dt,sigmav,beta,tau_vec,s,w,J)
 % integration of the membrane potential for E and I neurons
 
 
@@ -44,13 +44,13 @@ ffe=w{1}'*s*dt;
 %% integration
 
 Ve=zeros(N,T);      % membrane potential
-ye=zeros(N,T);      % spike train
-fe=zeros(N,T);      % filtered spike train
+fe=zeros(N,T);      % spike train
+re=zeros(N,T);      % filtered spike train
 xhat_e=zeros(M,T);  % excitatory estimate
 
 Vi=zeros(Ni,T);      % same for I neurons
-yi=zeros(Ni,T);
 fi=zeros(Ni,T);
+ri=zeros(Ni,T);
 xhat_i=zeros(M,T);
 
 Ve(:,1)=randn(N,1)*3-10;  % initialization with random membrane potentials E
@@ -59,31 +59,31 @@ Vi(:,1)=randn(Ni,1)*3-10;  % I
 for t=1:T-1
     
     %%%% excitatory neurons
-    Ve(:,t+1)=l_e*Ve(:,t)+ ffe(:,t) - Jei*yi(:,t) - loc_e*fe(:,t)- beta.*ye(:,t) + noise_e(:,t);
+    Ve(:,t+1)=l_e*Ve(:,t)+ ffe(:,t) - Jei*fi(:,t) - loc_e*re(:,t)- beta.*fe(:,t) + noise_e(:,t);
     
     %%% inhibitory neurons
-    Vi(:,t+1)=l_i*Vi(:,t) + Jie*ye(:,t) - Jii*yi(:,t) - loc_i*fi(:,t)-beta*yi(:,t)+ noise_i(:,t);  
+    Vi(:,t+1)=l_i*Vi(:,t) + Jie*fe(:,t) - Jii*fi(:,t) - loc_i*ri(:,t)-beta*fi(:,t)+ noise_i(:,t);  
     
     a=Ve(:,t+1)>threse; 
     if sum(a)>0
-        ye(:,t+1)=a;
+        fe(:,t+1)=a;
     end
     
     a_i=Vi(:,t+1)>thresi; 
     if sum(a_i)>0
-        yi(:,t+1)=a_i;
+        fi(:,t+1)=a_i;
     end
     
-    fe(:,t+1)=l_fe*fe(:,t)+ye(:,t);                 % firing rate E
-    xhat_e(:,t+1)=l_xe*xhat_e(:,t)+w{1}*ye(:,t+1);   % estimate E  
+    re(:,t+1)=l_fe*re(:,t)+fe(:,t);                 % firing rate E
+    xhat_e(:,t+1)=l_xe*xhat_e(:,t)+w{1}*fe(:,t+1);   % estimate E  
     
-    fi(:,t+1)=l_fi*fi(:,t)+yi(:,t);                 % firing rate I
-    xhat_i(:,t+1)=l_xi*xhat_i(:,t)+w{2}*yi(:,t+1);   % estimate I
+    ri(:,t+1)=l_fi*ri(:,t)+fi(:,t);                 % firing rate I
+    xhat_i(:,t+1)=l_xi*xhat_i(:,t)+w{2}*fi(:,t+1);   % estimate I
     
 end
 
-yi=int8(yi);
-ye=int8(ye);
+fi=int8(fi);
+fe=int8(fe);
 
 
 end

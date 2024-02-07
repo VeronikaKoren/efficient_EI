@@ -34,17 +34,19 @@ d=3;
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
-% stimulus properties
-
 %% compute measures
+
+%ntr=2;
+%beta_vec=[0,6,12];
 
 ntr=100;
 beta_vec=0:1:36;                       
-%beta_vec=[0,6,12];
+
 n=length(beta_vec);
 
 rms=zeros(n,2);
 cost=zeros(n,2);
+
 frate=zeros(n,2);
 CVs=zeros(n,2);
 
@@ -64,6 +66,7 @@ for g=1:n
     
     fr_tr=zeros(ntr,2);
     CV_tr=zeros(ntr,2);
+    
     rmse_tr=zeros(ntr,2);
     kappa_tr=zeros(ntr,2);
     
@@ -71,11 +74,13 @@ for g=1:n
         [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
         [I_E,I_I,r,rmse,kappa,CV,fr] = current_fun(dt,sigmav,beta,tau_vec,s,N,q,d,x);
         
+        rmse_tr(ii,:)=rmse;
+        kappa_tr(ii,:)=kappa;
+
         currE_tr(ii,:)=I_E;
         currI_tr(ii,:)=I_I;
         r_tr(ii,:)=r;
-        rmse_tr(ii,:)=rmse;
-        kappa_tr(ii,:)=kappa;
+        
         CV_tr(ii,:)=CV;
         fr_tr(ii,:)=fr;
         
@@ -83,6 +88,7 @@ for g=1:n
     
     rms(g,:)=mean(rmse_tr);
     cost(g,:)=mean(kappa_tr);
+    
     frate(g,:)=mean(fr_tr);
     CVs(g,:)=mean(CV_tr);
 

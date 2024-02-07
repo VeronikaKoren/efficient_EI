@@ -11,7 +11,7 @@ disp('computing performance measures as a function of mu_s');
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
-nsec=7;                                % duration of the trial in seconds 
+nsec=7; %7                                % duration of the trial in seconds 
 
 tau_s=10;
 tau_x=10;                              % time constant of the signal  
@@ -39,7 +39,6 @@ tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
 T=nsec*1000/dt;
 ntr=100;
-
 mus_vec=0:5:50;
 n=length(mus_vec);
 
@@ -48,6 +47,7 @@ varest=zeros(n,2);
 mse=zeros(n,2);
 R2=zeros(n,2);
 ratio=zeros(n,2);
+kappa=zeros(n,2);
 
 for g=1:n
     disp(n-g)
@@ -63,11 +63,16 @@ for g=1:n
     
     vars=zeros(ntr,M,2);
     ratio_tr=zeros(ntr,2);
+    kappa_tr=zeros(ntr,2);
+
     for ii=1:ntr
         
-        [~,~,xhat_e,xhat_i] = net_fun_complete(dt,sigmav,mu,tau_vec,s,w,C);
+        [~,~,xhat_e,xhat_i,re,ri] = net_fun_complete(dt,sigmav,mu,tau_vec,s,w,C);
         %[r,mean_eiff,CV,fr,xhat_e,xhat_i,ms,ratio] = current_fun2(dt,sigmav,mu,tau_vec,s,N,q,d,x);
         
+        kappa_tr(ii,1)=sqrt(mean(sum(re.^2,1)));
+        kappa_tr(ii,2)=sqrt(mean(sum(ri.^2,1)));
+       
         estE(ii,:,:)=xhat_e;
         estI(ii,:,:)=xhat_i;
         
@@ -94,11 +99,13 @@ for g=1:n
     varest(g,:)=cat(2,mean(VE),mean(VI));           % average variance of the estimate
     
     %%%%%%%%%%%%%%%%%%%%%%%%%
+
     xtr=permute(repmat(x,1,1,ntr),[3,1,2]);
-    mse_e=mean((sum((xtr-estE).^2,3)./T));
-    mse_i=mean((sum((estE-estI).^2,3)./T));
+    mse_e=mean(mean((xtr-estE).^2,3));
+    mse_i=mean(mean(estE-estI).^2,3);
     
     mse(g,:)=cat(2,mean(mse_e),mean(mse_i));   % mean squared error
+    kappa(g,:)=mean(kappa_tr);
     %%
     
     sigma=squeeze(mean(vars))';            % variance of estimates, averaged across trials
@@ -138,11 +145,11 @@ if showfig==1
     subplot(2,3,4)
     hold on
     for c=1:2
-        plot(mus_vec,mse(:,1),'r')
-        plot(mus_vec,mse(:,2),'b')
+        plot(mus_vec,kappa(:,1),'r')
+        plot(mus_vec,kappa(:,2),'b')
     end
     hold off
-    ylabel('MSE')
+    ylabel('kappa')
     
     subplot(2,3,5)
     hold on
@@ -172,7 +179,7 @@ if saveres==1
     
     savefile='result/stimulus/';
     savename='performance_mus';
-    save([savefile,savename],'mus_vec','bias','varest','mse','R2','ratio','parameters','param_name')
+    save([savefile,savename],'mus_vec','bias','varest','mse','kappa','R2','ratio','parameters','param_name')
     
 end
 

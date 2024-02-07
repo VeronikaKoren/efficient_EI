@@ -2,7 +2,7 @@
 clear all
 close all
 
-saveres=0;
+saveres=1;
 
 disp('computing measures as a function of sigma');
 addpath([cd,'/function/'])
@@ -12,6 +12,7 @@ M=3;
 N=400;                                 % number of E neurons   
 nsec=1;                                % duration of the trial in seconds 
 
+sigma_s=2;
 tau_s=10;
 tau_x=10;                              % time constant of the signal  
 
@@ -22,15 +23,11 @@ tau_re=10;                             % t. const firing rate of E neurons
 tau_ri=10;                             % t. constant firing rate of I neurons 
    
 b=1;
-%c=33;
 mu=b*log(N);                           % quadratic cost constant
-%sigmav=c/log(N);                       % standard deviation of the noise
 
 dt=0.02;                               % time step in ms     
 q=4;                                   % ratio of weight amplitudes I to E 
 d=3;
-
-sigma_s=2;
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
@@ -38,9 +35,13 @@ tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
 ntr=100;
 sigma_vec=0:1:25;                      % number of input variables    
+%ntr=2;
+%sigma_vec=0:5:10;
 n=length(sigma_vec);
 
 rms=zeros(n,2);
+cost=zeros(n,2);
+
 frate=zeros(n,2);
 CVs=zeros(n,2);
 
@@ -60,22 +61,29 @@ for g=1:n
 
     fr_tr=zeros(ntr,2);
     CV_tr=zeros(ntr,2);
+
     rmse_tr=zeros(ntr,2);
+    kappa_tr=zeros(ntr,2);
     
     for ii=1:ntr
         [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
-        [I_E,I_I,r,rmse,CV,fr] = current_fun(dt,sigmav,mu,tau_vec,s,N,q,d,x);
+        [I_E,I_I,r,rmse,kappa,CV,fr] = current_fun(dt,sigmav,mu,tau_vec,s,N,q,d,x);
         
+        rmse_tr(ii,:)=rmse;
+        kappa_tr(ii,:)=kappa;
+
         currE_tr(ii,:)=I_E;
         currI_tr(ii,:)=I_I;
         r_tr(ii,:)=r;
-        rmse_tr(ii,:)=rmse;
+        
         CV_tr(ii,:)=CV;
         fr_tr(ii,:)=fr;
         
     end
     
     rms(g,:)=mean(rmse_tr);
+    cost(g,:)=mean(kappa_tr);
+    
     frate(g,:)=mean(fr_tr);
     CVs(g,:)=mean(CV_tr);
 
@@ -92,8 +100,8 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'b'},{'c'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{tau_s},{b},{},{tau_vec},{q},{dt},{nsec},{ntr}};
     
-    savefile='result/sigma_beta/';
-    savename='measures_all_sigma';
-    save([savefile,savename],'sigma_vec','rms','frate','CVs','meanE','meanI','r_ei','parameters','param_name')
+    savefile='result/beta_sigma/';
+    savename='measures_sigma';
+    save([savefile,savename],'sigma_vec','rms','cost','frate','CVs','meanE','meanI','r_ei','parameters','param_name')
 end
 

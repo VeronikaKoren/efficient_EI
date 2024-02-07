@@ -2,7 +2,7 @@
 clear all
 
 addpath([cd,'/function/'])
-saveres=0;
+saveres=1;
 
 disp('computing measures as a function of q=ratio of E to I neurons');
 %% parameters
@@ -31,7 +31,6 @@ d=3.00;                                   % ratio of weight amplitudes I to E
 sigma_s=2;
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
-
 %% compute measures
 
 ntr=100;
@@ -44,7 +43,7 @@ frate=zeros(n,2);
 CVs=zeros(n,2);
 
 ms=zeros(n,2);
-ratios=zeros(n,2);
+cost=zeros(n,2);
 
 r_ei=zeros(n,2);
 meanE=zeros(n,2);
@@ -61,21 +60,22 @@ for g=1:n
 
     fr_tr=zeros(ntr,2);
     CV_tr=zeros(ntr,2);
+    
     rmse_tr=zeros(ntr,2);
-    ratio_tr=zeros(ntr,2);
+    kappa_tr=zeros(ntr,2);
     
     for ii=1:ntr
         
         [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
-        [I_E,I_I,r,rmse,CV,fr] = current_fun_1g(dt,sigmav,beta,tau_vec,s,N,q,d,x);
+        [I_E,I_I,r,rmse,kappa,CV,fr] = current_fun(dt,sigmav,beta,tau_vec,s,N,q,d,x);
         
         rmse_tr(ii,:)=rmse;
-        ratio_tr(ii,:)=ratio;
+        kappa_tr(ii,:)=kappa;
         
         currE_tr(ii,:)=I_E;
         currI_tr(ii,:)=I_I;
-
         r_tr(ii,:)=r;
+
         CV_tr(ii,:)=CV;
         fr_tr(ii,:)=fr;
         
@@ -89,7 +89,7 @@ for g=1:n
     CVs(g,:)=mean(CV_tr);
 
     ms(g,:)=mean(rmse_tr);
-    ratios(g,:)=mean(ratio_tr);
+    cost(g,:)=mean(kappa_tr);
    
 end
 
@@ -122,38 +122,14 @@ if showfig==1
     box off
     
     subplot(4,1,4)
-    plot(qvec,ratios(:,1),'r')
+    plot(qvec,cost(:,1),'r')
     hold on
-    plot(qvec,ratios(:,2),'b')
+    plot(qvec,cost(:,2),'b')
     line([qvec(1) qvec(end)],[1 1])
     hold off
     ylabel('ratio variance')
     box off
     
-        
-    figure()
-    subplot(3,1,1)
-    hold on
-    plot(qvec,meanE(:,1),'k')
-    plot(qvec,meanE(:,2),'b')
-    hold off
-    grid on
-    ylabel('mean E current')
-    
-    subplot(3,1,2)
-    hold on
-    plot(qvec,meanI(:,1),'r')
-    plot(qvec,meanI(:,2),'b')
-    hold off
-    grid on
-    ylabel('mean I current')
-    
-    subplot(3,1,3)
-    plot(qvec,r_ei(:,1),'r')
-    plot(qvec,r_ei(:,2),'b')
-    ylabel('balance E-I currents')
-    ylim([-1,1])
-    xlabel('noise intensity')
     
 end
 %%
@@ -163,7 +139,7 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'b'},{'c'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{tau_s},{b},{c},{tau_vec},{q},{dt},{nsec},{ntr}};
     
-    savefile='result/connectivity/';
-    savename='measures_all_q';
-    save([savefile,savename],'qvec','frate','CVs','ms','ratios','r_ei','meanE','meanI','parameters','param_name')
+    savefile='result/ratios/';
+    savename='measures_q';
+    save([savefile,savename],'qvec','frate','CVs','ms','cost','r_ei','meanE','meanI','parameters','param_name')
 end

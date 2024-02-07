@@ -3,14 +3,20 @@ close all
 clear all
 clc
 
-Ap=1.0;   % strength of perturbation wrt firing threshold (1 is at the threshold)
-saveres=0;
-showfig=1;                  
+a_s=1;  % strength of the stimulus
+a_p=1;   % strength of perturbation wrt firing threshold (1 is at the threshold)
+
+saveres=1;
+showfig=0;                  
 namepop={'different tuning','similar tuning'};
 
+addpath('code/lateral_inhibition/')
+addpath('code/function/')
+
+display(['perturbation strength ',sprintf('%0.1f',a_p),' in presence of a stimulus strength ',sprintf('%0.1f',a_s)]);
 %% parameters
 
-ntr=20;                               % number of trials
+ntr=200;                               % number of trials
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
@@ -35,25 +41,57 @@ dt=0.02;                               % time step in ms
 q=4;                                   % ratio number E to I neurons
 d=3;                                   % ratio strength of decoding weights 
 
-%% set the input, selectivity and synaptic weights 
-
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
-T=(nsec*1000)./dt;
-s=zeros(M,T);
-%[s,x]=signal_fun(tau_s,tau_x,M,nsec,dt);
+%% set the input, selectivity and synaptic weights 
 
 [w,J] = wJ_fun(M,N,q,d);                % randomly draw the selectivity weights and compute the connectivity matrices
 
 cn=100;                                 % choose 1 neuron
-[idx_d,idx_s,phi_vec] = tuning_similarity_idx(w{1},cn);  % index of neurosn with simialr and different selectivity
-[idx_di,idx_si,phi_veci] = tuning_similarity_ei(w{1},w{2},cn);  % find I neurons with similar and different selectivity
+[idx_d,idx_s,phi_vec] = tuning_similarity_idx(w{1},cn);  % index of E neurons with similar / different selectivity
+[idx_di,idx_si,phi_veci] = tuning_similarity_ei(w{1},w{2},cn);  % index I neurons with similar / different selectivity
 
+%% design a stimulus that the target neuron is strongly responsive to
+
+T=(nsec*1000)./dt;
+
+w_tar=w{1}(:,cn);
+s=ones(M,T).*w_tar*a_s; % static features proportional to the selectivity vector of the target neuron
+
+%{
+% O-U stimulus
+sigma_s=1;
+tau_s=100;
+[s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
+%}
+
+%{
+ti=(1:T)*dt;
+lambda=1/tau_x;
+x=zeros(M,T);
+for t=1:T-1
+    x(:,t+1)=(1-lambda*dt)*x(:,t)+s(:,t)*dt;  
+end
+figure()
+subplot(2,1,1)
+hold on
+for ii=1:3
+    plot(ti,s(ii,:))
+end
+hold off
+
+subplot(2,1,2)
+hold on
+for ii=1:3
+    plot(ti,x(ii,:))
+end
+hold off
+%}
 %% timings
 
 d_spontaneous = 300;     % duration of interval for measuring the spontaneous firing rate
 d_stim=50;               % duratio of stimulation
-d_measure=100;           % duration of interval for measuing the effect of stimulation
+d_measure=d_stim+50;           % duration of interval for measuing the effect of stimulation
 
 spont_on=100;            % start measuring the spontaneus firing rate
 spont_off=spont_on + d_spontaneous;          % stop measuring the spontaneous firing rate
@@ -78,15 +116,15 @@ Ni=N/q;
 sc=zeros(ntr,2);                          % spike count E and I cell type  
 sc_target=zeros(ntr,1);                   % spike count in target neuron  
 
-deltar=zeros(ntr,2,length(int_plt));      % time-dependent E
-deltari=zeros(ntr,2,length(int_plt));     % time-dependent I
+deltare=zeros(ntr,N,length(int_plt));      % time-dependent E
+deltari=zeros(ntr,Ni,length(int_plt));     % time-dependent I
 dFE=zeros(ntr,N);                          % time averaged E  
 dFI=zeros(ntr,Ni);                        % time averaged I
 
 for jj=1:ntr
 
     disp(jj)
-    [fe,fi,~,~,re,ri] =p_fun(dt,sigmav,beta,tau_vec,s,w,J,cn,int_stim,Ap);
+    [fe,fi,~,~,re,ri] =p_fun(dt,sigmav,beta,tau_vec,s,w,J,cn,int_stim,a_p);
 
     sc_target(jj)=sum(fe(cn,:))./nsec;                        % mean firing rate of the target neuron  
     fe(cn,:)=NaN;                                             % remove stimulated neuron  
@@ -99,17 +137,10 @@ for jj=1:ntr
     r_target=r_inst(cn,:);                                    % IFR of the stimulated (target) neuron
     r_inst(cn,:)=NaN;                                         % remove the activity of the stimulated neuron from the activity of other neurons
     
-    % for plotting the traces (time-dependent)
-    r1=mean(r_inst(idx_d,int_plt));                           % mean IFR across tested neurons with different selctivity
-    r2=mean(r_inst(idx_s,int_plt));                           % with similar selectivity
-    
-    md=mean(mean(r_inst(idx_d,int_spont),'omitnan'),'omitnan');   % average spontaneous IFR over time and neurons to compute delta of the activity; simialr selectivity
-    ms=mean(mean(r_inst(idx_s,int_spont),'omitnan'),'omitnan');   % different selectivity
+    r_base=mean(r_inst(:,int_spont),2,'omitnan');             % baseline firing date  
+    deltare(jj,:,:)=r_inst(:,int_plt)-r_base;                 % difference from the baseline
 
-    deltar(jj,1,:)=r1-md;                                      % difference from the mean of different
-    deltar(jj,2,:)=r2-ms;                                      % difference of the mean of similar
-
-    % time-averaged influence
+    % time-averaged (influence)
     F=mean(r_inst(:,int_measure),2);                           % time average influenced IFR
     S=mean(r_inst(:,int_spont),2);                             % time average spontaneous IFR 
     dFE(jj,:)=F-S;
@@ -117,21 +148,31 @@ for jj=1:ntr
     %% I neurons
 
     r_insti=ri./tau_ri;
-    r1i=mean(r_insti(idx_di,int_plt));                       % mean IFR across tested neurons with different selctivity
-    r2i=mean(r_insti(idx_si,int_plt));                       % with similar selectivity
-    
-    mdi=mean(mean(r_insti(idx_di,int_spont),'omitnan'),'omitnan');   % average spontaneous IFR over time and neurons to compute delta of the activity
-    msi=mean(mean(r_insti(idx_si,int_spont),'omitnan'),'omitnan');
+    r_basei=mean(r_insti(:,int_spont),2);                        % baseline firing date  
+    deltari(jj,:,:)=r_insti(:,int_plt)-r_basei;                 % difference from the baseline
 
-    deltari(jj,1,:)=r1i-mdi;                                      % difference from the mean of different
-    deltari(jj,2,:)=r2i-msi;                                      % difference of the mean of similar
-
-    % time-averaged infuence
+    % time-averaged (influence)
     FI=mean(r_insti(:,int_measure),2);                           % time average influenced IFR
     SI=mean(r_insti(:,int_spont),2);                             % time average spontaneous IFR 
     dFI(jj,:)=FI-SI;
 
 end
+
+%%
+dre=cell(2,1);
+dre{1}=deltare(:,idx_d,:);
+dre{2}=deltare(:,idx_s,:);
+drevec=cellfun(@(x) reshape(x,[size(x,1)*size(x,2),size(x,3)]),dre,'un',0);
+mdre=cellfun(@(x) mean(x,1),drevec,'un',0);
+semdre=cellfun(@(x) std(x,1)./sqrt(size(x,1)),drevec,'un',0);
+
+%%
+dri=cell(2,1);
+dri{1}=deltari(:,idx_di,:);
+dri{2}=deltari(:,idx_si,:);
+drivec=cellfun(@(x) reshape(x,[size(x,1)*size(x,2),size(x,3)]),dri,'un',0);
+mdri=cellfun(@(x) mean(x,1),drivec,'un',0);
+semdri=cellfun(@(x) std(x,1)./sqrt(size(x,1)),drivec,'un',0);
 
 %% trial-averaged statistics
 
@@ -141,13 +182,6 @@ msc=mean(sc);                           % mean sc E and I neurons (excluding the
 
 display(msc_target,'firing rate stimulated neuron')
 display(msc,'average firing rate E and I')
-
-% time-dependent delta r
-drE=squeeze(mean(deltar));             
-drI=squeeze(mean(deltari)); 
-
-semE=squeeze(std(deltar))./sqrt(ntr); 
-semI=squeeze(std(deltari))./sqrt(ntr);
 
 % time-averaged delta r
 
@@ -159,91 +193,59 @@ infI=mean(dFI,1);
 
 if saveres==1
     savefile='result/perturbation/';
-    savename=['perturbation_spont_Ap',sprintf('%1.0i',Ap*10)];
-    save([savefile,savename],'tidx','infE','infI','phi_vec','phi_veci','drE','drI','semE','semI','namepop','ntr','c','spont_on','spont_off','stim_on','stim_off','int_plt','Ap','dt','nsec','msc_target','msc');
+    savename=['perturbation_ap',sprintf('%1.0i',a_p*10),'_stim',sprintf('%1.0i',a_s*10)];
+    save([savefile,savename],'tidx','infE','infI','phi_vec','phi_veci','mdri','mdre','semdri','semdre','namepop','ntr','c','spont_on','spont_off','stim_on','stim_off','int_plt','a_p','dt','nsec','msc_target','msc');
 end
 
 %% prepare figure
 
 if showfig==1
 
-
     red=[0.7,0.2,0.1];
     green=[0.1,0.82,0.1];
     gray=[0.7,0.7,0.7];
     col={gray,green};  % for {"different", "similar"}
 
-    figure('name','influence','Position',[0,0,12,12]);
+    figure('name','influence','Position',[0,0,20,16]);
+    
+    
+    % plot time-dependent traces similar / different tuning
+    subplot(3,2,[1 2])
+    hold on
+    for k=1:2
+        plot(tidx,mdri{k}-semdri{k},'color',col{k})
+        plot(tidx,mdri{k}+semdri{k},'color',col{k})
+    end
+    hold off
 
-    subplot(2,1,1)
+    subplot(3,2,[3 4])
+    hold on
+    for k=1:2
+        plot(tidx,mdre{k}-semdre{k},'color',col{k})
+        plot(tidx,mdre{k}+semdre{k},'color',col{k})
+    end
+    hold off
+
+    subplot(3,2,5)
     plot(infI,phi_veci,'ko')
     hl=lsline;
     hl.Color='m';
     title('I neurons')
+    ylabel('tuning similarity')
     box off
-
-    subplot(2,1,2)
+    xlabel('influence')
+        
+    subplot(3,2,6)
     plot(infE,phi_vec,'ko')
     hl=lsline;
     hl.Color='m';
 
     title('E neurons')
-    ylabel('tuning similarity')
+   
     %set(gca,'XTick',xt)
     %axis([xt(1)-0.005,xt(end)+0.005,-1.1,1.1])
     box off
     xlabel('influence')
-    
-    %% plot time-dependent traces similar / different tuning
-
-    pos_vec=[0,0,20,10];
-    
-    maxid=max(max(drE));
-    minid=min(min(drE));
-    yt=-0.001:0.001:0.001;
-    yellow_zone=abs(minid-maxid)+abs(minid-maxid)*0.2;
-
-    xlimit=[0,nsec*1000 - spont_on];
-
-    H=figure('name','perturbation_traces','Position',[0,0,18,14]);
-
-    subplot(2,1,1)
-    hold on
-    plot(tidx,drI(1,:)+semI(1,:),'color',col{1})
-    plot(tidx,drI(1,:)-semI(1,:),'color',col{1})
-
-    plot(tidx,drI(2,:)+semI(2,:),'color',col{2})
-    plot(tidx,drI(2,:)-semI(2,:),'color',col{2})
-    
-    %plot(tidx,drI(2,:),'color',col{2})
-    rectangle('Position',[stim_on-spont_on,minid,stim_off-stim_on,yellow_zone],'FaceColor',[1,1,0,0.3],'EdgeColor','y','Linewidth',1)
-    line([tidx(1) tidx(end)],[0 0],'color','k','LineStyle','--','LineWidth',2)
-    text(stim_on-spont_on,maxid+maxid/2,'stim.','color',red,'fontsize',18)
-    hold off
-    box off
-
-    ylabel('\Delta r^I(t)')
-    xlim(xlimit)
-    legend(strcat(namepop,' tuning'),'Location','best')
-
-    subplot(2,1,2)
-    plot(tidx,drE(1,:),'color',col{1})
-    hold on
-    plot(tidx,drE(2,:),'color',col{2})
-    rectangle('Position',[stim_on-spont_on,minid,stim_off-stim_on,yellow_zone],'FaceColor',[1,1,0,0.3],'EdgeColor','y','Linewidth',1)
-    line([tidx(1) tidx(end)],[0 0],'color','k','LineStyle','--','LineWidth',2)
-    
-    hold off
-    box off
-
-    ylabel('\Delta r^E(t)')
-    xlabel('time [ms]')
-    xlim(xlimit)
-    set(gca,'YTick',yt)
-
-    set(H, 'Units','centimeters', 'Position', pos_vec)
-    set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_vec(3), pos_vec(4)]) % for saving in the right size
-
 
 end
 

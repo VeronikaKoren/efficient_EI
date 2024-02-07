@@ -6,20 +6,21 @@ savefig2=0;
 savefig3=0;
 savefig4=0;
 
-figname='loss_q';
-figname2='fr_cv_q';
-figname3='currents_q';
-figname4='rho_q';
+figname='loss_d';
+figname2='fr_cv_d';
+figname3='balance_d';
+figname4='currents_d';
 
 addpath('result/ratios/')
 savefile=[cd,'/figure/ratio/'];
 
-loadname='measures_q';
+loadname='measures_d';
 load(loadname)
 %%
-xvec=qvec;
+xvec=dvec;
 vis={'on','on','on','on'};
 %%
+
 fs=13;
 msize=6;
 lw=1.2;
@@ -40,7 +41,7 @@ namepop={'Exc','Inh'};
 plt1=[0,0,9,7];
 plt2=[0,0,9,10];
 xt=xvec(1):2:xvec(end);
-xlab='N^E:N^I';
+xlab='d^I:d^E';
 xlimit=[xvec(1),xvec(end-2)];
 
 %% optimal parameter
@@ -64,10 +65,10 @@ name_error={'RMSE^E','RMSE^I'};
 
 mini=min(loss);
 maxi=max(loss);
-delta= (maxi-mini)/4;
+delta= (maxi-mini)/5;
 
 pos_vec=plt2;
-yt=2:3:8;
+yt=3:3:6;
 yt2=[0,1];
 %%%%%%%%%%%%%
 
@@ -78,17 +79,14 @@ for ii=1:2
     plot(xvec,ms(:,ii),'color',col{ii});
     text(0.15,0.9-(ii-1)*0.17,name_error{ii},'units','normalized','color',col{ii},'fontsize',fs)
 end
-%plot(xvec,error,'color','k')
-%text(0.08,0.99-(3-1)*0.17,name_error{3},'units','normalized','color','k','fontsize',fs)
 
 hold off
 box off
-ylim([2.3,3.7])
-%xlim([xvec(1),xvec(end)])
+ylim([2.3,7.7])
 xlim(xlimit)
 
-%set(gca,'YTick',yt)
-%set(gca,'YTicklabel',yt)
+set(gca,'YTick',yt)
+set(gca,'YTicklabel',yt)
 set(gca,'XTick',xt)
 set(gca,'XTicklabel',[])
     
@@ -103,8 +101,8 @@ subplot(2,1,2)
 hold on
 plot(xvec,mcost,'color',green)
 plot(xvec,loss,'color','k')
-text(0.1,0.76,'cost','units','normalized','color',green,'fontsize',fs)
-text(0.1,0.6,'loss','units','normalized','color','k','fontsize',fs)
+text(0.7,0.86,'cost','units','normalized','color',green,'fontsize',fs)
+text(0.7,0.7,'loss','units','normalized','color','k','fontsize',fs)
 
 ylim([-0.2,1.1])
 % arrow
@@ -145,7 +143,7 @@ end
 %% firing rate and CV
 
 pos_vec=plt2;
-yt=0:10:30;
+yt=0:20:40;
 
 H=figure('name',figname2,'visible',vis{1});
 subplot(2,1,1)
@@ -160,7 +158,7 @@ for ii=1:2
 end
 
 xlim(xlimit)
-ylim([0,37])
+ylim([0,57])
 
 ylabel('firing rate','fontsize',fs)
 
@@ -214,7 +212,7 @@ subplot(2,1,1)
 hold on
 for ii=1:2
     plot(xvec,rec(:,ii),'color',col{ii})
-    text(0.08,0.85-(ii-1)*0.18,0.9,['in ',namepop{ii}],'units','normalized','fontsize',fs,'color',col{ii})
+    text(0.08,0.35-(ii-1)*0.18,0.9,['in ',namepop{ii}],'units','normalized','fontsize',fs,'color',col{ii})
 end
 hold off
 box off
@@ -222,11 +220,11 @@ box off
 title('average E-I balance')
 ylabel('net current')
 xlim(xlimit)
-ylim([-2,0])
+ylim([-5,0])
 
 set(gca,'XTick',xt)
 set(gca,'XTicklabel',[])
-set(gca,'YTick',[-2,0])
+set(gca,'YTick',[-4,0])
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')
