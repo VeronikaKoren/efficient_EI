@@ -16,6 +16,7 @@ M=3;                                   % number of input variables
 N=400;                                 % number of E neurons   
 nsec=1;                                % duration of the trial in seconds 
 
+sigma_s=2;
 tau_s=10;
 tau_x=10;                              % time constant of the signal  
 
@@ -39,7 +40,7 @@ tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 %% set the input
 
 T=(nsec*1000)./dt;
-[s,x]=signal_fun(tau_s,tau_x,M,nsec,dt);
+[s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
 
 %% get C^{-1}I(t) example for 1 neuron
 
@@ -61,7 +62,7 @@ pos_vec=[0,0,16,9];
 
 namec={'ff','Inh';'Exc','Inh'};
 %%
-
+savefig=1
 tindex= ((1:T).*dt);
 
 xt=0:400:800;
@@ -109,7 +110,7 @@ op=get(gca,'OuterPosition');
 set(gca,'OuterPosition',[op(1)+0.01 op(2)+0.03 op(3)-0.02 op(4)+0.02]);
 
 axes
-h1 = ylabel ('1/C I_i^{syn}(t) [mV]','units','normalized','Position',[-0.07,0.5,0],'fontsize',fs+1);
+h1 = ylabel ('1/C_m I_i^{syn}(t) [mV]','units','normalized','Position',[-0.07,0.5,0],'fontsize',fs+1);
 h2 = xlabel ('time [ms]','units','normalized','Position',[0.55,-0.03,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h2,'visible','on')

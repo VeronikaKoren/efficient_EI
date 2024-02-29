@@ -3,8 +3,8 @@
 close all
 clear all
 
-savefig1=0;
-savefig2=1;
+savefig1=1;
+savefig2=0;
 
 figname1='dist_mean_currents';
 figname2='rho_0net';
@@ -23,22 +23,23 @@ blue=[0,0.48,0.74];
 green=[0.2,0.7,0];
 col={'k',blue,green;red,blue,green};
 
-fs=13;
+fs=14;
 ms=6;
 lw=1.2;
 lwa=1;
 
-pos_vec=[0,0,14,5];
+pos_vec=[0,0,14,6];
 savefile='/Users/vkoren/ei_net/figure/statistics_0net/';
 
 namepop={'ff','Inh','syn E';'Exc','Inh','syn I'};
 
-xt=-2:2:2;
+xt=0:2:2;
 mini=min(cat(1,I_exc(:),I_inh(:)));
 maxi=max(cat(1,I_exc(:),I_inh(:)));
 xi=linspace(mini-0.5,maxi+0.5,200);
 
 %%
+
 H1=figure('name',figname1);
 for k=1:2
     
@@ -58,12 +59,16 @@ for k=1:2
     plot(xi,f1,'color',col{k,1},'linewidth',lw)
     hold on
     plot(xi,f2,'color',col{k,2},'linewidth',lw)
-    plot(xi,frec,'color',col{k,3},'linewidth',lw)
+    if k==1
+        plot(xi,frec,':','color',col{k,3},'linewidth',lw)
+    else
+        plot(xi,frec,'color',col{k,3},'linewidth',lw)
+    end
     hold off
     box off
 
     for ii=1:3
-        text(0.05,0.9-(ii-1)*0.1,namepop{k,ii},'units','normalized','fontsize',fs,'color',col{k,ii})
+        text(0.05,0.9-(ii-1)*0.13,namepop{k,ii},'units','normalized','fontsize',fs,'color',col{k,ii})
     end
 
     %ylim([0,8])
@@ -82,12 +87,13 @@ for k=1:2
     set(gca,'TickDir','out');
 
     op=get(gca,'OuterPosition');
-    set(gca,'OuterPosition',[op(1)+0.00 op(2)+0.09 op(3)+0.02 op(4)-0.02]);
+    set(gca,'OuterPosition',[op(1)+0.00 op(2)+0.09 op(3)+0.02 op(4)-0.04]);
 end
 
 axes
-h1 = ylabel ('density','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs);
-h2 = xlabel ('1/C \langle I^{syn} \rangle [mV]','units','normalized','Position',[0.5,+0.03,0],'fontsize',fs);
+h1 = ylabel ('density','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs+1);
+h2 = xlabel ('1/C_m \langle I^{syn}_i \rangle [mV]','units','normalized','Position',[0.5,+0.03,0],'fontsize',fs);
+%h2 = xlabel ('mean current [mV]','units','normalized','Position',[0.5,-0.02,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h1,'visible','on')
 set(h2,'visible','on')

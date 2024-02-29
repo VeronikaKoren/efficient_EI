@@ -12,7 +12,7 @@ N=size(ye,1);
 red=[0.85,0.32,0.1];
 blue=[0,0.48,0.74];
 
-fs=13;
+fs=14;
 ms=4;
 lw=1.7;
 lwa=1;
@@ -26,23 +26,24 @@ gridI=N+(1:Ni)'*ones(1,T);
 
 % ticks
 
-xt=0:200:nsec*1000;                         % in milliseconds
+xt=0:400:nsec*1000;                         % in milliseconds
 yt=[0,50];
 ytr=[10,20];
 ytn=[N,N+Ni];
 ytl=[N,Ni];
 
-maxi=round(max(max(xhat_i)))+25;
+maxi=round(max(max(xhat_i)))+28;
 %hm=round((maxi/2)/10)*10;
 %yt=-hm:hm:hm;
 
 colhat=[1,0.2,0];
 colhatI=blue;
-
+%{
 namex={'$x_1(t)$','$x_2(t)$','$x_3(t)$'};
 namexhat={'$\hat{x}^E_1(t)$','$\hat{x}^E_2(t)$','$\hat{x}^E_3(t)$'};
 namexhatI={'$\hat{x}^I_1(t)$','$\hat{x}^I_2(t)$','$\hat{x}^I_3(t)$'};
 a=0.1;
+%}
 %% plot
 
 H=figure('name',figname);
@@ -67,10 +68,17 @@ for d=1:3
     set(gca,'XTickLabel',[]);
     set(gca,'YTickLabel',yt,'Fontsize',fs)
    
+    %{
     text(0.02,0.85,namex{d},'units','normalized','color','k','Fontsize',fs+1,'Interpreter','latex')
     text(0.02+a,0.85,namexhat{d},'units','normalized','color',colhat,'Fontsize',fs+1,'Interpreter','latex')
     text(0.02+(2*a),0.85,namexhatI{d},'units','normalized','color',colhatI,'Fontsize',fs+1,'Interpreter','latex')
-    
+    %}
+    if d==1
+        text(0.05,0.9,'target','units','normalized','color','k','Fontsize',fs,'Interpreter','tex')
+        text(0.18,0.9,'E estimate','units','normalized','color',colhat,'Fontsize',fs,'Interpreter','tex')
+        text(0.35,0.9,'I estimate','units','normalized','color',colhatI,'Fontsize',fs,'Interpreter','tex')
+    end
+
     set(gca,'LineWidth',lwa,'TickLength',[tl tl]);
     set(gca,'TickDir','out');
 end
@@ -87,7 +95,7 @@ box off
 legend([p1(1),p2(1)],'Exc','Inh','Fontsize',fs,'Location','NorthWest')
 set(gca,'xtick',xt);
 set(gca,'XTickLabel',[])
-ylabel('neuron index','Fontsize',fs)
+ylabel('neuron idx','Fontsize',fs)
 
 xlim([0,nsec*1000])
 ylim([0.5 N+Ni+0.5])

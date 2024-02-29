@@ -24,7 +24,7 @@ tindex=nsec*(1:T)/T*1000;
 
 %% ticks
 
-xt=200:200:nsec*1000;                         % in milliseconds
+xt=0:400:nsec*1000;                         % in milliseconds
 signals=cat(1,x,xhat);
 
 maxy=max(abs(signals(:)));
@@ -34,8 +34,8 @@ yt=[0,ytr];
 ytn=N/2:N/2:N;
 
 xlimit=[0,nsec*1000];
-namex={'$x_1(t)$','$x_2(t)$','$x_3(t)$'};
-namexhat={'$\hat{x}_1(t)$','$\hat{x}_2(t)$','$\hat{x}_3(t)$'};
+%namex={'$x_1(t)$','$x_2(t)$','$x_3(t)$'};
+%namexhat={'$\hat{x}_1(t)$','$\hat{x}_2(t)$','$\hat{x}_3(t)$'};
 
 y=y(1:N,:);
 %% plot
@@ -55,8 +55,14 @@ for d=1:3
     xlim(xlimit) 
     ylim([-maxy,maxy])
     
-    text(0.02,0.85,namex{d},'units','normalized','color','k','Fontsize',fs+1,'Interpreter','latex')
-    text(0.02+0.1,0.85,namexhat{d},'units','normalized','color',magenta,'Fontsize',fs+1,'Interpreter','latex')
+    %text(0.02,0.85,namex{d},'units','normalized','color','k','Fontsize',fs+1,'Interpreter','latex')
+    %text(0.02+0.1,0.85,namexhat{d},'units','normalized','color',magenta,'Fontsize',fs+1,'Interpreter','latex')
+    
+    if d==1
+        text(0.05,0.9,'target','units','normalized','color','k','Fontsize',fs,'Interpreter','tex')
+        text(0.18,0.9,'estimate','units','normalized','color','m','Fontsize',fs,'Interpreter','tex')
+        
+    end
     set(gca,'XTick',xt);
     set(gca,'YTick',yt);
     set(gca,'XTickLabel',[]);

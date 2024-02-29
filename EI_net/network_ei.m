@@ -52,8 +52,8 @@ display([sc_E,sc_I],'average spike count per second in E and I')
 
 %% nice plot signal and E estimate, spikes and pop. firing rate
 
-figname='activity';
-savefile=[cd,'/figure/'];
+figname='activity22';
+savefile='/Users/vkoren/ei_net/figure/implementation/';
 
 pos_vec=[0,0,20,17];
 plt_network(x,xhat_e,xhat_i,fe,fi,re,ri,dt,tau_fe,tau_fi,figname, savefig,savefile,pos_vec)

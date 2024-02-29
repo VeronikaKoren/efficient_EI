@@ -4,7 +4,7 @@ clear all
 close all
 
 savefig=0;
-savefile=[cd,'/figure/'];
+savefile='/Users/vkoren/ei_net/figure/implementation/';
 figname='activity_1ct';
 
 disp('computing MSE for the network with 1 cell type')
@@ -47,6 +47,6 @@ display(frate,'mean firing rate');
 %% plot signal, estimate and spikes
 
 pos_vec=[0,0,20,15];
-plt_1pop_network(x,xhat,f,r,dt,tau,pos_vec,savefig,savefile,figname)
+plt_1ct_network(x,xhat,f,r,dt,tau,pos_vec,savefig,savefile,figname)
 %}
 
