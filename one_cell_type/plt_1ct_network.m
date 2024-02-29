@@ -5,13 +5,13 @@ function [] = plt_1ct_network(x,xhat,y,r,dt,tau,pos_vec,savefig,savefile,figname
 
 T=size(x,2);
 nsec=(T*dt)/1000;
-N=150;
+N=400;
 
 %% figure parameters
 
 magenta=[1,0,1,0.5];
 
-fs=13;
+fs=14;
 ms=5;
 lw=1.7;
 lwa=1;
@@ -29,9 +29,9 @@ signals=cat(1,x,xhat);
 
 maxy=max(abs(signals(:)));
 %ytr=round(maxy)/2;
-ytr=30;
+ytr=50;
 yt=[0,ytr];
-ytn=N/2:N/2:N;
+%ytn=N/2:N/2:N;
 
 xlimit=[0,nsec*1000];
 %namex={'$x_1(t)$','$x_2(t)$','$x_3(t)$'};
@@ -82,13 +82,13 @@ box off
 
 set(gca,'xtick',xt);
 set(gca,'XTickLabel',[])
-ylabel('neural index','FontName','Arial','Fontsize',fs)
+ylabel('neural idx','FontName','Arial','Fontsize',fs)
 
 xlim(xlimit)
 ylim([0.5 N+0.5])
 
-set(gca,'YTick',ytn)
-set(gca,'YTickLabel',ytn,'FontName','Arial','Fontsize',fs)
+set(gca,'YTick',N)
+set(gca,'YTickLabel',N,'FontName','Arial','Fontsize',fs)
 
 set(gca,'LineWidth',lwa,'TickLength',[tl tl]);
 set(gca,'TickDir','out');
@@ -101,6 +101,7 @@ ylabel('r(t) / \tau_r','FontName','Arial','Fontsize',fs)
 %ylabel('firing rate [Hz]','FontName','Arial','Fontsize',fs)
 set(gca,'XTick',xt);
 set(gca,'XTickLabel',xt,'FontName','Arial','Fontsize',fs)
+set(gca,'YTick',[0,30],'FontName','Arial','Fontsize',fs);
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 xlim(xlimit)

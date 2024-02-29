@@ -8,6 +8,7 @@ savefile='/Users/vkoren/ei_net/figure/implementation/';
 figname='activity_1ct';
 
 disp('computing MSE for the network with 1 cell type')
+addpath([cd,'/function/'])
 %% parameters
 
 nsec=1;                     % simulation length in seconds
@@ -17,12 +18,12 @@ N=400;
 tau=10;                     % time constant of the membrane potential
 
 b=1.5;
-c=33;
+%c=33;
+c=15
 
 nu=0;                       % linear cost
 beta=b*log(N);                % quadratic cost
 sigmav=c/log(N);            % standard deviation of the noise
-
 
 dt=0.02;                    % time step  
 
@@ -45,7 +46,7 @@ display(rmse,'mean squared error');
 display(frate,'mean firing rate');
 
 %% plot signal, estimate and spikes
-
+savefig=1
 pos_vec=[0,0,20,15];
 plt_1ct_network(x,xhat,f,r,dt,tau,pos_vec,savefig,savefile,figname)
 %}

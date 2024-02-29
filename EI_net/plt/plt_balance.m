@@ -3,7 +3,7 @@
 close all
 clear all
 
-savefig1=1;
+savefig1=0;
 savefig2=0;
 
 figname1='dist_mean_currents';
