@@ -9,7 +9,7 @@ addpath([cd,'/result/perturbation/'])
 
 %% load result
 
-Ap=0.6;
+Ap=1.0;
 figname=['influence_tuning_',sprintf('%1.0i',Ap*10)];
 
 F=cell(2,1);
@@ -25,7 +25,7 @@ phi{2}=phi_vec;
 
 %% prepare fig.
 
-plt1=[0,0,12,14];
+plt1=[0,0,10,12];
 
 fs=14;
 msize=6;
@@ -75,7 +75,7 @@ end
 
 axes
 
-h1 = xlabel ('influence','units','normalized','Position',[0.5,-0.07,0],'Fontsize',fs+1);
+h1 = xlabel ('effective connectivity','units','normalized','Position',[0.5,-0.07,0],'Fontsize',fs+1);
 h2 = ylabel ('tuning similarity','units','normalized','Position',[-0.05,0.5,0],'Fontsize',fs+1);
 set(gca,'Visible','off')
 set(h1,'visible','on')

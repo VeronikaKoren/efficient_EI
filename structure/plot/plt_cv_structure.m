@@ -8,7 +8,7 @@ k=1;
 namet={'perm_full','perm_partial'};
 
 figname=['CV_',namet{k}];
-savefile=[cd,'/figure/weights_J/effect_structure/'];
+savefile=['/Users/vkoren/ei_net/figure/weights_J/effect_structure/',namet{k},'/'];
 
 disp(['plotting ' ,figname])
 
@@ -35,7 +35,7 @@ red=[0.85,0.32,0.1];
 blue=[0,0.48,0.74];
 col={red,blue};
 
-plt1=[0,0,8,12];
+plt1=[0,0,8,11];
 
 xvec=1:4;
 xt=1:4;
@@ -48,7 +48,7 @@ Ct{4}(4:end)=[];
 
 order=[2,1,3,4];
 Co=Ct(order);
-
+nametit={'fully unstructured','partially unstructured'};
 %%
 
 H=figure('name',figname);
@@ -62,14 +62,15 @@ box off
 xlim(xlimit)
 ylim([0.5,1.5])
 
+text(0.2,1.1,nametit{k},'units',' normalized','fontsize',fs)
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt)
 set(gca,'XTick',xt)
-set(gca,'XTicklabel',Co)
+set(gca,'XTicklabel',[])
 xtickangle(25)
 
 op=get(gca,'OuterPosition');
-set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.05 op(3)-0.05 op(4)-0.05]);
+set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.05 op(3)-0.05 op(4)-0.03]);
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')
 
@@ -95,7 +96,7 @@ set(gca,'XTicklabel',Co)
 xtickangle(25)
 
 op=get(gca,'OuterPosition');
-set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.05 op(3)-0.05 op(4)-0.05]);
+set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.05 op(3)-0.05 op(4)+0.0]);
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')
 

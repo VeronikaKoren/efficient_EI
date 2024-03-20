@@ -4,15 +4,15 @@ clc
 
 savefig=0;
 
-savefile=[cd,'/figure/lateral/Jstructure/'];
-addpath([cd,'/result/perturbation/Jstructure/'])
-addpath([cd,'/result/perturbation/'])
+savefile='/Users/vkoren/ei_net/figure/lateral/Jstructure/';
+addpath('/Users/vkoren/ei_net/result/perturbation/Jstructure/')
+addpath('/Users/vkoren/ei_net/result/perturbation/')
 
 ntype={'noiseJ','full_perm','partial_perm'};
 Jp_name={'E-E','I-I','E-I','I-E','all'}; % Connetivity matrix that is permuted
 
-type=2; % [2,3] relevant values
-Jp=2;   % [2,3,4,5]
+type=3; % [2,3] relevant values
+Jp=3;   % [2,3,4,5]
 Ap=1.0;
 
 %% load result
@@ -32,7 +32,7 @@ phi{2}=phi_vec;
 
 %% prepare fig.
 
-plt1=[0,0,12,14];
+plt1=[0,0,10,12];
 
 fs=14;
 msize=6;
@@ -47,9 +47,10 @@ darkgray=[0.5,0.5,0.5];
 col={gray,green};                               % for "different", "similar"
 coltxt={darkgray,olive};
 if type==2
-    titles=[ntype{type}(1:4),' permutation ',Jp_name{Jp}];
+    %titles=[ntype{type}(1:4),' permutation ',Jp_name{Jp}];
+    titles=Jp_name{Jp};
 else
-    titles=[ntype{type}(1:7),' permutation ',Jp_name{Jp}];
+    titles=[ntype{type}(1:7),' ',Jp_name{Jp}];
 end
 xt=[0.01,0.003];
 
@@ -71,13 +72,16 @@ for ii=1:2
     box off
 
     if ii==1
-        title(titles,'Fontsize',fs)
+        title(titles,'Fontsize',fs,'Fontsize',fs)
     end
+    if Jp==3
+        ylabel(['tuning similarity ',pop{ii}],'Fontsize',fs)
+    end
+
     xlim([-maxi(ii),maxi(ii)])
     ylim([-1.2,1.2])
-    ylabel(['tuning similarity ',pop{ii}])
-    xtic=-xt(ii):xt(ii):xt(ii);
-    
+ 
+    xtic=-xt(ii):xt(ii):xt(ii);   
     set(gca,'XTick',xtic)
     set(gca,'XTickLabel',xtic,'Fontsize',fs)
     
@@ -91,7 +95,7 @@ for ii=1:2
 end
 
 axes
-h1 = xlabel ('influence','units','normalized','Position',[0.5,-0.07,0],'Fontsize',fs+1);
+h1 = xlabel ('effective connectivity','units','normalized','Position',[0.5,-0.07,0],'Fontsize',fs+1);
 set(gca,'Visible','off')
 set(h1,'visible','on')
 

@@ -3,11 +3,11 @@ clear all
 %close all
 clc
 
-savefig=1;
+savefig=0;
 
-savefile=[cd,'/figure/lateral/Jstructure/'];
-addpath([cd,'/result/perturbation/Jstructure/'])
-addpath([cd,'/result/perturbation/'])
+savefile='/Users/vkoren/ei_net/figure/lateral/Jstructure/';
+addpath('/Users/vkoren/ei_net/result/perturbation/Jstructure/')
+addpath('/Users/vkoren/ei_net/result/perturbation/')
 
 ntype={'noiseJ','full_perm','partial_perm'};
 Jp_name={'E-E','I-I','E-I','I-E','all'}; % Connetivity matrix that is permuted
@@ -67,9 +67,9 @@ ylimitE=[-0.001,0.001]*1.7;
 ytE=-0.001:0.001:0.001;
 %pos=[stim_on-spont_on,-5*d,stim_off-stim_on,10*d];% [x y w h] rectangle for stim on
 
-namepp={'different permuted','similar permuted'};
+namepp={'different unstructured','similar unstructured'};
 namepop={'different structured','similar structured'};
-nametype={'','full permutation','partial permutation'};
+nametype={'','','partial'};
 
 %% plot dr1 and dr2 average across trials
 
@@ -97,7 +97,7 @@ line([tidx(1) tidx(end)],[0 0],'color','k','LineStyle','--','LineWidth',1.5)
 if Jp==3
     text(stim_on-spont_on+8,ylimitI(1)+di/10,'perturb','color',red,'fontsize',fs)
 end
-title([nametype{type},' ',Jp_name{Jp},' connectivity'],'fontsize',fs)
+title([nametype{type},' ',Jp_name{Jp}],'fontsize',fs)
 
 xlim(xlimit)
 ylim(ylimitI)

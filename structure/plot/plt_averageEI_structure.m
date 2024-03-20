@@ -6,11 +6,11 @@ clc
 %%
 savefig=0;
 
-k=1;
+k=2;
 namet={'perm_full','perm_partial'};
 
 figname=['average_EI_balance_',namet{k}];
-savefile=[cd,'/figure/'];
+savefile=['/Users/vkoren/ei_net/figure/weights_J/effect_structure/',namet{k},'/'];
 
 disp(['plotting ' ,figname])
 
@@ -47,7 +47,7 @@ red=[0.85,0.32,0.1];
 blue=[0,0.48,0.74];
 col={red,blue};
 
-plt1=[0,0,8,12];
+plt1=[0,0,8,11];
 
 xvec=1:4;
 xt=1:4;
@@ -71,19 +71,19 @@ line([0.5 4.5],[net0(1) net0(1)],'Color',col{1},'LineStyle','--')
 text(0.05,0.9,namep{1},'units','normalized','fontsize',fs,'color',col{1})
 box off
 
-title('average E-I balance')
+title('average balance')
 
 xlim(xlimit)
 ylim([-4,0])
 
 set(gca,'YTick',yt)
-set(gca,'YTicklabel',yt)
+set(gca,'YTicklabel',yt,'fontsize',fs)
 set(gca,'XTick',xt)
-set(gca,'XTicklabel',Co)
+set(gca,'XTicklabel',[])
 xtickangle(25)
 
 op=get(gca,'OuterPosition');
-set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.05 op(3)-0.05 op(4)-0.05]);
+set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.0 op(3)-0.05 op(4)-0.01]);
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')
 
@@ -103,19 +103,19 @@ xlim(xlimit)
 ylim([-4, 0])
 
 set(gca,'YTick',yt)
-set(gca,'YTicklabel',yt)
+set(gca,'YTicklabel',yt,'fontsize',fs)
 set(gca,'XTick',xt)
 set(gca,'XTicklabel',Co)
 xtickangle(25)
 
 op=get(gca,'OuterPosition');
-set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.05 op(3)-0.05 op(4)-0.05]);
+set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.0 op(3)-0.05 op(4)+0.01]);
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')
 
 axes
 
-h2 = ylabel ('net synaptic current','units','normalized','Position',[-0.08,0.5,0]);
+h2 = ylabel ('net synaptic current','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h2,'visible','on')
 

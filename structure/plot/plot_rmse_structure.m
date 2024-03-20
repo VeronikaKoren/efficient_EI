@@ -3,7 +3,7 @@ clear all
 close all
 
 namet={'perm_full','perm_partial'};
-type=1;
+type=2;
 
 savefig=1;
 savefig2=1;
@@ -42,7 +42,7 @@ blue=[0,0.48,0.74];
 col={red,blue};
 green=[0.2,0.7,0];
 ochre=[0.8,0.7,0.4];
-col2={green,ochre}
+col2={green,ochre};
 
 plt1=[0,0,8,7];
 
@@ -51,14 +51,14 @@ xt=1:n;
 
 xlimit=[0.5,n+0.5];
 namep={'RMSE^E','RMSE^I'};
-namec={'cost^E','cost^I'};
+namec={'MC^E','MC^I'};
 
 order=[2,1,3,4];
 Co=Ct(order);
 
 titles={'fully','partially'};
 if type==1
-    yt=0:3:12;
+    yt=[1,4,8]
 else
     yt=0:2;
 end
@@ -78,14 +78,16 @@ hold off
 box off
 
 for ii=1:2
-    text(0.6,0.9-(ii-1)*0.12,namep{ii},'units','normalized','fontsize',fs,'color',col{ii})
+    text(0.55,0.9-(ii-1)*0.12,namep{ii},'units','normalized','fontsize',fs,'color',col{ii})
 end
 
 xlim(xlimit)
 
 ylim([0,maxi])
-title([titles{type},' unstructured connectivity'],'fontweight','normal','fontsize',fs)
-ylabel('relative RMSE','fontsize',fs)
+if type==2
+    title([titles{type},' unstructured'],'fontweight','normal','fontsize',fs)
+end
+ylabel('relative error','fontsize',fs)
 
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
@@ -104,8 +106,11 @@ if savefig==1
 end
 
 %% plot cost
-
-yt=0:2
+if type==1
+    yt=0:2;
+else
+    yt=[0,1,1.5];
+end
 H=figure('name',figname2);
 
 hold on
@@ -122,7 +127,9 @@ end
 
 xlim(xlimit)
 ylim([0,maxc])
-
+if type==2
+    title([titles{type},' unstructured'],'fontweight','normal','fontsize',fs)
+end
 ylabel('relative cost','fontsize',fs)
 
 set(gca,'YTick',yt)

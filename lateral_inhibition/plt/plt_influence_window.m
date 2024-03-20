@@ -5,9 +5,8 @@ clc
 savefig=1;
 figname='influence_window';
 
-savefile=[cd,'/figure/lateral/'];
-addpath([cd,'/result/perturbation/'])
-
+savefile='/Users/vkoren/ei_net/figure/lateral/';
+addpath('/Users/vkoren/ei_net/result/perturbation/')
 %%
 loadname='perturbation_Ei_spont_dstim';
 load(loadname)
@@ -51,12 +50,15 @@ end
 line([x(1) x(end)],[0 0],'color','k','linestyle','--','linewidth',1)
 hold off
 
+title('to I neurons','Fontsize',fs)
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
 set(gca,'XTick',xt)
 set(gca,'XTickLabel',[])
+
 axis(ax)
-ylabel('influence I','fontsize',fs+2)
+op=get(gca,'OuterPosition');
+set(gca,'OuterPosition',[op(1)+0.08 op(2)+0.0 op(3)-0.03 op(4)+0.02]);
 
 subplot(2,1,2)
 hold on
@@ -67,16 +69,26 @@ for k=1:2
 end
 line([x(1) x(end)],[0 0],'color','k','linestyle','--','linewidth',1)
 hold off
-ylabel('influence E','fontsize',fs)
-xlabel('length stimulation [ms]','fontsize',fs)
+
+title('to E neurons','fontsize',fs)
+%xlabel('length stimulation [ms]','fontsize',fs)
 
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
 set(gca,'XTick',xt)
 set(gca,'XTickLabel',xt,'fontsize',fs)
 
-set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 axis(ax)
+op=get(gca,'OuterPosition');
+set(gca,'OuterPosition',[op(1)+0.08 op(2)+0.0 op(3)-0.03 op(4)+0.02]);
+
+axes
+
+h1 = xlabel('length stimulation [ms]','units','normalized','Position',[0.55,-0.07,0],'Fontsize',fs+1);
+h2 = ylabel('effective connectivity','units','normalized','Position',[-0.07,0.5,0],'Fontsize',fs+1);
+set(gca,'Visible','off')
+set(h1,'visible','on')
+set(h2,'visible','on')
 
 set(H, 'Units','centimeters', 'Position', plt3)
 set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[plt3(3), plt3(4)]) % for saving in the right size

@@ -4,11 +4,11 @@ close all
 
 savefig=0;
 
-k=1;
+k=2;
 namet={'perm_full','perm_partial'};
 
-figname=['fr_',namet{k}];
-savefile=[cd,'/figure/weights_J/effect_structure/',namet{k},'/'];
+figname=['frate_',namet{k}];
+savefile=['/Users/vkoren/ei_net/figure/weights_J/effect_structure/',namet{k},'/'];
 
 disp(['plotting ' ,figname])
 
@@ -35,12 +35,11 @@ red=[0.85,0.32,0.1];
 blue=[0,0.48,0.74];
 col={red,blue};
 
-plt1=[0,0,8,12];
+plt1=[0,0,8,11];
 
 xvec=1:4;
 xt=1:4;
 xlb=Ct;
-yt=0:10:40;
 
 xlimit=[0.3,4.7];
 namep={'in Exc','in Inh'};
@@ -51,6 +50,7 @@ Co=Ct(order);
 
 %%
 
+yt=0:10:20;
 
 H=figure('name',figname);
 subplot(2,1,1)
@@ -63,19 +63,19 @@ box off
 xlim(xlimit)
 ylim([0,23])
 
-%set(gca,'YTick',yt)
-%set(gca,'YTicklabel',yt)
+set(gca,'YTick',yt)
+set(gca,'YTicklabel',yt,'fontsize',fs)
 set(gca,'XTick',xt)
-set(gca,'XTicklabel',Co)
+set(gca,'XTicklabel',[])
 xtickangle(25)
 
 op=get(gca,'OuterPosition');
-set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.05 op(3)-0.05 op(4)-0.05]);
+set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.0 op(3)-0.05 op(4)-0.01]);
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')
 
 %%% I neurons
-
+yt=0:20:40;
 subplot(2,1,2)
 hold on
 plot(fr(order,2),'d','color','k','markersize',ms,'MarkerFaceColor',col{2});
@@ -89,20 +89,20 @@ box off
 xlim(xlimit)
 ylim([0, 40])
 
-set(gca,'YTick',[0,20,40])
-set(gca,'YTicklabel',[0,20,40])
+set(gca,'YTick',yt)
+set(gca,'YTicklabel',yt,'fontsize',fs)
 set(gca,'XTick',xt)
 set(gca,'XTicklabel',Co)
 xtickangle(25)
 
 op=get(gca,'OuterPosition');
-set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.05 op(3)-0.05 op(4)-0.05]);
+set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.0 op(3)-0.05 op(4)+0.01]);
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')
 
 axes
 
-h2 = ylabel ('firing rate','units','normalized','Position',[-0.08,0.5,0]);
+h2 = ylabel ('firing rate','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h2,'visible','on')
 
