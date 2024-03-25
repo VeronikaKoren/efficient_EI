@@ -3,10 +3,10 @@ clear all
 clc
 
 savefig=0;
-figname='spikes_beta';
-savefile=[cd,'/figure/'];
+figname='spikes_mu';
+savefile=[cd,'/figure/implementation/'];
 
-addpath([cd,'/function/'])
+addpath([cd,'/code/function/'])
 
 %%
 M=3;                                   % number of input variables    
@@ -30,25 +30,23 @@ dt=0.02;                               % time step in ms
 q=4;
 d=3;
 
-sigma_s=2;
-
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
-[s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
-[w,J] = w_fun(M,N,q,d); 
+[s,x]=signal_fun(tau_s,tau_x,M,nsec,dt);
+[w,C] = w_fun(M,N,q,d); 
 
 %% get spikes for a couple of values of the metabolic constant
 
-betavec=[1,6,15,30];
-n=length(betavec);
+muvec=[1,6,15,30];
+n=length(muvec)
 spikes_E=cell(n,1);
 spikes_I=cell(n,1);
 
 for ii=1:n
-    beta=betavec(ii);
-    [fe,fi] = net_fun_complete(dt,sigmav,beta,tau_vec,s,w,J);
-    spikes_E{ii}=fe;
-    spikes_I{ii}=fi;
+    mu=muvec(ii);
+    [ye,yi,xhat_e,xhat_i,fe,fi] = net_fun_complete(dt,sigmav,mu,tau_vec,s,w,C);
+    spikes_E{ii}=ye;
+    spikes_I{ii}=yi;
 end
 
 
@@ -82,13 +80,13 @@ gridI=Ne+(1:Ni)'*ones(1,T);
 H=figure('name',figname);
 for ii=1:n
     
-    fe=spikes_E{ii};
-    fi=spikes_I{ii};
+    ye=spikes_E{ii};
+    yi=spikes_I{ii};
     
     subplot(nit,1,ii)
     hold on
-    p1=plot(tindex,(gridE.*single(fe))','.','color',col{1},'markersize',ms);
-    p2=plot(tindex,(gridI.*single(fi))','.','color',col{2},'markersize',ms);
+    p1=plot(tindex,(gridE.*single(ye))','.','color',col{1},'markersize',ms);
+    p2=plot(tindex,(gridI.*single(yi))','.','color',col{2},'markersize',ms);
     hold off
     box off
     if ii==1
@@ -103,7 +101,7 @@ for ii=1:n
     
     set(gca,'YTick',Ne)
     set(gca,'YTickLabel',Ne,'Fontsize',fs)
-    text(1.01,0.3,['\beta = ',sprintf('%1.0f',betavec(ii))],'units','normalized','fontsize',fs,'Rotation',35)
+    text(1.01,0.3,['\beta = ',sprintf('%1.0f',muvec(ii))],'units','normalized','fontsize',fs,'Rotation',35)
     
     if ii==5
         annotation('ellipse',[.89 .32 .022 .025],'EdgeColor','m','FaceColor','m')

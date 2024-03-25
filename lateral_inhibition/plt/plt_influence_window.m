@@ -2,7 +2,7 @@ clear all
 close all
 clc
 
-savefig=1;
+savefig=0;
 figname='influence_window';
 
 savefile='/Users/vkoren/ei_net/figure/lateral/';
