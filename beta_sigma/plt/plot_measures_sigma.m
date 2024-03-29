@@ -8,21 +8,21 @@ g_l=0.7;
 
 savefig1=0;
 savefig2=0;
-savefig3=0;
+savefig3=1;
 
 figname1=strcat('loss_',vari,'_',sprintf('%1.0i',g_l*10));
 figname2=strcat('fr_cv_',vari);
 figname3=strcat('EI_balance_',vari);
 
-addpath('result/beta_sigma/')
-savefile=[cd,'/figure/beta_sigma/'];
+addpath('/Users/vkoren/ei_net/result/beta_sigma/')
+savefile='/Users/vkoren/ei_net/figure/beta_sigma/';
 
 loadname=strcat('measures_',vari);
 load(loadname)
 %%
 
 xvec=sigma_vec;
-vis={'on','off','off'};
+vis={'off','off','on'};
 
 fs=13;
 msize=6;
@@ -219,35 +219,35 @@ end
 
 
 %% E-I balance
-
+a=0.3;
 pos_vec=plt2;
 rec=zeros(length(xvec),2);
-rec(:,1)=meanE(:,1)+meanE(:,2);
-rec(:,2)=meanI(:,1)+meanI(:,2);
+rec(:,1)=meanE(:,1)*a + meanE(:,2)*a;
+rec(:,2)=meanI(:,1)*a + meanI(:,2)*a;
 
 mini=min(rec(:));
 maxi=max(rec(:));
-delta= (maxi-mini)/3;
-
+delta= (maxi-mini)/2.5;
+yt=[-1,0];
 H=figure('name',figname3,'visible',vis{3});
 subplot(2,1,1)
 hold on
 for ii=1:2
     plot(xvec,rec(:,ii),'color',colpop{ii})
-    text(0.7, 0.83-(ii-1)*0.18,['in ', namepop{ii}],'units','normalized','color',colpop{ii},'fontsize',fs)
+    text(0.7, 0.83-(ii-1)*0.18,['to ', namepop{ii}],'units','normalized','color',colpop{ii},'fontsize',fs)
 end
 line([optimal_param optimal_param],[mini+delta/2 maxi-delta],'color','k')
 plot(optimal_param,maxi-delta,'k^','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
 hold off
 box off
 
-title('average E-I balance')
+title('average imbalance','fontsize',fs)
 xlim([xvec(1),xvec(end)])
-%ylim([-2,2])
+ylim([-1.5,0])
 
-ylabel('net current')
-%set(gca,'YTick',yt)
-%set(gca,'YTicklabel',yt)
+ylabel('net syn. input [mV]','fontsize',fs)
+set(gca,'YTick',yt)
+set(gca,'YTicklabel',yt,'fontsize',fs)
 set(gca,'XTick',xt)
 set(gca,'XTicklabel',[])
 
@@ -276,17 +276,17 @@ box off
 
 xlim([xvec(1),xvec(end)])
 ylim([0.1,0.7])
-title('temporal E-I balance')
+title('instantaneous balance','fontsize',fs)
 
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
 set(gca,'XTick',xt)
-set(gca,'XTicklabel',xt)
-ylabel('corr. coefficient')
+set(gca,'XTicklabel',xt,'fontsize',fs)
+ylabel('corr. coefficient','fontsize',fs)
 
 
 op=get(gca,'OuterPosition');
-set(gca,'OuterPosition',[op(1)+0.02 op(2)+0.03 op(3)+0.01 op(4)+0.01]);
+set(gca,'OuterPosition',[op(1)+0.02 op(2)+0.03 op(3)+0.01 op(4)+0.02]);
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')

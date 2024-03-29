@@ -12,7 +12,7 @@ namepop={'E','I'};
 
 loadname= 'local_2d_measures';
 load(loadname)
-
+%%
 figname='fr_2d';
 savefile='/Users/vkoren/ei_net/figure/adaptation/';
 
@@ -22,9 +22,9 @@ lwa=1;
 pos_vec=[0,0,14,6];
 
 %%
-
+%variable=variable(1:end-3)
 idx=find(variable==10);
-vec=(idx+2):size(frate,1);
+vec=(idx+2):size(frate,1)-3;
 x=variable(vec);
 y=variable(vec);
 varz=frate(vec,vec,:);
@@ -41,10 +41,10 @@ for ii=1:ncol
 end
 
 q=round(maxi/10)*10;
-clb_ticks=0:10:20;
+clb_ticks=[5,15];
 
-ticks=[1,10,20];
-ticksl=x(ticks);
+ticks=[1,10,19];
+ticksl=x(ticks)
 
 %%
 
@@ -69,14 +69,15 @@ for k=1:2
 
     if k==1
         set(gca,'YTickLabel',ticksl,'fontsize',fs)
-        ylabel(namevar{2},'fontsize',fs)
+        hy=ylabel(namevar{2},'fontsize',fs,'Rotation',0)
+        
         %op=get(gca,'OuterPosition');
         %set(gca,'OuterPosition',[op(1)+0.00 op(2)+0.01 op(3)-0.045 op(4)+0.01]);
     else 
         set(gca,'YTickLabel',[])
 
         op=get(gca,'OuterPosition');
-        set(gca,'OuterPosition',[op(1)+0.00 op(2)+0.02 op(3)+0.00 op(4)+0.01]);
+        set(gca,'OuterPosition',[op(1)+0.00 op(2)+0.02 op(3)+0.03 op(4)+0.01]);
         
     end
    

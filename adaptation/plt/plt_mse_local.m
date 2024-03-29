@@ -21,9 +21,9 @@ for cases=1:2
 end
 
 %%
-fs=16;
+fs=15;
 msize=6;
-lw=1.2;
+lw=1.9;
 lwa=1;
 
 red=[0.85,0.32,0.1];
@@ -32,15 +32,15 @@ green=[0.2,0.7,0];
 
 col={red,blue};
 
-namepop={'Exc','Inh'};
+namepop={'RMSE^E','RMSE^I'};
 
 plt2=[0,0,8,10];
 
 xlab=namevar;
 xvec=variable;
-xt=[10,60,200];
+xt=[10,30,100];
 %xlimit=[10,500];
-xlimit=[5,500];
+xlimit=[5,200];
 %%
 
 pos_vec=plt2;
@@ -53,7 +53,7 @@ for k=1:2
 
     hold on
     for ii=1:2
-        plot(xvec,mse{k}(:,ii),'color',col{ii});
+        plot(xvec,mse{k}(:,ii),'color',col{ii},'linewidth',lw);
     end
     hold off
     box off
@@ -66,16 +66,16 @@ for k=1:2
     set(gca,'XTick',xt)
     if k==1
         for ii=1:2
-            text(0.7,0.8-(ii-1)*0.15,namepop{ii},'units','normalized','fontsize',fs-1,'color',col{ii})
+            text(0.7,0.85-(ii-1)*0.22,namepop{ii},'units','normalized','fontsize',fs-1,'color',col{ii})
         end
         set(gca,'XTicklabel',[])
         op=get(gca,'OuterPosition');
-        set(gca,'OuterPosition',[op(1)+0.06 op(2)+0.0 op(3)+0.02 op(4)-0.0])
+        set(gca,'OuterPosition',[op(1)+0.04 op(2)+0.0 op(3)+0.01 op(4)-0.0])
         
     else
         set(gca,'XTicklabel',xt)
         op=get(gca,'OuterPosition');
-        set(gca,'OuterPosition',[op(1)+0.06 op(2)+0.0 op(3)+0.02 op(4)+0.02])
+        set(gca,'OuterPosition',[op(1)+0.04 op(2)+0.0 op(3)+0.01 op(4)+0.04])
         
     end
     
@@ -90,7 +90,7 @@ end
 
 axes
 %h1 = xlabel (['time constant ',namevar{2}],'units','normalized','Position',[0.55,0.0,0],'fontsize',fs);
-h2 = ylabel ('root mean squared error','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs);
+h2 = ylabel('RMSE','units','normalized','Position',[-0.06,0.55,0],'fontsize',fs);
 set(gca,'Visible','off')
 set(h2,'visible','on')
 %set(h1,'visible','on')

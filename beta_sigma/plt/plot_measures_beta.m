@@ -8,7 +8,7 @@ g_l=0.7;                    % weighting of the error vs. cost
 
 savefig1=0;
 savefig2=0;
-savefig3=0;
+savefig3=1;
 savefig4=0;
 
 figname1=strcat('loss_',vari,'_',sprintf('%1.0i',g_l*10));
@@ -191,37 +191,37 @@ end
 
 %% E-I balance
 
-
+a=0.3;
 pos_vec=plt2;
 rec=zeros(length(xvec),2);
-rec(:,1)=meanE(:,1)+meanE(:,2);
-rec(:,2)=meanI(:,1)+meanI(:,2);
+rec(:,1)=meanE(:,1)*a+meanE(:,2)*a;
+rec(:,2)=meanI(:,1)*a+meanI(:,2)*a;
 
 mini=rec(idx,2);
-delta= 0.2;
-
+delta= 0.15;
+yt=[-0.5,0];
 H3=figure('name',figname3,'visible',vis{3});
 subplot(2,1,1)
 hold on
 for ii=1:2
     plot(xvec,rec(:,ii),'color',colpop{ii})
-    text(0.7, 0.33-(ii-1)*0.18,['in ', namepop{ii}],'units','normalized','color',colpop{ii},'fontsize',fs)
+    text(0.7, 0.33-(ii-1)*0.18,['to ', namepop{ii}],'units','normalized','color',colpop{ii},'fontsize',fs)
 end
 
-line([optimal_param optimal_param],[mini+delta mini+4*delta],'color','k')
+line([optimal_param optimal_param],[mini+delta mini+2.5*delta],'color','k')
 plot(optimal_param,mini+delta,'kv','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
 
 hold off
 box off
 
-title('average E-I balance')
+title('average imbalance','fontsize',fs)
 xlim([xvec(1),xvec(end)])
-%ylim([-2,2])
+ylim([-0.8,0.3])
 
-ylabel('net current')
-%set(gca,'YTick',yt)
-%set(gca,'YTicklabel',yt)
-set(gca,'XTick',xt)
+ylabel('net syn. input [mV]','fontsize',fs)
+set(gca,'YTick',yt)
+set(gca,'YTicklabel',yt,'fontsize',fs)
+set(gca,'XTick',xt,'fontsize',fs)
 set(gca,'XTicklabel',[])
 
 op=get(gca,'OuterPosition');
@@ -237,7 +237,6 @@ mini=abs(r_ei(idx,2));
 maxi=max(abs(r_ei(:)));
 delta= 0.05;
 
-
 subplot(2,1,2)
 hold on
 for ii=1:2
@@ -251,23 +250,23 @@ hold off
 box off
 
 xlim([xvec(1),xvec(end)])
-title('instantaneous balance')
+title('instantaneous balance','fontsize',fs)
 
 %set(gca,'YTick',yt)
 %set(gca,'YTicklabel',yt,'fontsize',fs)
 set(gca,'XTick',xt)
-set(gca,'XTicklabel',xt)
-ylabel('corr. coefficient')
+set(gca,'XTicklabel',xt,'fontsize',fs)
+ylabel('corr. coefficient','fontsize',fs)
 ylim([0.15,0.65])
 
 op=get(gca,'OuterPosition');
-set(gca,'OuterPosition',[op(1)+0.04 op(2)+0.03 op(3)-0.02 op(4)-0.01]);
+set(gca,'OuterPosition',[op(1)+0.04 op(2)+0.03 op(3)-0.02 op(4)+0.01]);
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')
 
 axes
-h2 = xlabel (xlab,'units','normalized','Position',[0.5,-0.03,0],'fontsize',fs+2);
+h2 = xlabel (xlab,'units','normalized','Position',[0.5,-0.03,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h2,'visible','on')
 

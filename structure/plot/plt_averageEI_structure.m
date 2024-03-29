@@ -4,7 +4,7 @@ close all
 clc
 
 %%
-savefig=0;
+savefig=1;
 
 k=2;
 namet={'perm_full','perm_partial'};
@@ -15,14 +15,14 @@ savefile=['/Users/vkoren/ei_net/figure/weights_J/effect_structure/',namet{k},'/'
 disp(['plotting ' ,figname])
 
 %% load results
-
+a=0.3;
 % regular model
 addpath('/Users/vkoren/ei_net/result/connectivity/')
 loadname0='Cnoise_factor_measures';
 load(loadname0,'meanE','meanI')
 
-var1=meanE(1,:);
-var2=meanI(1,:);
+var1=meanE(1,:).*a;
+var2=meanI(1,:).*a;
 net0=[sum(var1),sum(var2)]; % net current
 
 clear meanE
@@ -33,8 +33,8 @@ clear meanI
 loadname=['measures_',namet{k}];
 load(loadname,'meanE','meanI','Ct')
 net=zeros(length(Ct),2);
-net(:,1)=sum(meanE,2);
-net(:,2)=sum(meanI,2);
+net(:,1)=sum(meanE,2).*a;
+net(:,2)=sum(meanI,2).*a;
 
 %%
 
@@ -52,7 +52,7 @@ plt1=[0,0,8,11];
 xvec=1:4;
 xt=1:4;
 xlb=Ct;
-yt=-4:2:0;
+yt=-2:0;
 
 xlimit=[0.3,4.7];
 namep={'in Exc','in Inh'};
@@ -71,10 +71,10 @@ line([0.5 4.5],[net0(1) net0(1)],'Color',col{1},'LineStyle','--')
 text(0.05,0.9,namep{1},'units','normalized','fontsize',fs,'color',col{1})
 box off
 
-title('average balance')
+title('average imbalance')
 
 xlim(xlimit)
-ylim([-4,0])
+ylim([-1.2,0])
 
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
@@ -100,7 +100,7 @@ hold off
 box off
 
 xlim(xlimit)
-ylim([-4, 0])
+ylim([-1.2, 0])
 
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
@@ -115,7 +115,7 @@ set(gca,'TickDir','out')
 
 axes
 
-h2 = ylabel ('net synaptic current','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs+1);
+h2 = ylabel ('net synaptic input [mV]','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h2,'visible','on')
 

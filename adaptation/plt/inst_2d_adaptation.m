@@ -42,9 +42,9 @@ clb=colorbar;
 caxis([mini,maxi])
 set(clb,'YTick',[0.2,0.4],'fontsize',fs)
 clb.FontSize=fs;
-%clb.Label.String = 'corr. coefficient';
+clb.Label.String = 'corr. coefficient';
 
-title('adaptation in E and I','fontweight','normal','fontsize',fs-1)
+title('adaptation in E and I','fontweight','normal','fontsize',fs)
 xlabel(namevar{1},'fontsize',fs)
 ylabel(namevar{2},'fontsize',fs,'rotation',0)
 

@@ -43,7 +43,6 @@ display(meanr,'average correlation coefficient')
 roundedr=round(meanr*100)/100; % to 2 decimals
 
 %%
-savefig=1
 xt=0:0.5:1;
 yt=0:0.2:0.4;
 d=abs(min(min(zvar))-max(max(zvar)))/7;
@@ -70,18 +69,18 @@ end
 hold off
 ylim([0.1,0.5])
 xlim([-0.2,1.03])
-xlabel('coding error (normalized)','fontsize',fs)
-ylabel('correlation coefficient','fontsize',fs)
+xlabel('encoding error (normalized)','fontsize',fs)
+ylabel('correlation coeff. in I','fontsize',fs)
 
-text(0.3,0.35,['$\langle r \rangle = - $',sprintf('%0.2f',abs(roundedr))],'interpreter','latex','units','normalized','color','k','fontsize',fs)
+text(0.3,0.3,['$\langle r \rangle = - $',sprintf('%0.2f',abs(roundedr))],'interpreter','latex','units','normalized','color','k','fontsize',fs)
 
 set(gca,'XTick',xt)
 set(gca,'XTickLabel',xt,'fontsize',fs)
 set(gca,'YTick',yt)
 set(gca,'YTickLabel',yt,'fontsize',fs)
 
-text(0.05,0.99,'strong temporal balance','color',gray,'units','normalized','fontsize',fs)
-text(0.05,0.05,'weak temporal balance','color',gray,'units','normalized','fontsize',fs)
+text(0.05,0.95,'instantaneous balance','color',gray,'units','normalized','fontsize',fs)
+%text(0.05,0.05,'weak temporal balance','color',gray,'units','normalized','fontsize',fs)
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')

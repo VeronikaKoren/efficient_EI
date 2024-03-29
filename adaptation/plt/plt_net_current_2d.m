@@ -21,7 +21,7 @@ lwa=1;
 pos_vec=[0,0,10,8];
 
 idx=find(variable==10);     % limit between adaptation and facilitation
-vec=(idx+1):(size(mean_curr,1)); % range of values for adaptation
+vec=idx:(size(mean_curr,1))-3; % range of values for adaptation
 %%
 a=0.3;
 I_net=(mean_curr(:,:,1) + mean_curr(:,:,2)).*a;
@@ -32,7 +32,7 @@ maxi=max(zvar(:));
 
 ncol=30;
 
-ticks=[2,10,20];
+ticks=[1,11,21];
 x=variable(vec);
 tl=x(ticks);
 
@@ -53,14 +53,14 @@ colormap(ci)
 
 clb=colorbar;
 caxis([mini,maxi])
-set(clb,'YTick',0:1:2,'fontsize',fs)
+set(clb,'YTick',0:2:4,'fontsize',fs)
 clb.FontSize=fs;
-clb.Label.String = 'net current';
+clb.Label.String = 'net syn. input to I';
 
-title('adaptation in E and I','fontweight','normal','fontsize',fs)
+title('adaptation in E and I','fontweight','normal','fontsize',fs-1)
 
 xlabel(namevar{1},'fontsize',fs)
-ylabel(namevar{2},'fontsize',fs)
+ylabel(namevar{2},'fontsize',fs,'rotation',0)
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 
 set(gca,'XTick',ticks,'fontsize',fs)

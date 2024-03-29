@@ -22,14 +22,14 @@ figname4=['rho_',namec{cases}];
 figname5=['fr_',namec{cases}];
 figname6=['net_rho_',namec{cases}];
 
-addpath('result/adaptation/')
+addpath('/Users/vkoren/ei_net/result/adaptation/')
 savefile=[cd,'/figure/adaptation/'];
 
 loadname=['measures_', namec{cases}];
 load(loadname)
 %%
 
-vis={'on','on','off','off','off','off'};
+vis={'off','on','on','on','off','off'};
 %%
 fs=13;
 msize=6;
@@ -115,7 +115,7 @@ if savefig==1
 end
 
 %%
-g=0.08;
+g=0.5;
 error=g.*sqrt(ms(:,1))+ (1-g).*sqrt(ms(:,2));
 [~,idx]=min(error);
 dstar=variable(idx);

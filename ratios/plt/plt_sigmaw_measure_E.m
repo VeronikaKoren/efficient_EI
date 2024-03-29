@@ -4,14 +4,14 @@ close all
 vari='de';
 
 savefig1=1;
-savefig2=0;
-savefig3=0;
-savefig4=0;
-savefig5=0;
+savefig2=1;
+savefig3=1;
+savefig4=1;
+savefig5=1;
 %savefig6=0;
 
-addpath('result/ratios/')
-savefile=[cd,'/figure/ratios/measure_sigmawE/'];
+addpath('/Users/vkoren/ei_net/result/ratios/')
+savefile='/Users/vkoren/ei_net/figure/ratios/measure_sigmawE/';
 
 loadname='measures_dE';
 load(loadname)
@@ -42,7 +42,7 @@ optimal_ratio=dI/optimal_dE;
 display(optimal_ratio,'best ratio sigmawI: sigmawE')
 xvec=dI./devec;
 
-fs=13;
+fs=14;
 msize=6;
 lw=1.2;
 lwa=1;
@@ -55,14 +55,14 @@ green=[0.2,0.7,0];
 colI={red,blue,green};
 colE={'k',blue,green};
 
-nameI={'Exc','Inh','Net'};
-nameE={'ffw','Inh','Net'};
+nameI={'Exc','Inh','net'};
+nameE={'ff','Inh','net'};
 namepop={'Exc','Inh'};
 
 plt1=[0,0,9,7];
 plt2=[0,0,9,10];
 xt=[3,6,9];
-xlab='\sigma_w^I:\sigma_w^E (varying \sigma_w^E)';
+xlab='mean I-I : mean E-I (vary E-I)';
 xlimit=[xvec(end),xvec(1)];
 
 figname1=strcat('loss_',vari,'_',sprintf('%1.0i',g_l*10));
@@ -178,7 +178,7 @@ box off
 xlim(xlimit)
 ylim([0,40])
 
-ylabel('firing rate','fontsize',fs)
+ylabel('firing rate [Hz]','fontsize',fs)
 
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
@@ -228,9 +228,10 @@ end
 
 %% E-I balance
 
+a=0.3;
 pos_vec=plt2;
-rec(:,1)=meanE(:,1)+meanE(:,2);
-rec(:,2)=meanI(:,1)+meanI(:,2);
+rec(:,1)=meanE(:,1).*a+meanE(:,2).*a;
+rec(:,2)=meanI(:,1).*a+meanI(:,2).*a;
 
 mini=min(rec(:));
 maxi=max(rec(:))-1;
@@ -241,17 +242,17 @@ subplot(2,1,1)
 hold on
 for ii=1:2
     plot(xvec,rec(:,ii),'color',col{ii})
-    text(0.75,0.55-(ii-1)*0.18,0.9,['in ',namepop{ii}],'units','normalized','fontsize',fs,'color',col{ii})
+    text(0.75,0.55-(ii-1)*0.18,0.9,['to ',namepop{ii}],'units','normalized','fontsize',fs,'color',col{ii})
 end
 %line([optimal_ratio optimal_ratio],[mini+delta/2 maxi-delta],'color','k')
 %plot(optimal_ratio,maxi-delta,'k^','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
 hold off
 box off
 
-title('average E-I balance','fontsize',fs)
-ylabel('net current','fontsize',fs)
+title('average imbalance','fontsize',fs)
+ylabel('net syn. input [mV]','fontsize',fs)
 xlim(xlimit)
-ylim([-4,0.5])
+ylim([-2,0.5])
 
 set(gca,'XTick',xt)
 set(gca,'XTicklabel',[])
@@ -277,7 +278,7 @@ end
 hold off
 box off
 
-title('temporal E-I balance','fontsize',fs)
+title('instantaneous balance','fontsize',fs)
 ylabel('corr. coefficient','fontsize',fs)
 xlabel (xlab,'fontsize',fs);
 
@@ -303,22 +304,22 @@ end
 %% mean syn. current
 
 pos_vec=plt2;
-mce=cat(2,meanE,meanE(:,1)+meanE(:,2));
-yt=-5:5:0;
+mce=cat(2,meanE.*a,meanE(:,1).*a+meanE(:,2).*a);
+yt=[0,2];
 
 H=figure('name',figname4,'visible',vis{4});
 subplot(2,1,1)
 hold on
 for ii=1:3
     plot(xvec,mce(:,ii),'color',colE{ii})
-    text(0.05+ (ii-1)*0.15,0.88,nameE{ii},'fontsize',fs,'units','normalized','color',colE{ii})
+    text(0.05+ (ii-1)*0.13,0.85,nameE{ii},'fontsize',fs,'units','normalized','color',colE{ii})
 end
 hold off
 box off
 
-title('in Excitatory','Fontsize',fs-1)
+title('to Excitatory','Fontsize',fs-1)
 xlim(xlimit)
-ylim([-5,2.5])
+ylim([-2,2])
 
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
@@ -332,23 +333,23 @@ set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 %set(gca,'TickDir','out')
 %%%%%%%%%%%%
 
-mci=cat(2,meanI,meanI(:,1)+meanI(:,2));
-rec=meanI(:,1)+meanI(:,2);
-yt=-5:5:5;
+mci=cat(2,meanI.*a,meanI(:,1).*a+meanI(:,2).*a);
+rec=meanI(:,1).*a+meanI(:,2).*a;
+yt=[0,2];
 
 subplot(2,1,2)
 hold on
 for ii=1:3
     plot(xvec,mci(:,ii),'color',colI{ii})
-    text(0.05+ (ii-1)*0.15,0.9,nameI{ii},'fontsize',fs,'units','normalized','color',colI{ii})
+    text(0.05+(ii-1)*0.15,0.9,nameI{ii},'fontsize',fs,'units','normalized','color',colI{ii})
 end
 
 hold off
 box off
 
-title('in Inhibitory','Fontsize',fs-1)
+title('to Inhibitory','Fontsize',fs-1)
 xlim(xlimit)
-ylim([-8,8])
+ylim([-3,3])
 
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
@@ -362,7 +363,7 @@ set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 %set(gca,'TickDir','out')
 
 axes
-h1 = ylabel ('mean synaptic current','units','normalized','Position',[-0.05,0.5,0],'fontsize',fs+1);
+h1 = ylabel ('mean synaptic input [mV]','units','normalized','Position',[-0.05,0.5,0],'fontsize',fs+1);
 h2 = xlabel (xlab,'units','normalized','Position',[0.55,-0.01,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h2,'visible','on')
@@ -459,7 +460,7 @@ set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')
 
 axes
-h1 = ylabel ('optimal \sigma_w^I : \sigma_w^E (varying \sigma_w^E)','units','normalized','Position',[-0.03,0.5,0],'fontsize',fs+1);
+h1 = ylabel ('optimal mean I-I : E-I (vary E-I)','units','normalized','Position',[-0.03,0.5,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h1,'visible','on')
 

@@ -31,7 +31,7 @@ lwa=1;
 pos_vec=[0,0,14,6];
 savefile='/Users/vkoren/ei_net/figure/statistics_0net/';
 
-namepop={'ff','Inh','syn E';'Exc','Inh','syn I'};
+namepop={'ff','Inh','net E';'Exc','Inh','net I'};
 
 xt=0:2:2;
 mini=min(cat(1,I_exc(:),I_inh(:)));
@@ -91,8 +91,8 @@ for k=1:2
 end
 
 axes
-h1 = ylabel ('density','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs+1);
-h2 = xlabel ('1/C_m \langle I^{syn}_i \rangle [mV]','units','normalized','Position',[0.5,+0.03,0],'fontsize',fs);
+h1 = ylabel ('density','units','normalized','Position',[-0.08,0.53,0],'fontsize',fs+1);
+h2 = xlabel ('synaptic input [mV]','units','normalized','Position',[0.5,0.0,0],'fontsize',fs);
 %h2 = xlabel ('mean current [mV]','units','normalized','Position',[0.5,-0.02,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h1,'visible','on')
@@ -116,7 +116,7 @@ rho{1}=abs(rho_e);
 rho{2}=abs(rho_i);
 
 %%
-
+pos_vec=[0,0,14,7];
 H2=figure('name',figname2);
 hold on
 for k=1:2
@@ -131,15 +131,15 @@ for k=1:2
     text(meanr-0.028,0.31,['$\rho=$ ' sprintf('%0.2f',meanr)],'Fontsize',fs,'Interpreter','latex')
     
 end
-text(0.25,0.7,'in I neurons: \rho(I^{IE}(t),I^{II}(t))','units','normalized','color',blue,'Fontsize',fs)
-text(0.25,0.45,'in E neurons: \rho(I^{ff}(t),I^{EI}(t))','units','normalized','color',red,'Fontsize',fs)
+text(0.25,0.7,'in I neurons: \rho(A^{IE}(t),A^{II}(t))','units','normalized','color',blue,'Fontsize',fs)
+text(0.25,0.45,'in E neurons: \rho(A^{ff}(t),A^{EI}(t))','units','normalized','color',red,'Fontsize',fs)
 
 box off
 
 ylim([0,0.33])
 xlim([0.21,0.48])
 ylabel('fraction neurons','Fontsize',fs)
-xlabel('correlation of currents','Fontsize',fs)
+xlabel('correlation of synaptic inputs','Fontsize',fs)
 
 set(gca,'XTick',xt);
 set(gca,'XTickLabel',xt,'Fontsize',fs)

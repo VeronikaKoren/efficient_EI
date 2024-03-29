@@ -4,10 +4,10 @@ close all
 
 savefig=0;
 
-k=2;
+k=1;
 namet={'perm_full','perm_partial'};
 
-figname=['frate_',namet{k}];
+figname=['fr_',namet{k}];
 savefile=['/Users/vkoren/ei_net/figure/weights_J/effect_structure/',namet{k},'/'];
 
 disp(['plotting ' ,figname])
@@ -102,7 +102,7 @@ set(gca,'TickDir','out')
 
 axes
 
-h2 = ylabel ('firing rate','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs+1);
+h2 = ylabel ('firing rate [Hz]','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h2,'visible','on')
 

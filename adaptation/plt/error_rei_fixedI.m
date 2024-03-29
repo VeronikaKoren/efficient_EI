@@ -2,7 +2,7 @@
 clear all
 close all
 
-savefig=1; 
+savefig=0; 
 
 addpath('/Users/vkoren/ei_net/result/adaptation/')
 savefile='/Users/vkoren/ei_net/figure/adaptation/';
@@ -65,24 +65,24 @@ for k=1:3:length(gvec)-5
 end
 for k=1:5:length(gvec)-5
     g=gvec(k);
-    text(0.05,0.75-(k-1)*0.03,['\tau_r^I=',sprintf('%1.0i',tau_f_fixed(g))],'units','normalized','color',colmap(g,:),'fontsize',fs-2)
+    text(0.03,0.75-(k-1)*0.03,['\tau_r^I=',sprintf('%1.0i',tau_f_fixed(g))],'units','normalized','color',colmap(g,:),'fontsize',fs-2)
 end
 hold off
 
 ylim([0.15,0.5])
 xlim([-0.2,1.03])
-xlabel('coding error (normalized)','fontsize',fs)
+xlabel('encoding error (normalized)','fontsize',fs)
 %ylabel('correlation currents','fontsize',fs)
 
-text(0.3,0.35,['$\langle r \rangle = - $',sprintf('%0.2f',abs(roundedr))],'interpreter','latex','units','normalized','color','k','fontsize',fs)
+text(0.3,0.25,['$\langle r \rangle = - $',sprintf('%0.2f',abs(roundedr))],'interpreter','latex','units','normalized','color','k','fontsize',fs)
 
 set(gca,'XTick',xt)
 set(gca,'XTickLabel',xt,'fontsize',fs)
 set(gca,'YTick',yt)
 set(gca,'YTickLabel',yt,'fontsize',fs)
 
-text(0.15,0.99,'strong temporal balance','color',gray,'units','normalized','fontsize',fs)
-text(0.15,0.05,'weak temporal balance','color',gray,'units','normalized','fontsize',fs)
+text(0.15,0.95,'instantaneous balance','color',gray,'units','normalized','fontsize',fs)
+%text(0.15,0.05,'weak temporal balance','color',gray,'units','normalized','fontsize',fs)
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')

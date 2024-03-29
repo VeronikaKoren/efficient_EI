@@ -73,7 +73,7 @@ subplot(2,1,1)
 hold on
 for ii=1:2
     plot(tindex,I_E(ii,:),'color',colE{ii},'linewidth',lw)
-    text(0.05+(ii-1)*0.12,0.9,namec{1,ii},'units','normalized','color',colE{ii},'Fontsize',fs)
+    text(0.05+(ii-1)*0.05,0.9,namec{1,ii},'units','normalized','color',colE{ii},'Fontsize',fs)
 end
 hold off
 ylim([-1,1].*2.4)
@@ -110,7 +110,7 @@ op=get(gca,'OuterPosition');
 set(gca,'OuterPosition',[op(1)+0.01 op(2)+0.03 op(3)-0.02 op(4)+0.02]);
 
 axes
-h1 = ylabel ('1/C_m I_i^{syn}(t) [mV]','units','normalized','Position',[-0.07,0.5,0],'fontsize',fs+1);
+h1 = ylabel ('synaptic input [mV]','units','normalized','Position',[-0.07,0.5,0],'fontsize',fs+1);
 h2 = xlabel ('time [ms]','units','normalized','Position',[0.55,-0.03,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h2,'visible','on')

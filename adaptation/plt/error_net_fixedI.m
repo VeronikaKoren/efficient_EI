@@ -2,7 +2,7 @@
 clear all
 close all
 
-savefig=1; 
+savefig=0; 
 
 addpath('/Users/vkoren/ei_net/result/adaptation/')
 savefile='/Users/vkoren/ei_net/figure/adaptation/';
@@ -66,24 +66,24 @@ for k=3:length(gvec)-5
 end
 for k=3:5:length(gvec)-5
     g=gvec(k);
-    text(0.05,0.75-(k-1)*0.025,['\tau_r^I=',sprintf('%1.0i',tau_f_fixed(g))],'units','normalized','color',colmap(g,:),'fontsize',fs-2)
+    text(0.03,0.79-(k-1)*0.03,['\tau_r^I=',sprintf('%1.0i',tau_f_fixed(g))],'units','normalized','color',colmap(g,:),'fontsize',fs-2)
 end
 hold off
 %xlim([0,1.02])
 ylim([-1,4.5])
 
-xlabel('coding error (normalized)','fontsize',fs)
-ylabel('net current','fontsize',fs)
+xlabel('encoding error (normalized)','fontsize',fs)
+ylabel('net syn. input','fontsize',fs)
 
-text(0.23,0.7,['$\langle r \rangle= - $',sprintf('%0.2f',abs(roundedr))],'interpreter','latex','units','normalized','color','k','fontsize',fs)
+text(0.23,0.8,['$\langle r \rangle= - $',sprintf('%0.2f',abs(roundedr))],'interpreter','latex','units','normalized','color','k','fontsize',fs)
 
 set(gca,'XTick',xt)
 set(gca,'XTickLabel',xt,'fontsize',fs)
 set(gca,'YTick',yt)
 set(gca,'YTickLabel',yt,'fontsize',fs)
 
-text(0.1,0.95,'weaker average balance','color',gray,'units','normalized','fontsize',fs)
-text(0.1,0.05,'stronger average balance','color',gray,'units','normalized','fontsize',fs)
+text(0.1,0.95,'average imbalance','color',gray,'units','normalized','fontsize',fs)
+%text(0.1,0.05,'stronger average balance','color',gray,'units','normalized','fontsize',fs)
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')
