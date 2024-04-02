@@ -13,7 +13,7 @@ namepop={'E','I'};
 loadname='adaptation_2d_measures';
 load(loadname)
 
-figname='cv_2d';
+figname='net_2d_all';
 savefile='/Users/vkoren/ei_net/figure/adaptation/';
 
 fs=13;
@@ -22,33 +22,33 @@ lwa=1;
 pos_vec=[0,0,14,6];
 
 %%
+a=0.3;
+net=(meanE+meanI).*a;
 
-idx_nan=isnan(CVs);
-CVs(idx_nan)=0;
 idx=find(variable==10);
-vec=(idx+2):size(frate,1);
+vec=idx:size(frate,1);
 
 x=variable(vec);
 y=variable(vec);
-varz=CVs(vec,vec,:);
+varz=net(vec,vec,:);
 
 %%
 
-mini=0;
-maxi=1;
+mini=min(varz(:));
+maxi=max(varz(:));
 
-ncol=25;
-mymap=ones(ncol,3).*0.7;
-for ii=1:ncol
-    %mymap(ii,1)=ii/ncol;    % gets green
-    mymap(ii,2)=1-ii/ncol;
-    mymap(ii,3)=ii/ncol;
-end
+ncol=length(variable);
+%mymap=ones(ncol,3).*0.7;
+%for ii=1:ncol
+%    %mymap(ii,1)=ii/ncol;    % gets green
+%    mymap(ii,2)=1-ii/ncol;
+%    mymap(ii,3)=ii/ncol;
+%end
 
-q=round(maxi/10)*10;
-clb_ticks=0:0.4:0.8;
+%q=round(maxi/10)*10;
+clb_ticks=[-1,1,3];
 
-ticks=[1,10,19];
+ticks=[1,11,21];
 ticksl=x(ticks);
 
 %%
@@ -59,10 +59,14 @@ for k=1:2
     
     subplot(1,2,k)
     imagesc(z')
-    colormap(spring)
+    ch=colormap(hot(ncol+1)); % modified colormap "hot"
+    ci(:,1)=ch(:,2);
+    ci(:,2)=ch(:,1);
+    ci(:,3)=ch(:,3);
+    colormap(ci)
     %colormap(parula)
-    caxis([mini,maxi])
-    
+    %caxis([mini,maxi])
+    clb=colorbar;
     axis xy
     axis square
     
@@ -84,12 +88,12 @@ for k=1:2
         if k==1
             set(gca,'OuterPosition',[op(1)+0.00 op(2)+0.02 op(3)+0.02 op(4)+0.01]);
         else
-            set(gca,'OuterPosition',[op(1)+0.00 op(2)+0.02 op(3)+0.02 op(4)+0.03]);
+            set(gca,'OuterPosition',[op(1)+0.00 op(2)+0.02 op(3)+0.02 op(4)+0.05]);
         end
-        clb=colorbar;
-        set(clb,'YTick',clb_ticks,'fontsize',fs)
+        
+        %set(clb,'YTick',clb_ticks,'fontsize',fs)
         clb.FontSize=fs;
-        clb.Label.String = 'coefficient variation';
+        clb.Label.String = 'net syn. input';
 
     end
    

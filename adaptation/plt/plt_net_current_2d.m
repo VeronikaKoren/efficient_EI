@@ -1,27 +1,35 @@
 
 clear all
-close all
+%close all
 
 savefig=0;
+pop=2;        % [1,2] for E,I   
 
 addpath('/Users/vkoren/ei_net/result/adaptation/')
 namevar={'\tau_r^E','\tau_r^I'};
+namepop={'E','I'}; 
 
 %%
 
-loadname= 'local_2d_measures';
-load(loadname)
-
-figname='net_current_2d_adaptation';
+loadname='adaptation_2d_measures';
+if pop==1
+    load(loadname,'meanE','variable')
+    mean_curr=meanE;
+else
+    load(loadname,'meanI','variable')
+    mean_curr=meanI;
+end
+figname=['net_2d_',namepop{pop}];
 savefile='/Users/vkoren/ei_net/figure/adaptation/';
 
 fs=15;
 lw=1.5;
 lwa=1;
-pos_vec=[0,0,10,8];
+pos_vec=[0,0,11,8];
 
 idx=find(variable==10);     % limit between adaptation and facilitation
-vec=idx:(size(mean_curr,1))-3; % range of values for adaptation
+vec=idx:(size(mean_curr,1)); % range of values for adaptation
+%vec=1:(size(mean_curr,1)); 
 %%
 a=0.3;
 I_net=(mean_curr(:,:,1) + mean_curr(:,:,2)).*a;
@@ -30,7 +38,7 @@ zvar=I_net(vec,vec);
 mini=min(zvar(:));
 maxi=max(zvar(:));
 
-ncol=30;
+ncol=length(variable);
 
 ticks=[1,11,21];
 x=variable(vec);
@@ -38,12 +46,14 @@ tl=x(ticks);
 
 %%
 ci=zeros(ncol+1,3);
+ty={[-0.4,-0.1],[0,4]}
 
 H=figure('name',figname);
 %contourf(zvar',ncol)
 imagesc(zvar')
 axis xy
 axis square
+caxis([mini,maxi])
 
 ch=colormap(hot(ncol+1)); % modified colormap "hot"
 ci(:,1)=ch(:,2);
@@ -52,12 +62,12 @@ ci(:,3)=ch(:,3);
 colormap(ci)
 
 clb=colorbar;
-caxis([mini,maxi])
-set(clb,'YTick',0:2:4,'fontsize',fs)
-clb.FontSize=fs;
-clb.Label.String = 'net syn. input to I';
 
-title('adaptation in E and I','fontweight','normal','fontsize',fs-1)
+set(clb,'YTick',ty{pop},'fontsize',fs)
+clb.FontSize=fs;
+clb.Label.String = ['net syn. input to ',namepop{pop}];
+
+title(['average imbalance in ',namepop{pop}],'fontweight','normal','fontsize',fs-1)
 
 xlabel(namevar{1},'fontsize',fs)
 ylabel(namevar{2},'fontsize',fs,'rotation',0)

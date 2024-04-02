@@ -1,15 +1,17 @@
 clear all
-%close all
+close all
 
 savefig=0;
- 
+pop=1;  
+
 addpath('/Users/vkoren/ei_net/result/adaptation/')
 namevar={'\tau_r^E','\tau_r^I'};
+namepop={'E','I'}; 
 %%
-loadname='local_2d_measures';
-load(loadname)
+loadname='adaptation_2d_measures';
+load(loadname,'variable','r_ei')
 
-figname='corr_2d_adaptation';
+figname=['inst_2d_',namepop{pop}];
 savefile='/Users/vkoren/ei_net/figure/adaptation/';
 
 fs=15.0;
@@ -18,9 +20,9 @@ lwa=1;
 pos_vec=[0,0,11,8];
 
 idx=find(variable==10);
-vec=(idx):size(r_ei,1)-3;
+vec=(idx):size(r_ei,1);
 %vec=(idx+1):(size(mean_curr,1)-0);
-zvar=abs(r_ei(vec,vec));
+zvar=abs(r_ei(vec,vec,pop));
 
 mini=min(zvar(:));
 maxi=max(zvar(:));
@@ -29,10 +31,10 @@ ticks=[1,11,21];
 x=variable(vec);
 tl=x(ticks);
 
+clby={[0.1,0.25],[0.2,0.4]};
 %%
 
 H=figure('name',figname);
-%contourf(zvar',ncol)
 imagesc(zvar')
 axis xy
 axis square
@@ -40,11 +42,13 @@ axis square
 colormap hot
 clb=colorbar;
 caxis([mini,maxi])
-set(clb,'YTick',[0.2,0.4],'fontsize',fs)
+
+%cbaryt=clb.YTick;
+set(clb,'YTick',clby{pop},'fontsize',fs)
 clb.FontSize=fs;
 clb.Label.String = 'corr. coefficient';
 
-title('adaptation in E and I','fontweight','normal','fontsize',fs)
+title(['instantaneous balance in ',namepop{pop}],'fontweight','normal','fontsize',fs-1)
 xlabel(namevar{1},'fontsize',fs)
 ylabel(namevar{2},'fontsize',fs,'rotation',0)
 

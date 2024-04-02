@@ -3,15 +3,17 @@ clear all
 close all
 
 savefig=0; 
+pop=2;
 
 addpath('/Users/vkoren/ei_net/result/adaptation/')
 savefile='/Users/vkoren/ei_net/figure/adaptation/';
+namepop={'E','I'}
 
 %%
-loadname='local_2d_measures';
-load(loadname)
+loadname='adaptation_2d_measures';
+load(loadname,'variable','r_ei','rms')
 
-figname='error_rei_fixedI';
+figname=['error_rei_fixedI_in',namepop{pop}];
 
 fs=16;
 lw=1.5;
@@ -34,9 +36,12 @@ zvar=zeros(n,n);
 err=zeros(n,n);
 r=zeros(n,1);
 
+error=error-(min(min(error)));
+
 for g=1:n
+    %emin=error(g,:)-min(error(g,:));
     err(:,g)=error(g,:)./max(error(g,:));
-    zvar(:,g)=rei(:,g);
+    zvar(:,g)=abs(rei(:,g));
     r(g)=corr(err(:,g),zvar(:,g));
 end
 
@@ -58,31 +63,30 @@ colmap=usemap(vec_col,:);
 
 H=figure('name',figname);
 hold on
-for k=1:3:length(gvec)-5
+for k=1:2:length(gvec)-4
     g=gvec(k);
     h=plot(err(:,g),zvar(:,g),'v','markersize',ms,'color',colmap(g,:));
     plot(err(:,g),zvar(:,g),'--','color',gray);
 end
-for k=1:5:length(gvec)-5
+for k=1:5:length(gvec)-4
     g=gvec(k);
-    text(0.03,0.75-(k-1)*0.03,['\tau_r^I=',sprintf('%1.0i',tau_f_fixed(g))],'units','normalized','color',colmap(g,:),'fontsize',fs-2)
+    text(0.01,0.75-(k-1)*0.03,['\tau_r^I=',sprintf('%1.0i',tau_f_fixed(g))],'units','normalized','color',colmap(g,:),'fontsize',fs-2)
 end
 hold off
 
-ylim([0.15,0.5])
-xlim([-0.2,1.03])
-xlabel('encoding error (normalized)','fontsize',fs)
-%ylabel('correlation currents','fontsize',fs)
+%ylim([0.15,0.5])
+xlim([-0.2,1.05])
+xlabel('error (normalized)','fontsize',fs)
+ylabel(['correlation coeff. in ',namepop{pop}],'fontsize',fs)
 
 text(0.3,0.25,['$\langle r \rangle = - $',sprintf('%0.2f',abs(roundedr))],'interpreter','latex','units','normalized','color','k','fontsize',fs)
 
 set(gca,'XTick',xt)
 set(gca,'XTickLabel',xt,'fontsize',fs)
-set(gca,'YTick',yt)
-set(gca,'YTickLabel',yt,'fontsize',fs)
+%set(gca,'YTick',yt)
+%set(gca,'YTickLabel',yt,'fontsize',fs)
 
-text(0.15,0.95,'instantaneous balance','color',gray,'units','normalized','fontsize',fs)
-%text(0.15,0.05,'weak temporal balance','color',gray,'units','normalized','fontsize',fs)
+title(['instantaneous balance in ',namepop{pop}],'fontsize',fs,'fontweight','normal')
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')

@@ -2,15 +2,26 @@
 clear all
 close all
 
-savefig=0; 
+savefig=1; 
+pop=2;
 
 addpath('/Users/vkoren/ei_net/result/adaptation/')
 savefile='/Users/vkoren/ei_net/figure/adaptation/';
-%%
-loadname='local_2d_measures';
-load(loadname)
 
-figname='error_net_fixedI';
+namepop={'E','I'};
+
+%%
+
+loadname='adaptation_2d_measures';
+if pop==1
+    load(loadname,'meanE','variable','rms')
+    mean_curr=meanE;
+else
+    load(loadname,'meanI','variable','rms')
+    mean_curr=meanI;
+end
+
+figname=['error_net_fixedI_in_',namepop{pop}];
 
 fs=15.5;
 lw=1.5;
@@ -24,19 +35,22 @@ gray=[0.5,0.5,0.5];
 idx=find(variable==10);             % adaptation regime only
 vec=idx:length(variable);           
 
-a=0.3;
+
 g=0.5;                                  % weighting ofthe RMSE of E andI cell type
+
 error=g*rms(vec,vec,1)+(1-g)*rms(vec,vec,2); % equally weighted coding error
+a=0.3;
 net=a.*(mean_curr(vec,vec,1)+mean_curr(vec,vec,2)); % average net synaptic current in I neurons 
 
 n=size(error,1);
 zvar=zeros(n,n);
 err=zeros(n,n);
 r=zeros(n,1);
+error=error-(min(min(error)));
 
 for g=1:n
     err(:,g)=error(g,:)./max(error(g,:));
-    zvar(:,g)=net(:,g);
+    zvar(:,g)=abs(net(:,g));
     r(g)=corr(err(:,g),zvar(:,g));
 end
 
@@ -59,30 +73,34 @@ colmap=usemap(vec_col,:);
 
 H=figure('name',figname);
 hold on
-for k=3:length(gvec)-5
-    g=gvec(k);
-    h=plot(err(:,g),zvar(:,g),'v','markersize',ms,'color',colmap(g,:));
-    plot(err(:,g),zvar(:,g),'--','color',gray);
+for k=1:2:length(gvec)-4
+    %g=gvec(k);
+    h=plot(err(:,k),zvar(:,k),'v','markersize',ms,'color',colmap(k,:));
+    plot(err(:,k),zvar(:,k),'--','color',gray);
+    %text(0.02,0.79-(k-1)*0.03,['\tau_r^I=',sprintf('%1.0i',tau_f_fixed(k))],'units','normalized','color',colmap(k,:),'fontsize',fs-2)
 end
-for k=3:5:length(gvec)-5
+for k=1:5:length(gvec)-4
     g=gvec(k);
-    text(0.03,0.79-(k-1)*0.03,['\tau_r^I=',sprintf('%1.0i',tau_f_fixed(g))],'units','normalized','color',colmap(g,:),'fontsize',fs-2)
+    text(0.02,0.78-(k-1)*0.03,['\tau_r^E=',sprintf('%1.0i',tau_f_fixed(g))],'units','normalized','color',colmap(g,:),'fontsize',fs-2)
 end
+
 hold off
-%xlim([0,1.02])
-ylim([-1,4.5])
+xlim([-0.2,1.05])
+%ylim([-1,4.5])
 
+title(['average imbalance in ',namepop{pop}],'fontsize',fs,'fontweight','normal')
 xlabel('encoding error (normalized)','fontsize',fs)
-ylabel('net syn. input','fontsize',fs)
+ylabel(['net syn. input to ',namepop{pop}],'fontsize',fs)
 
-text(0.23,0.8,['$\langle r \rangle= - $',sprintf('%0.2f',abs(roundedr))],'interpreter','latex','units','normalized','color','k','fontsize',fs)
+ytxt=[0.2,0.8]
+text(0.23,ytxt(pop),['$\langle r \rangle= - $',sprintf('%0.2f',abs(roundedr))],'interpreter','latex','units','normalized','color','k','fontsize',fs)
 
 set(gca,'XTick',xt)
 set(gca,'XTickLabel',xt,'fontsize',fs)
-set(gca,'YTick',yt)
-set(gca,'YTickLabel',yt,'fontsize',fs)
+%set(gca,'YTick',yt)
+%set(gca,'YTickLabel',yt,'fontsize',fs)
 
-text(0.1,0.95,'average imbalance','color',gray,'units','normalized','fontsize',fs)
+%title(['average imbalance in ',namepop{pop}],'fontweight','normal','fontsize',fs)
 %text(0.1,0.05,'stronger average balance','color',gray,'units','normalized','fontsize',fs)
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);

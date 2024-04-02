@@ -12,8 +12,9 @@ savefig3=0;
  
 namevar={'\tau_r^E','\tau_r^I'};
 %%
+
 addpath('/Users/vkoren/ei_net/result/adaptation/')
-loadname= 'local_2d_measures';
+loadname= 'adaptation_2d_measures';
 load(loadname)
 
 figname1=strcat('error_',vari,'_2d');
