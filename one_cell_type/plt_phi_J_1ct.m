@@ -6,14 +6,14 @@ clc
 
 addpath([cd,'/function/'])
 
-savefig=0;
-savefile=[cd,'/figure/weights_J/'];
+savefig=1;
+savefile=['/Users/vkoren/ei_net/figure/weights_J/'];
 
 %% parameters
 
 N=400;                                 % number of neurons 
 M=3;                                   % number of input variables     
-a=0.3;                                 % unit constant
+a=1;                                   % unit constant
 
 %% synaptic conectivity matrix
 
@@ -41,26 +41,27 @@ for ii=1:N
 end
 %}
 %% plot
+fs=14;
+pos_vec=[0,0,7.5,7];
 
 xt=-1:1:1;
-yt=-0.3:0.3:0.3;
-pos_vec=[0,0,7,7];
+yt=[-1:1:1].*a;
 
 figname='phi_J_1ct';
 H=figure('name',figname);
-plot(phi(:),J(:),'.','color',[0.5,0.5,0.5],'markersize',3)
+plot(phi(:),J(:),'.','color','k','markersize',3)
 line([-1,1],[0 0],'LineStyle','--')
 box off
 %title('one cell type')
-ylim([-0.35,0.35])
+ylim([-1,1].*a)
 
-set(gca,'YTick',yt)
-set(gca,'XTick',xt)
+set(gca,'YTick',yt,'fontsize',fs)
+set(gca,'XTick',xt,'fontsize',fs)
 
 op=get(gca,'OuterPosition');
 set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.1 op(3)-0.05 op(4)-0.1]); % OuterPosition = [left bottom width height]
-xlabel ('tuning similarity')
-ylabel ('synaptic strength [mV]')
+xlabel ('tuning similarity','fontsize',fs)
+ylabel ('synaptic strength [mV]','fontsize',fs)
 
 set(H, 'Units','centimeters', 'Position', pos_vec)
 set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_vec(3), pos_vec(4)])

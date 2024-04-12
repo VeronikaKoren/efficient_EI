@@ -67,6 +67,7 @@ set(clb,'YTick',ty{pop},'fontsize',fs)
 clb.FontSize=fs;
 clb.Label.String = ['net syn. input to ',namepop{pop}];
 
+
 title(['average imbalance in ',namepop{pop}],'fontweight','normal','fontsize',fs-1)
 
 xlabel(namevar{1},'fontsize',fs)

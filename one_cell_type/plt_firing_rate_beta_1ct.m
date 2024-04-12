@@ -2,7 +2,7 @@
 clear all
 close all
 
-savefig=1;
+savefig=0;
 
 figname='beta_1ct';
 

@@ -7,7 +7,7 @@ savefig1=0;
 figname='beta_EI';
 
 addpath('/Users/vkoren/ei_net/result/connectivity/')
-savefile=[cd,'/figure/implementation/'];
+savefile=['/Users/vkoren/ei_net/figure/implementation/'];
 
 loadname='measures_mu';
 load(loadname)
@@ -35,7 +35,7 @@ xlab='metabolic constant \beta';
 
 %% plot firing rate
 
-yt=0:10:20;
+yt=10:10:20;
 plt1=[0,0,8,6];
 pos_vec=plt1;
 
@@ -48,19 +48,20 @@ hold off
 box off
 
 for ii=1:2
-    text(0.7,0.85-(ii-1)*0.15,namect{ii},'units','normalized','fontsize',fs,'color',col{ii})
+    text(0.8,0.85-(ii-1)*0.15,namect{ii},'units','normalized','fontsize',fs,'color',col{ii})
 end
 
 xlim([xvec(1),xvec(end)])
+title('E-I model','Fontweight','normal','fontsize',fs)
 %ylim([0,58])
 
-ylabel('f. rate [Hz]')
+ylabel('f. rate [Hz]','fontsize',fs)
 xlabel (xlab);
 
 set(gca,'YTick',yt)
-set(gca,'YTicklabel',yt)
+set(gca,'YTicklabel',yt,'fontsize',fs)
 set(gca,'XTick',xt)
-set(gca,'XTick',xt)
+set(gca,'XTickLabel',xt,'fontsize',fs)
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')

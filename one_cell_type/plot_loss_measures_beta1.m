@@ -3,7 +3,7 @@ clear all
 close all
 clc
     
-savefig=1;
+savefig=0;
 vari='beta';
 g_l=0.7;                    % weighting of the error vs. cost
 
@@ -34,9 +34,14 @@ xlab='metabolic constant \beta_1';
 
 %%
 
+%loss=g_l*ms.^2 + (1-g_l)*mc.^2;
+%loss=(g_l*eps) + ((1-g_l) * kappa);
+
+
 eps=(ms-min(ms))./max(ms-min(ms));
 kappa= (mc-min(mc))./max(mc - min(mc));
 loss=(g_l*eps) + ((1-g_l) * kappa);
+%loss_plt=(loss - min(loss))./max(loss-min(loss));
 
 [~,idx]=min(loss);
 optimal_param=xvec(idx);
@@ -65,7 +70,7 @@ ylim([1.5,6.5])
 xlim([xvec(1),xvec(end)])
 
 set(gca,'YTick',yt)
-set(gca,'YTicklabel',yt)
+set(gca,'YTicklabel',yt,'fontsize',fs)
 set(gca,'XTick',xt)
 set(gca,'XTicklabel',[])
     
@@ -96,9 +101,9 @@ xlim([xvec(1),xvec(end)])
 ylim([0,1])
 
 set(gca,'YTick',yt2)
-set(gca,'YTicklabel',yt2)
+set(gca,'YTicklabel',yt2,'fontsize',fs)
 set(gca,'XTick',xt)
-set(gca,'XTicklabel',xt)
+set(gca,'XTicklabel',xt,'fontsize',fs)
 
 op=get(gca,'OuterPosition');
 set(gca,'OuterPosition',[op(1)+0.04 op(2)+0.03 op(3)-0.02 op(4)+0.01]);

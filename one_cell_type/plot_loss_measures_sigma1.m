@@ -32,7 +32,12 @@ plt2=[0,0,8,10];
 xt=xvec(1):2:8;
 xlab='noise intensity \sigma_1';
 
-%%
+%% optimal paramter
+
+%loss=g_l*ms + (1-g_l)*mc;
+%loss=g_l*ms.^2 + (1-g_l)*mc.^2;
+
+%% normalize for plotting
 
 eps=(ms-min(ms))./max(ms-min(ms));
 kappa= (mc-min(mc))./max(mc - min(mc));
@@ -40,9 +45,10 @@ loss=(g_l*eps) + ((1-g_l) * kappa);
 
 [~,idx]=min(loss);
 optimal_param=xvec(idx);
-
 display(optimal_param,'best sigmav')
 display(c_vec(idx),'best c')
+loss_plt=(loss - min(loss))./max(loss-min(loss));
+
 %% loss measures
 
 mini=min(loss);
