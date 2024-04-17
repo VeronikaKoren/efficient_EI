@@ -5,17 +5,19 @@ close all
 vari='q';
 g_l=0.7;
 
-savefig1=0;
-savefig2=0;
-savefig3=0;
-savefig4=0;
-savefig5=0;
+savefig1=1;
+savefig2=1;
+savefig3=1;
+savefig4=1;
+savefig5=1;
+%savefig6=0;
 
 figname1=strcat('loss_',vari,'_',sprintf('%1.0i',g_l*10));
 figname2=strcat('fr_cv_',vari);
 figname3=strcat('balance_',vari);
 figname4=strcat('currents_',vari);
 figname5=strcat('optimal_',vari);
+%figname6=strcat('weighting_error_vs_cost_',vari);
 
 addpath('/Users/vkoren/ei_net/result/ratios/')
 savefile='/Users/vkoren/ei_net/figure/ratios/measure_NI/';
@@ -60,8 +62,8 @@ avloss=mean(loss_ei,2); % average across E and I neurons
 optimal_param=xvec(idx);
 display(optimal_param,'best param')
 
-
-[~,idx2]=min(mean(ms,2));
+%{
+[~,idx2]=min(mean(rms,2));
 optimal_param_error=xvec(idx2);
 display(optimal_param_error,'best param with respect to error')
 %}
@@ -76,7 +78,7 @@ loss_norm=(avloss-min(avloss))./max(avloss - min(avloss));
 
 name_error={'RMSE^E','RMSE^I','(RMSE^E + RMSE^I)/2'};
 mini=min(loss_norm);
-maxi=max(loss_norm);
+maxi=max(loss);
 delta= (maxi-mini)/4;
 
 pos_vec=plt2;
@@ -382,17 +384,17 @@ end
 %% full range of optimal parameters as a function of weighting of RMSE^E and RMSE^I 
 
 g_ei_vec=0:0.01:1;
-optimal_ratio_ei=zeros(length(g_ei_vec),1);
+optimal_weight_ei=zeros(length(g_ei_vec),1);
 
 for ii=1:length(g_ei_vec)
 
     avloss_g_ei=g_ei_vec(ii).*loss_ei(:,1) + (1-g_ei_vec(ii)).*loss_ei(:,2);
 
     [~,idx_ei]=min(avloss_g_ei);
-    optimal_ratio_ei(ii)=xvec(idx_ei);
+    optimal_weight_ei(ii)=xvec(idx_ei);
 end
 
-display([optimal_ratio_ei(1),optimal_ratio_ei(end)],'range of optimal parameters for different weighting of E and I loss')
+display([optimal_weight_ei(1),optimal_weight_ei(end)],'range of optimal parameters for different weighting of E and I loss')
 
 %% full range of optimal parameters as a function of weighting of error and cost
 
@@ -411,8 +413,8 @@ display([optimal_ratio_gl(1),optimal_ratio_gl(end)],'range of optimal parameters
 
 %% plot optimal param as a function of weighting
 
-hidx=find(g_ei_vec==0.5)
-glidx=find(glvec==g_l)
+hidx=find(g_ei_vec==0.5);
+glidx=find(glvec==g_l);
 
 pos_vec=[0,0,8,10];
 xt=0:0.5:1;
@@ -422,8 +424,8 @@ H=figure('name',figname5,'visible','on');
 %%%%%%%%%%%%%%%%%%
 subplot(2,1,1)
 hold on
-stem(g_ei_vec,optimal_ratio_ei,'color',red)
-plot(g_l,optimal_ratio_ei(hidx)+1,'kv','markersize',13)
+stem(g_ei_vec,optimal_weight_ei,'color',red)
+plot(g_e,optimal_weight_ei(hidx)+1,'kv','markersize',13)
 hold off
 box off
 
@@ -464,7 +466,7 @@ set(gca,'OuterPosition',[op(1)+0.07 op(2)+0.00 op(3)-0.05 op(4)-0.0]);
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 
 axes
-h1 = ylabel ('optimal ratio N^E : N^I','units','normalized','Position',[-0.05,0.5,0],'fontsize',fs+1);
+h1 = ylabel ('optimal N^E : N^I','units','normalized','Position',[-0.05,0.5,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h1,'visible','on')
 
@@ -476,3 +478,35 @@ if savefig5==1
 end
 %}
 %%
+%{
+pos_vec=plt1;
+xt=0:0.5:1;
+yt=[2,4];
+
+H=figure('name',figname6,'visible','on');
+stem(gevec,optimal_wrt_error,'color','k')
+box off
+
+ylabel('optimal N^E : N^I','fontsize',fs)
+xlabel('g_L (weighting error vs. cost) ','fontsize',fs)
+ylim([0,max(optimal_gl)+1])
+xlim([-0.1,1.1])
+
+set(gca,'XTick',xt)
+set(gca,'XTicklabel',xt,'fontsize',fs)
+set(gca,'YTick',yt)
+set(gca,'YTicklabel',yt,'fontsize',fs)
+
+op=get(gca,'OuterPosition');
+set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.05 op(3)-0.05 op(4)-0.05]);
+
+set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
+%set(gca,'TickDir','out')
+
+set(H, 'Units','centimeters', 'Position', pos_vec)
+set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_vec(3), pos_vec(4)]) % for saving in the right size
+
+if savefig6==1
+    print(H,[savefile,figname6],'-dpng','-r300');
+end
+%}

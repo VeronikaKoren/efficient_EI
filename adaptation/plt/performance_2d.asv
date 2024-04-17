@@ -35,15 +35,29 @@ m=min(variable);
 M=max(variable);
 
 idx=find(variable==10);
-clb_ticks=[2,6];
+
+g_e = 0.5;
+g_k = 0.5;
 
 %% plot error
 
+%g=0.5;
+%zvar=log(g*rms(:,:,1)+(1-g)*rms(:,:,2));
+
+RMSE=squeeze(rms(:,:,1));
+RMSI=squeeze(rms(:,:,2));
+eps_E=(RMSE-min(min(RMSE)))./max(max(RMSE));
+eps_I=(RMSE-min(min(RMSI)))./max(max(RMSI));
+error=(g_e*eps_E) + ((1-g_e)*eps_I);
+%zvar=log(error);
 zvar=log(mean(rms,3));
+%}
 
 mini=min(zvar(:));
 maxi=max(zvar(:));
+clb_ticks=[-5,-2];
 
+%%
 H=figure('name',figname1);
 
 imagesc(zvar)
@@ -53,8 +67,8 @@ axis square
 caxis([mini,maxi])
 clb=colorbar;
 
-set(clb,'YTick',clb_ticks,'fontsize',fs)
-set(clb,'YTickLabel',clb_ticks,'fontsize',fs-2)
+%set(clb,'YTick',clb_ticks,'fontsize',fs)
+%set(clb,'YTickLabel',clb_ticks,'fontsize',fs-2)
 clb.FontSize=fs;
 clb.Label.String = 'log( error )';
 
@@ -86,11 +100,21 @@ end
 
 %% plot cost
 
-cvar=log(mean(cost,3));
+%cvar=log(mean(cost,3));
+
+MCE=squeeze(cost(:,:,1));
+MCI=squeeze(cost(:,:,2));
+kappa_E=(MCE-min(min(MCE)))./max(max(MCE));
+kappa_I=(MCI-min(min(MCI)))./max(max(MCI));
+costm=(g_k.*kappa_E) + ((1-g_k).*kappa_I);
+%cvar=log(costm);
+cvar=log(mean(cost,3))
 
 mini=min(cvar(:));
 maxi=max(cvar(:));
+clb_ticks=[-5,-2];
 
+%%
 H=figure('name',figname2);
 
 imagesc(cvar)
@@ -100,8 +124,8 @@ axis square
 caxis([mini,maxi])
 clb=colorbar;
 
-set(clb,'YTick',clb_ticks,'fontsize',fs)
-set(clb,'YTickLabel',clb_ticks,'fontsize',fs-2)
+%set(clb,'YTick',clb_ticks,'fontsize',fs)
+%set(clb,'YTickLabel',clb_ticks,'fontsize',fs-2)
 clb.FontSize=fs;
 clb.Label.String = 'log( cost )';
 
@@ -133,12 +157,13 @@ end
 
 %% plot loss
 
-lossvar=log((g_l*mean(rms,3)) + ((1-g_l)*mean(cost,3)));
-
+%lossvar=log(g*rms(:,:,1)+(1-g)*rms(:,:,2) + mean(cost,3)); % compute the loss, plot it in log scale
+lossvar=(g_l*mean(rms,3) + (1-g_l)*mean(cost,3)
+%lossvar=log(g_l.*error + (1-g_l).*costm);
 mini=min(lossvar(:));
 maxi=max(lossvar(:));
 
-%clb_ticks=[-5,-2];
+clb_ticks=[-5,-2];
 
 H=figure('name',figname3);
 
