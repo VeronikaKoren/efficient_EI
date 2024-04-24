@@ -411,8 +411,8 @@ display([optimal_ratio_gl(1),optimal_ratio_gl(end)],'range of optimal parameters
 
 %% plot optimal param as a function of weighting
 
-hidx=find(g_ei_vec==0.5)
-glidx=find(glvec==g_l)
+hidx=find(g_ei_vec==0.5);
+glidx=find(glvec==g_l);
 
 pos_vec=[0,0,8,10];
 xt=0:0.5:1;
@@ -423,7 +423,7 @@ H=figure('name',figname5,'visible','on');
 subplot(2,1,1)
 hold on
 stem(g_ei_vec,optimal_ratio_ei,'color',red)
-plot(g_l,optimal_ratio_ei(hidx)+1,'kv','markersize',13)
+plot(0.5,optimal_ratio_ei(hidx)+1,'kv','markersize',13)
 hold off
 box off
 

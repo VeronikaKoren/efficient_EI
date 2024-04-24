@@ -6,7 +6,7 @@ figname='varV_regular_permuted';
 
 addpath('/Users/vkoren/ei_net/result/connectivity/')
 %addpath('result/connectivity/')
-savefile=[cd,'/figure/'];
+savefile='/Users/vkoren/ei_net/figure/weights_J/effect_structure/'
 
 %% load permuted
 
@@ -44,6 +44,7 @@ mini=min(min(cellfun(@min,stdV)));
 xvec=linspace(mini-1,maxi+1,200);
 
 %%
+
 namepop={'E cell type','I cell type'};
 xt=7:7:21;
 yt=0:5:5;
@@ -91,8 +92,8 @@ set(H, 'Units','centimeters', 'Position', pos_vec)
 set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_vec(3), pos_vec(4)]) % for saving in the right size
 
 axes
-h1 = ylabel ('density','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs+1);
-h2 = xlabel ('STD membrane potential','units','normalized','Position',[0.5,-0.04,0],'fontsize',fs+1);
+h1 = ylabel ('density [1/mV]','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs+1);
+h2 = xlabel ('STD membrane potential [mV]','units','normalized','Position',[0.5,-0.04,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h1,'visible','on')
 set(h2,'visible','on')

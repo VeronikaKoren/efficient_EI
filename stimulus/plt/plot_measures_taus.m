@@ -5,8 +5,8 @@ clc
         
 vari='taus';
 savefig1=0;
-savefig2=1;
-savefig3=1;
+savefig2=0;
+savefig3=0;
 
 figname1=strcat('loss_',vari);
 figname2=strcat('fr_cv_',vari);
@@ -74,7 +74,6 @@ cost_norm=mean(cost_ei_norm,2);
 loss_norm=(avloss-min(avloss))./max(avloss - min(avloss));
 %% plot loss =measures
 
-
 name_error={'RMSE^E','RMSE^I'};
 name_cost={'MC^E','MC^I'};
 
@@ -100,11 +99,13 @@ box off
 ylim([0,8])
 xlim([xvec(1),xvec(end)])
 
+ylabel('encoding error','fontsize',fs)
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
 set(gca,'XTick',xt)
 set(gca,'XTicklabel',[])
     
+
 op=get(gca,'OuterPosition');
 set(gca,'OuterPosition',[op(1)+0.04 op(2)+0.03 op(3)-0.02 op(4)-0.02]);
 
@@ -130,6 +131,7 @@ hold off
 box off
 xlim([xvec(1),xvec(end)])
 
+ylabel('metabolic cost','fontsize',fs)
 set(gca,'YTick',yt2)
 set(gca,'YTicklabel',yt2,'fontsize',fs)
 set(gca,'XTick',xt)
@@ -143,10 +145,10 @@ set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')
 
 axes
-h1 = ylabel ('loss measures','units','normalized','Position',[-0.05,0.5,0],'fontsize',fs+1);
+%h1 = ylabel ('loss measures','units','normalized','Position',[-0.05,0.5,0],'fontsize',fs+1);
 h2 = xlabel (xlab,'units','normalized','Position',[0.5,-0.03,0],'fontsize',fs+1);
 set(gca,'Visible','off')
-set(h1,'visible','on')
+%set(h1,'visible','on')
 set(h2,'visible','on')
 
 set(H, 'Units','centimeters', 'Position', pos_vec)

@@ -4,7 +4,7 @@ clear all
 namet='perm_full';
 
 savefig=0;
-savefile=[cd,'/figure/'];
+savefile='/users/vkoren/ei_net/figure/structure/';
 
 figname=['corrV_', namet];
 
