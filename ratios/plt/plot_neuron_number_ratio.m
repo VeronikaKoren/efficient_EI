@@ -26,7 +26,7 @@ load(loadname)
 %%
 
 xvec=qvec;
-vis={'on','on','on','on','on'};
+vis={'off','off','off','off','on'};
 
 %%
 fs=14;

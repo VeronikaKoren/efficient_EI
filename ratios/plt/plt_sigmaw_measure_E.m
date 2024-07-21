@@ -7,7 +7,7 @@ savefig1=0;
 savefig2=0;
 savefig3=0;
 savefig4=0;
-savefig5=0;
+savefig5=1;
 
 addpath('/Users/vkoren/ei_net/result/ratios/')
 savefile='/Users/vkoren/ei_net/figure/ratios/measure_sigmawE/';
@@ -15,11 +15,12 @@ savefile='/Users/vkoren/ei_net/figure/ratios/measure_sigmawE/';
 loadname='measures_dE';
 load(loadname)
 
-vis={'on','on','on','on','on'};
+vis={'off','off','off','off','on'};
 
 %% compute optimal parameter
 
-g_l=0.7;
+g_l=0.7;            % weighting error vs. cost
+g_eps=0.5;          % weighting error E vs. I
 
 loss_ei=g_l.*ms + ((1-g_l).*cost);
 avloss=mean(loss_ei,2); % average across E and I neurons
@@ -36,7 +37,6 @@ xvec=dI./devec;
 
 cost_ei_norm= (cost-min(cost))./max(cost - min(cost));
 cost_norm=mean(cost_ei_norm,2);
-
 loss_norm=(avloss-min(avloss))./max(avloss - min(avloss));
 
 %%
@@ -62,13 +62,14 @@ plt1=[0,0,9,7];
 plt2=[0,0,9,10];
 xt=[3,6,9];
 xlab='mean I-I : mean E-I (vary E-I)';
+xlab_opt='mean E-I : mean I-I (vary E-I)';
 xlimit=[xvec(end),xvec(1)];
 
 figname1=strcat('loss_',vari,'_',sprintf('%1.0i',g_l*10));
 figname2=strcat('fr_cv_',vari);
 figname3=strcat('balance_',vari);
 figname4=strcat('currents_',vari);
-figname5=strcat('optimal_',vari);
+figname5=strcat('weightings_',vari);
 
 %% plot loss
 
@@ -372,6 +373,19 @@ end
 
 %% weighting E vs. I
 
+%{
+loss_ei=g_l.*ms + ((1-g_l).*cost);
+avloss=mean(loss_ei,2); % average across E and I neurons
+[~,idx]=min(avloss);
+optimal_dE=devec(idx);
+display(optimal_dE,'best parameter dE')
+
+dI=parameters{8}{:};
+optimal_ratio=dI/optimal_dE;
+display(optimal_ratio,'best ratio sigmawI: sigmawE')
+xvec=dI./devec;
+%}
+
 g_ei_vec=0:0.01:1;
 optimal_ratio_ei=zeros(length(g_ei_vec),1);
 
@@ -379,8 +393,8 @@ for ii=1:length(g_ei_vec)
 
     avloss_g_ei=g_ei_vec(ii).*loss_ei(:,1) + (1-g_ei_vec(ii)).*loss_ei(:,2);
 
-    [~,idx_ei]=min(avloss_g_ei);
-    optimal_ratio_ei(ii)=dI/xvec(idx_ei);
+    [~,idx_ei]=min(avloss_g_ei); % index of the best dE
+    optimal_ratio_ei(ii)=xvec(idx_ei); % best ratio
 end
 
 display([optimal_ratio_ei(1),optimal_ratio_ei(end)],'range of optimal parameters for different weighting of E and I loss')
@@ -394,7 +408,8 @@ for ii=1:length(glvec)
     loss_ei_gl=glvec(ii).*ms + ((1-glvec(ii)).*cost);
     avloss_gl=mean(loss_ei_gl,2); % average across E and I neurons (assuming equal weighting of the loss across E and I neurons)
     [~,idx_gl]=min(avloss_gl);
-    optimal_ratio_gl(ii)=dI/xvec(idx_gl);
+    optimal_ratio_gl(ii)=xvec(idx_gl);
+
 
 end
 
@@ -402,24 +417,25 @@ display([optimal_ratio_gl(1),optimal_ratio_gl(end)],'range of optimal parameters
 
 %% plot optimal param as a function of weightings
 
-hidx=find(g_ei_vec==0.5);
+hidx=find(g_ei_vec==g_eps);
 glidx=find(glvec==g_l);
 
 pos_vec=[0,0,8,10];
 xt=0:0.5:1;
-yt=[1,3];
+yt=[3,6,9];
+ylimit=[0,11];
 
 H=figure('name',figname5,'visible','on');
 %%%%%%%%%%%%%%%%%%
 subplot(2,1,1)
 hold on
 stem(g_ei_vec,optimal_ratio_ei,'color',red)
-plot(0.5,optimal_ratio_ei(hidx)+1,'kv','markersize',13)
+plot(g_eps,optimal_ratio_ei(hidx)+2,'kv','markersize',13)
 hold off
 box off
 
 xlabel('weighting loss E vs. I','fontsize',fs)
-ylim([0,4])
+ylim(ylimit)
 xlim([-0.1,1.1])
 
 set(gca,'XTick',xt)
@@ -436,12 +452,12 @@ set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 subplot(2,1,2)
 hold on
 stem(glvec,optimal_ratio_gl,'k')
-plot(g_l,optimal_ratio_gl(glidx)+1,'kv','markersize',13)
+plot(g_l,optimal_ratio_gl(glidx)+3,'kv','markersize',13)
 hold off
 box off
 
 xlabel('weighting error vs. cost','fontsize',fs)
-ylim([0,4])
+ylim(ylimit)
 xlim([-0.1,1.1])
 
 set(gca,'XTick',xt)

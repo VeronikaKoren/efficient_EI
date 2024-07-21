@@ -17,9 +17,9 @@ addpath('/Users/vkoren/ei_net/result/adaptation/')
 loadname= 'adaptation_2d_measures';
 load(loadname)
 
-figname1=strcat('error_',vari,'_2d');
-figname2=strcat('cost_',vari,'_2d');
-figname3=strcat('loss_local_2d_',sprintf('%1.0i',g_l*10));
+figname1=strcat('error_',vari,'_2d',sprintf('%1.0i',g_l*10));
+figname2=strcat('cost_',vari,'_2d',sprintf('%1.0i',g_l*10));
+figname3=strcat('loss_',vari,'2d_',sprintf('%1.0i',g_l*10));
 
 savefile='/Users/vkoren/ei_net/figure/adaptation/';
 

@@ -3,6 +3,7 @@ close all
 
 vari='d'; 
 g_l=0.7;
+g_eps=0.5;
 
 savefig1=0;
 savefig2=0;
@@ -26,7 +27,7 @@ load(loadname)
 %%
 
 xvec=dvec;
-vis={'on','on','on','on','on'};
+vis={'off','off','off','off','on'};
 
 fs=14;
 msize=6;
@@ -408,7 +409,8 @@ display([optimal_ratio_gl(1),optimal_ratio_gl(end)],'range of optimal parameters
 
 %% plot optimal param as a function of weightings
 
-hidx=find(g_ei_vec==0.5);
+
+hidx=find(g_ei_vec==g_eps);
 glidx=find(glvec==g_l);
 
 pos_vec=[0,0,8,10];
@@ -420,7 +422,7 @@ H=figure('name',figname5,'visible','on');
 subplot(2,1,1)
 hold on
 stem(g_ei_vec,optimal_ratio_ei,'color',red)
-plot(g_l,optimal_ratio_ei(hidx)+0.6,'kv','markersize',13)
+plot(g_eps,optimal_ratio_ei(hidx)+0.6,'kv','markersize',13)
 hold off
 box off
 
@@ -442,7 +444,7 @@ set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 subplot(2,1,2)
 hold on
 stem(glvec,optimal_ratio_gl,'k')
-plot(g_l,optimal_ratio_gl(glidx)+1.5,'kv','markersize',13)
+plot(g_l,optimal_ratio_gl(glidx)+1.9,'kv','markersize',13)
 hold off
 box off
 

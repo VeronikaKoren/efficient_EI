@@ -5,11 +5,12 @@ clc
 
 vari='M';
 g_l=0.7;
+g_eps=0.5;
 
 savefig1=0;
-savefig2=1;
-savefig3=1;
-savefig4=1;
+savefig2=0;
+savefig3=0;
+savefig4=0;
 
 figname1=strcat('loss_',vari,'_',sprintf('%1.0i',g_l*10));
 figname2=strcat('fr_cv_',vari);
@@ -25,7 +26,7 @@ load(loadname)
 %%
 
 xvec=Mvec;
-vis={'on','on','on','on'};
+vis={'off','off','off','on'};
 
 fs=14;
 msize=6;
@@ -332,9 +333,10 @@ display([optimal_ratio_gl(1),optimal_ratio_gl(end)],'range of optimal parameters
 
 %% plot optimal param as a function of weighting
 
-xlab_sh='nb. encoded variables M'
-hidx=find(g_ei_vec==0.5)
-glidx=find(glvec==g_l)
+
+xlab_sh='nb. encoded variables M';
+hidx=find(g_ei_vec==g_eps);
+glidx=find(glvec==g_l);
 
 pos_vec=[0,0,8,10];
 xt=0:0.5:1;
@@ -345,7 +347,7 @@ H=figure('name',figname4,'visible','on');
 subplot(2,1,1)
 hold on
 stem(g_ei_vec,optimal_ratio_ei,'color',red)
-plot(g_l,optimal_ratio_ei(hidx)+1,'kv','markersize',13)
+plot(g_eps,optimal_ratio_ei(hidx)+1,'kv','markersize',13)
 hold off
 box off
 
@@ -367,7 +369,7 @@ set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 subplot(2,1,2)
 hold on
 stem(glvec,optimal_ratio_gl,'k')
-plot(g_l,optimal_ratio_gl(glidx)+1.5,'kv','markersize',13)
+plot(g_l,optimal_ratio_gl(glidx)+1.3,'kv','markersize',13)
 hold off
 box off
 
