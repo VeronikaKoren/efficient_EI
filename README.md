@@ -1,5 +1,5 @@
 # General
-This code is associated with the paper "Efficient coding in biophysically realistic excitatory-inhibitory spiking networks." published in eLife in 2024.
+This code is associated with the paper "Efficient coding in biophysically realistic excitatory-inhibitory spiking networks." authored by Veronika Koren, Simone Blanco Malerba, Tilo Schwalger and Stefano Panzeri, published in eLife in 2024.
 
 The author of the code is Veronika Koren.  
 For any questions, please write to koren.veronika@gmail.com.
