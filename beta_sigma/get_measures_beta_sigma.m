@@ -2,7 +2,7 @@
 clear all
 close all
 
-computing=1;   % testing or computing?
+computing=0;   % testing or computing?
 
 if computing ==1
     saveres=1;
@@ -38,7 +38,7 @@ d=3;
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 %%
 
-addpath([cd,'/code/function/'])
+addpath([cd,'/function/'])
 
 %% compute measures
 if computing==0

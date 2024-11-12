@@ -27,7 +27,7 @@ load(loadname)
 %%
 
 xvec=beta_vec;
-vis={'off','off','off','off','on'};
+vis={'on','on','on','on','on'};
 
 fs=14;
 msize=6;

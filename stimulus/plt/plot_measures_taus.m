@@ -43,36 +43,26 @@ namepop={'Exc','Inh'};
 plt1=[0,0,9,7];
 plt2=[0,0,9,10];
 xt=[xvec(1),50,100,150]
-xlab='time const. stimulus \tau_s';
+xlab='time const. stimuli \tau_s';
 
 %%
 
-% optimal parameter with respect to the rmse
-
-best_rmse=zeros(2,1);
-for ii=1:2
-
-    [~,idxrmse]=min(rms(:,ii))
-    best_rmse(ii)=xvec(idxrmse)
-end
-display(best_rmse,'best param according to RMSE E and I')
-
-%% optimal parameter average loss
-
+g_e = 0.5;
+g_k = 0.5;
 g_l=0.7;
-loss_ei=g_l.*rms + ((1-g_l).*cost);
-avloss=mean(loss_ei,2); % average across E and I neurons
-[~,idx]=min(avloss);
+
+eps=(rms-min(rms))./max(rms-min(rms));
+kappa= (cost-min(cost))./max(cost - min(cost));
+error=(g_e*eps(:,1)) + ((1-g_e)*eps(:,2));
+mcost=(g_k*kappa(:,1)) + ((1-g_k)*kappa(:,2));
+loss=(g_l*error) + ((1-g_l) * mcost);
+
+[~,idx]=min(loss);
 optimal_param=xvec(idx);
 display(optimal_param,'best param')
 
-%% normalized for plotting
-
-cost_ei_norm= (cost-min(cost))./max(cost - min(cost));
-cost_norm=mean(cost_ei_norm,2);
-
-loss_norm=(avloss-min(avloss))./max(avloss - min(avloss));
 %% plot loss =measures
+
 
 name_error={'RMSE^E','RMSE^I'};
 name_cost={'MC^E','MC^I'};
@@ -99,13 +89,11 @@ box off
 ylim([0,8])
 xlim([xvec(1),xvec(end)])
 
-ylabel('encoding error','fontsize',fs)
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
 set(gca,'XTick',xt)
 set(gca,'XTicklabel',[])
     
-
 op=get(gca,'OuterPosition');
 set(gca,'OuterPosition',[op(1)+0.04 op(2)+0.03 op(3)-0.02 op(4)-0.02]);
 
@@ -131,7 +119,6 @@ hold off
 box off
 xlim([xvec(1),xvec(end)])
 
-ylabel('metabolic cost','fontsize',fs)
 set(gca,'YTick',yt2)
 set(gca,'YTicklabel',yt2,'fontsize',fs)
 set(gca,'XTick',xt)
@@ -145,10 +132,10 @@ set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')
 
 axes
-%h1 = ylabel ('loss measures','units','normalized','Position',[-0.05,0.5,0],'fontsize',fs+1);
+h1 = ylabel ('loss measures','units','normalized','Position',[-0.05,0.5,0],'fontsize',fs+1);
 h2 = xlabel (xlab,'units','normalized','Position',[0.5,-0.03,0],'fontsize',fs+1);
 set(gca,'Visible','off')
-%set(h1,'visible','on')
+set(h1,'visible','on')
 set(h2,'visible','on')
 
 set(H, 'Units','centimeters', 'Position', pos_vec)
@@ -225,7 +212,7 @@ end
 yt=-4:2:0;
 pos_vec=plt2;
 
-a=1;
+a=0.3;
 rec=zeros(length(xvec),2);
 rec(:,1)=meanE(:,1).*a+meanE(:,2).*a;
 rec(:,2)=meanI(:,1).*a+meanI(:,2).*a;
@@ -235,7 +222,7 @@ subplot(2,1,1)
 hold on
 for ii=1:2
     plot(xvec,rec(:,ii),'color',colpop{ii})
-    text(0.7, 0.9-(ii-1)*0.18,['to ', namepop{ii}],'units','normalized','color',colpop{ii},'fontsize',fs)
+    text(0.7, 0.43-(ii-1)*0.18,['to ', namepop{ii}],'units','normalized','color',colpop{ii},'fontsize',fs)
 end
 
 hold off

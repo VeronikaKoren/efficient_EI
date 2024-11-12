@@ -4,26 +4,30 @@ close all
 
 savefig=0;
 
-k=1;
+k=2;
 namet={'perm_full','perm_partial'};
 
-figname=['CV_',namet{k}];
+figname=['CVs_',namet{k}];
 savefile=['/Users/vkoren/ei_net/figure/weights_J/effect_structure/',namet{k},'/'];
 
-disp(['plotting ' ,figname])
+disp(['plotting ' ,figname,'and optimal'])
 
-%% load results
+%% load result with unstructured
 
 addpath('/Users/vkoren/ei_net/result/connectivity/')
 loadname=['measures_',namet{k}];
-load(loadname,'CVs','Ct')
+load(loadname,'CVs','which_permuted')
 CV=CVs;
 clear CVs
+np=length(which_permuted);
 
-loadname='Cnoise_factor_measures'; % baseline (regular network)
-load(loadname,'CVs')
-CV0=CVs(1,:);
-clear CVs
+%% load result optimal network
+
+addpath('/Users/vkoren/ei_net/result/implementation/')
+loadname='activity_measures_optimal_ei';
+load(loadname,'CV_tr')
+CV0=mean(CV_tr);
+
 %%
 
 fs=13;
@@ -37,17 +41,17 @@ col={red,blue};
 
 plt1=[0,0,8,11];
 
-xvec=1:4;
-xt=1:4;
-xlb=Ct;
+xvec=1:np;
+xt=xvec;
+xlb=which_permuted;
 yt=0.7:0.3:1.3;
 
 xlimit=[0.3,4.7];
 namep={'in Exc','in Inh'};
-Ct{4}(4:end)=[];
+which_permuted{4}(4:end)=[];
 
 order=[2,1,3,4];
-Co=Ct(order);
+Co=which_permuted(order);
 nametit={'fully unstructured','partially unstructured'};
 %%
 
@@ -60,7 +64,7 @@ text(0.05,0.9,namep{1},'units','normalized','fontsize',fs,'color',col{1})
 box off
 
 xlim(xlimit)
-ylim([0.5,1.5])
+ylim([0.5,1.3])
 
 text(0.2,1.1,nametit{k},'units',' normalized','fontsize',fs)
 set(gca,'YTick',yt)
@@ -87,7 +91,7 @@ hold off
 box off
 
 xlim(xlimit)
-ylim([0.5, 1.5])
+ylim([0.5, 1.3])
 
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt)

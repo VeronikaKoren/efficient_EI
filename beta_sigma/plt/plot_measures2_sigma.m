@@ -10,7 +10,7 @@ g_eps=0.5;
 savefig1=0;
 savefig2=0;
 savefig3=0;
-savefig4=1;
+savefig4=0;
 
 figname1=strcat('loss_',vari,'_',sprintf('%1.0i',g_l*10));
 figname2=strcat('fr_cv_',vari);
@@ -25,7 +25,7 @@ load(loadname)
 %%
 
 xvec=sigma_vec;
-vis={'off','off','off','on'};
+vis={'on','on','on','on'};
 
 fs=14;
 msize=6;

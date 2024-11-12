@@ -3,11 +3,12 @@
 clear all
 close all
 
-savefig=0;
+savefig=1;
 savefile='/Users/vkoren/ei_net/figure/implementation/';
 figname='activity_1ct';
 
-disp('computing MSE for the network with 1 cell type')
+display('computing spiking activity of the 1CT network ')
+
 addpath([cd,'/function/'])
 %% parameters
 
@@ -17,19 +18,18 @@ M=10;                        % number of inputs
 N=400;
 tau=10;                     % time constant of the membrane potential
 
-b=1.5;
-%c=33;
-c=15
 
 nu=0;                       % linear cost
-beta=b*log(N);                % quadratic cost
-sigmav=c/log(N);            % standard deviation of the noise
-
-dt=0.02;                    % time step  
-
-%% signal
+beta=11.4                % quadratic cost
+sigmav=1.84            % standard deviation of the noise
 
 sigma_s=2;
+dt=0.02;                    % time step  
+
+%% external input and signal
+
+%loadname='estimate_non_rectified'; 
+%load(loadname,'s','x')
 tau_s=10;
 tau_x=10;
 [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
@@ -37,17 +37,18 @@ tau_x=10;
 %% simulate network activity
   
 T=nsec*1000/dt;
-[xhat,f,r] =network_1ct_fun(N,s,dt,tau,beta,sigmav);
+[xhat,f,r] =network_1pop_fun(N,s,dt,tau,beta,nu,sigmav);
 
 frate=sum(sum(f))/(N*nsec);           % average nb.spikes/sec
 rmse=sqrt(mean(sum((x-xhat).^2,2)./T));        % mean squared error
+%time_upstate=sum(sum(y)>(N/10));      % time in upstate
 
 display(rmse,'mean squared error');
-display(frate,'mean firing rate');
+display(frate,'firing rate');
 
 %% plot signal, estimate and spikes
-savefig=1
+
 pos_vec=[0,0,20,15];
-plt_1ct_network(x,xhat,f,r,dt,tau,pos_vec,savefig,savefile,figname)
+plt_1ct_activity(x,xhat,f,r,dt,tau,pos_vec,savefig,savefile,figname)
 %}
 

@@ -3,18 +3,18 @@ clear all
 clc
 
 savefig=0;
-figname='spikes_mu';
+figname='spikes_beta';
 savefile=[cd,'/figure/implementation/'];
 
-addpath([cd,'/code/function/'])
-
+addpath([cd,'/function/'])
 %%
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
 nsec=0.5;                                % duration of the trial in seconds 
 
+sigma_s=2;
 tau_s=10;
-tau_x=10;                              % time constant of the signal  
+tau_x=10;                              % time constant of the target  
 
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
@@ -22,9 +22,7 @@ tau_i=10;                              % time const I estimate
 tau_re=10;                             % t. const firing rate of E neurons
 tau_ri=10;                             % t. constant firing rate of I neurons 
    
-
-c=33;
-sigmav=c/log(N);                       % standard deviation of the noise
+sigmav=5;                       % standard deviation of the noise
 
 dt=0.02;                               % time step in ms     
 q=4;
@@ -32,7 +30,7 @@ d=3;
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
-[s,x]=signal_fun(tau_s,tau_x,M,nsec,dt);
+[s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
 [w,C] = w_fun(M,N,q,d); 
 
 %% get spikes for a couple of values of the metabolic constant

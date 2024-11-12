@@ -18,7 +18,7 @@ figname3=strcat('EI_balance_',vari);
 figname4='weighting';
 
 addpath('/Users/vkoren/ei_net/result/stimulus/')
-savefile=['/Users/vkoren/ei_net/figure/stimulus/dimensionality_M/'];
+savefile='/Users/vkoren/ei_net/figure/stimulus/dimensionality_M/';
 
 loadname=strcat('measures_',vari)
 load(loadname)

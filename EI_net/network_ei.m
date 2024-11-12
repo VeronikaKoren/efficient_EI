@@ -1,11 +1,14 @@
-% plot of the activity in one trial
+% for the plot of the activity
 
 %close all
 clear all
 %clc
 
 savefig=0;
-addpath([cd,'/function/'])
+savest=0;
+addpath([cd,'/code/function/'])
+%addpath([cd,'/result/connectivity/'])
+
 %% parameters
 
 M=3;                                   % number of input variables    
@@ -13,49 +16,65 @@ N=400;                                 % number of E neurons
 
 nsec=1;                                % duration of the trial in seconds 
 
+sigma_s=2;
 tau_s=10;
 tau_x=10;                              % time constant of the signal  
 
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_fe=10;                             % t. const firing rate of E neurons
-tau_fi=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % t. const firing rate of E neurons
+tau_ri=10;                             % t. constant firing rate of I neurons 
    
-b=1.0;                                   % sets the strength of the regularizer     
-c=33;                                  % sets the strength of the noise 
-mu=b*log(N);                           % quadratic cost constant
-sigmav=c/log(N);                       % noise intensity
+beta=14;                           % quadratic cost constant
+sigmav=5;                       % noise intensity
 
 dt=0.02;                               % time step in ms     
-q=4;                                   % ratio number E to I neurons
-d=3;                                   % ratio spread of weights I to E 
+q=4;                                 % ratio number E to I neurons
+d=3;                                   % ratio IPSP/EPSP 
 
-tau_vec=cat(1,tau_x,tau_e,tau_i,tau_fe, tau_fi);
+tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
+[w,J] = w_fun(M,N,q,d);
 
-sigma_s=2;                              % STD of input features
-%% set the input, selectivity weigths and connectivity
+%% set the input
 
 T=(nsec*1000)./dt;
 [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
-
-[w,J] = w_fun(M,N,q,d);
+%%{
+%{
+s=ones(M,T).*1.6;
+lambda=1/tau_x;
+x=zeros(M,T);
+for t=1:T-1
+    x(:,t+1)=(1-lambda*dt)*x(:,t)+s(:,t)*dt;  
+end
+%}
+%{
+figure()
+plot(s(1,:))
+%}
 
 %% simulate network activity
 
-[fe,fi,xhat_e,xhat_i,re,ri] =net_fun_complete(dt,sigmav,mu,tau_vec,s,w,J);
+[fe,fi,xhat_e,xhat_i,re,ri] =net_fun_complete(dt,sigmav,beta,tau_vec,s,w,J);
+
+%% performance
+[rmse,kappa] = performance_fun(x,xhat_e,xhat_i,re,ri);
+gL=0.7;
+loss=gL*mean(rmse) + (1-gL).*mean(kappa);
+display(loss, 'average loss')
 
 %%
 sc_E=sum(mean(fe,1))./nsec;              % spikes/sec
 sc_I=sum(mean(fi,1))./nsec;
 display([sc_E,sc_I],'average spike count per second in E and I')
 
-%% nice plot signal and E estimate, spikes and pop. firing rate
+%% plot signal and E estimate, spikes and pop. firing rate
 
-figname='activity22';
+figname='activity_optimal';
 savefile='/Users/vkoren/ei_net/figure/implementation/';
 
 pos_vec=[0,0,20,17];
-plt_network(x,xhat_e,xhat_i,fe,fi,re,ri,dt,tau_fe,tau_fi,figname, savefig,savefile,pos_vec)
+plt_network(x,xhat_e,xhat_i,fe,fi,re,ri,dt,tau_re,tau_ri,figname, savefig,savefile,pos_vec)
 
 

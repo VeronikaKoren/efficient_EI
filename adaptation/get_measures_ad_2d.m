@@ -1,0 +1,172 @@
+
+close all
+clear all
+clc
+
+addpath('function/')
+saveres=0;
+showfig=0;
+
+disp('computing balance measures as a function of the adaptation current in E and I neurons')
+
+%% parameters
+
+M=3;                                   
+N=400;                               
+nsec=1;                               
+
+sigma_s=2;
+tau_s=10;
+tau_x=10;
+tau_e=10;                             
+tau_i=10;                          
+
+beta=14;                           % quadratic cost
+sigmav=5;                       % standard deviation of the noise
+
+q=4;                                   % ratio E to I 
+d=3;
+dt=0.02;                               % time step in ms  
+
+T=(nsec*1000)./dt;
+
+%% simulate network activity
+
+tic
+ntr=100;
+variable=[5:0.5:10,11:20,25,30:10:100,200]; 
+%variable=[5,10,50,100];
+n=length(variable);
+
+rms=zeros(n,n,2);
+cost=zeros(n,n,2);
+
+frate=zeros(n,n,2);
+CVs=zeros(n,n,2);
+
+r_ei=zeros(n,n,2);
+meanE=zeros(n,n,2);
+meanI=zeros(n,n,2);
+
+delta=zeros(n,2);     % difference of time constants
+
+for g=1:n
+    
+    disp(n-g)
+    tau_re=variable(g);               
+    delta(g,1)=(1/tau_e) - (1/tau_re);
+    
+    for h=1:n
+        
+        tau_ri=variable(h);
+        if g==1
+            delta(h,2)=(1/tau_i) - (1/tau_ri);
+        end
+        
+        tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
+        
+        rms_tr=zeros(ntr,2);
+        cost_tr=zeros(ntr,2);
+
+        frate_tr=zeros(ntr,2);
+        CV_tr=zeros(ntr,2);
+
+        currE_tr=zeros(ntr,2);
+        currI_tr=zeros(ntr,2);
+        r_tr=zeros(ntr,2);
+        
+        for ii=1:ntr
+
+            [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
+            [I_E,I_I,r,rmse,kappa,CV,fr] = current_fun(dt,sigmav,beta,tau_vec,s,N,q,d,x);
+            
+            rms_tr(ii,:)=rmse;
+            cost_tr(ii,:)=kappa;
+            
+            CV_tr(ii,:)=CV;
+            frate_tr(ii,:)=fr;
+            
+            r_tr(ii,:)=r;
+            currE_tr(ii,:)=I_E;
+            currI_tr(ii,:)=I_I;
+            
+        end
+        
+        rms(g,h,:)=mean(rms_tr);
+        cost(g,h,:)=mean(cost_tr);
+        
+        frate(g,h,:)=mean(frate_tr);
+        CVs(g,h,:)=mean(CV_tr);
+        
+        r_ei(g,h,:)=mean(r_tr);
+        meanE(g,h,:)=mean(currE_tr);
+        meanI(g,h,:)=mean(currI_tr);
+        
+    end
+    
+end
+toc
+%%
+
+if saveres==1
+    
+    param_name={{'N'},{'M'},{'tau_s'},{'b'},{'c'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'d'},{'dt'},{'nsec'},{'ntrial'}};
+    parameters={{N},{M},{tau_s},{b},{c},{tau_vec},{q},{d},{dt},{nsec},{ntr}};
+    
+    savename='adaptation_2d_measures';
+    savefile='result/adaptation/';
+    save([savefile,savename],'delta','variable','frate','CVs','rms','cost','r_ei','meanE','meanI','parameters','param_name')
+    
+end
+
+%%
+
+if showfig==1
+    
+    rmse_tot= (rms(:,:,1) + rms(:,:,2))./2;
+    cost_tot=(cost(:,:,1)+cost(:,:,2))./2;
+    netE=squeeze(sum(meanE,3));
+    netI=squeeze(sum(meanI,3));
+     
+    H=figure('units','centimeters','Position',[0,0,28,32]);
+    subplot(3,2,1)
+    imagesc(variable,variable,log(rms(:,:,1)))
+    %set(gca,'YScale','log')
+    %set(gca,'XScale','log')
+    %xlabel('\tau_r^E')
+    ylabel('\tau_r^I')
+    colorbar
+    title('encoding error')
+    
+    subplot(3,2,2)
+    imagesc(variable,variable,log(cost_tot))
+    colorbar
+    title('metabolic cost')
+    
+    subplot(3,2,3)
+    imagesc(variable,variable,netE)
+    ylabel('\tau_r^I')
+    colorbar
+    title('net syn. current in E')
+    
+    subplot(3,2,4)
+    imagesc(variable,variable,netI)
+    colorbar
+    title('net syn. current in I')
+
+    subplot(3,2,5)
+    imagesc(variable,variable,r_ei(:,:,1))
+    xlabel('\tau_r^E')
+    ylabel('\tau_r^I')
+    colorbar
+    title('correlation of syn. currents in E')
+    
+    subplot(3,2,6)
+    imagesc(variable,variable,r_ei(:,:,2))
+    colorbar
+    xlabel('\tau_r^E')
+    title('correlation of syn. currents in I')
+    
+end
+%}
+

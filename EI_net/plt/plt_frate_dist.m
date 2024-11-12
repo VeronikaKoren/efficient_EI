@@ -9,9 +9,9 @@ figname='dist_frate_0net';
 addpath('/Users/vkoren/ei_net/result/statistics/frate/')
 savefile=[cd,'/figure/implementation/'];
 
-N=1500;
+N=400;
 
-loadname=['mean_fr_N',sprintf('%1.0i',N)];       % get spikes
+loadname=['mean_fr_N',sprintf('%1.0i',N),'_loss'];       % get spikes
 load(loadname);
 
 fr=cell(2,1);

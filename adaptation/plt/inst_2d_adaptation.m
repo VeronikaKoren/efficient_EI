@@ -1,7 +1,7 @@
 clear all
 close all
 
-savefig=0;
+savefig=1;
 pop=1;  
 
 addpath('/Users/vkoren/ei_net/result/adaptation/')
@@ -48,7 +48,7 @@ set(clb,'YTick',clby{pop},'fontsize',fs)
 clb.FontSize=fs;
 clb.Label.String = 'corr. coefficient';
 
-title(['instantaneous balance in ',namepop{pop}],'fontweight','normal','fontsize',fs-1)
+title(['inst. balance in ',namepop{pop}],'fontweight','normal','fontsize',fs-1)
 xlabel(namevar{1},'fontsize',fs)
 ylabel(namevar{2},'fontsize',fs,'rotation',0)
 
