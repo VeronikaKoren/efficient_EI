@@ -4,9 +4,9 @@ close all
 clear all
 %clc
 
-savefig=1;
+savefig=0;
 figname='activity_3taus';
-addpath([cd,'/function/'])
+addpath([cd,'/code/function/'])
 
 %% parameters
 
