@@ -2,7 +2,7 @@
 clear all
 %clc
 
-saveres=1;
+saveres=0;
 showfig=0;
 addpath([cd,'/code/function/'])
 

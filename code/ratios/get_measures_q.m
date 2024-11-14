@@ -1,8 +1,8 @@
 
 clear all
 
-addpath([cd,'/function/'])
-saveres=1;
+addpath([cd,'/code/function/'])
+saveres=0;
 
 disp('computing measures as a function of q=ratio of E to I neurons');
 %% parameters
@@ -20,10 +20,8 @@ tau_i=10;                              % time const I estimate
 tau_re=10;                             % t. const firing rate of E neurons
 tau_ri=10;                             % t. constant firing rate of I neurons 
    
-b=1;
-c=33;
-beta=b*log(N);                           % quadratic cost constant
-sigmav=c/log(N);                       % standard deviation of the noise
+beta=14;                           % quadratic cost constant
+sigmav=5;                       % standard deviation of the noise
 
 dt=0.02;                               % time step in ms     
 d=3.00;                                   % ratio of weight amplitudes I to E 
@@ -136,8 +134,8 @@ end
 
 if saveres==1
     
-    param_name={{'N'},{'M'},{'tau_s'},{'b'},{'c'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
-    parameters={{N},{M},{tau_s},{b},{c},{tau_vec},{q},{dt},{nsec},{ntr}};
+    param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
+    parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{dt},{nsec},{ntr}};
     
     savefile='result/ratios/';
     savename='measures_q';

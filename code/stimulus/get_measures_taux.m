@@ -3,7 +3,7 @@ clear all
 close all
 
 addpath([cd,'/code/function/'])
-computing=1;
+computing=0;
 
 if computing ==1
     saveres=1;

@@ -4,7 +4,7 @@ clear all
 saveres=0;
 type=2;
 
-addpath([cd,'/function/'])
+addpath([cd,'/code/function/'])
 
 namet={'','perm_full','perm_partial'};
 disp(['computing variance in V with ',namet{type}]);
@@ -27,10 +27,8 @@ tau_i=10;                              % time const I estimate
 tau_re=10;                             % t. const firing rate of E neurons
 tau_ri=10;                             % t. constant firing rate of I neurons 
    
-b=1;
-c=33;
-beta=b*log(N);                           % quadratic cost constant
-sigmav=c/log(N);                       % standard deviation of the noise
+beta=14;                           % quadratic cost constant
+sigmav=5;                       % standard deviation of the noise
 
 dt=0.02;                               % time step in ms     
 q=4;
@@ -70,8 +68,8 @@ end
 
 if saveres==1
     
-    param_name={{'N'},{'M'},{'tau_s'},{'b'},{'c'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
-    parameters={{N},{M},{tau_s},{b},{c},{tau_vec},{q},{dt},{nsec},{ntr}};
+    param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
+    parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{dt},{nsec},{ntr}};
     
     savefile='result/connectivity/';
     savename=['stdV_',namet{type}];

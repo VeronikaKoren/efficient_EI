@@ -2,8 +2,8 @@
 clear all
 close all
 
-addpath([cd,'/function/'])
-saveres=1;
+addpath([cd,'/code/function/'])
+saveres=0;
 showfig=0;
 
 vari='tau_s';
@@ -24,10 +24,8 @@ tau_i=10;                              % time const I estimate
 tau_re=10;                             % t. const firing rate of E neurons
 tau_ri=10;                             % t. constant firing rate of I neurons 
    
-b=1;
-c=33;
-mu=b*log(N);                           % quadratic cost constant
-sigmav=c/log(N);                       % standard deviation of the noise
+beta=14;                           % quadratic cost constant
+sigmav=5;                       % standard deviation of the noise
 
 dt=0.02;                               % time step in ms     
 q=4;                                   % ratio of weight amplitudes I to E 
@@ -72,7 +70,7 @@ for g=1:n
     
     for ii=1:ntr
         [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
-        [I_E,I_I,r,rmse,kappa,CV,fr] = current_fun(dt,sigmav,mu,tau_vec,s,N,q,d,x);
+        [I_E,I_I,r,rmse,kappa,CV,fr] = current_fun(dt,sigmav,beta,tau_vec,s,N,q,d,x);
         
         rmse_tr(ii,:)=rmse;
         kappa_tr(ii,:)=kappa;
@@ -102,8 +100,8 @@ toc
 
 if saveres==1
     
-    param_name={{'N'},{'M'},{'tau_s'},{'b'},{'c'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
-    parameters={{N},{M},{tau_s},{b},{c},{tau_vec},{q},{dt},{nsec},{ntr}};
+    param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
+    parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{dt},{nsec},{ntr}};
     
     savefile='result/stimulus/';
     savename='measures_taus';

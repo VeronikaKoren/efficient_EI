@@ -4,7 +4,7 @@ close all
 
 addpath([cd,'/code/function/'])
 
-computing=1;
+computing=0;
 
 if computing==1
     saveres=1;
@@ -32,8 +32,7 @@ tau_i=10;                              % time const I estimate
 tau_re=10;                             % t. const firing rate of E neurons
 tau_ri=10;                             % t. constant firing rate of I neurons 
    
-%b=1;
-%c=33;
+
 beta=14;                           % quadratic cost constant
 sigmav=5;                       % standard deviation of the noise
 

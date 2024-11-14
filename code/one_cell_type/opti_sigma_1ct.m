@@ -1,13 +1,13 @@
-% simple net with function
+% one cell type net ; optimization of noise intensity
 
 clear all
 close all
 
 addpath([cd,'/code/function/'])
-saveres=1;
-showfig=0
+saveres=0;
+showfig=0;
 
-type=1;
+type=2;
 
 namet={'1pop','1pop_rectified'};
 display(['computing optimal sigma for the network ', namet{type}])
@@ -20,8 +20,7 @@ N=400;
 tau=10;                     % time constant of the membrane potential
 
 nu=0;                       % linear cost
-b=1.5;
-beta=b*log(N);              % quadratic cost
+beta=11.4;              % quadratic cost
 
 dt=0.02;                    % time step  
 
@@ -36,9 +35,8 @@ tau_x=10;
 T=nsec*1000/dt;
 ntr=100;
 
-%c_vec=14:20;
-c_vec=0:1:45;
-n=length(c_vec);
+sigma_vec=0:0.17:7.5;
+n=length(sigma_vec);
 
 rmse_tr=zeros(n,ntr);
 kappa_tr=zeros(n,ntr);
@@ -46,14 +44,14 @@ kappa_tr=zeros(n,ntr);
 for k=1:n
 
     disp(n-k);
-    c=c_vec(k);
-    sigmav=c/log(N);                % quadratic cost
+    sigmav=sigma_vec(k);                % quadratic cost
     
     for ii=1:ntr
         [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
-        [xhat,f,r] =network_1pop_fun(N,s,dt,tau,beta,nu,sigmav,type);
-             
+
+        [xhat,f,r] = network_1ct_fun(N,s,dt,tau,beta,sigmav);     
         [rmse,kappa] = performance_fun1(x,xhat,r);
+        
         rmse_tr(k,ii)=rmse;
         kappa_tr(k,ii)=kappa;
     end
@@ -69,21 +67,20 @@ gl=0.7;
 loss=(gl.*error)+((1-gl).*(cost));
 
 [~,idx]=min(loss);
-c_star=c_vec(idx);
-sigma_star=c_star/log(N);
+sigma_star=sigma_vec(idx);
 
-display(c_star,'optimal c parameter')
+display(sigma_star,'optimal noise strength sigma')
 
 %%
 
 if saveres==1
     
-    param_name={{'N'},{'M'},{'tau_s'},{'b'},{'c'},{'tau'},{'dt'},{'nsec'},{'ntrial'}};
-    parameters={{N},{M},{tau_s},{},{c},{tau},{dt},{nsec},{ntr}};
+    param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau'},{'dt'},{'nsec'},{'ntrial'}};
+    parameters={{N},{M},{tau_s},{beta},{},{tau},{dt},{nsec},{ntr}};
 
     savefile='result/implementation/';
     savename='optimization_1ct_sigma';
-    save([savefile,savename],'c_vec','c_star','sigma_star','ms','mc','error','cost','loss','gl','param_name','parameters');
+    save([savefile,savename],'sigma_vec','sigma_star','ms','mc','error','cost','loss','gl','param_name','parameters');
 end
 
 %% show figure?

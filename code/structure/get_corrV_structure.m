@@ -6,9 +6,9 @@ type=1;
 
 disp(['computing correlation of membrane potentials with ',namet{type}]);
 
-addpath([cd,'/function/'])
+addpath([cd,'/code/function/'])
 saveres=0;
-showfig=1;
+showfig=0;
 
 %% parameters
 
@@ -25,10 +25,8 @@ tau_i=10;                              % time const I estimate
 tau_re=10;                             % t. const firing rate of E neurons
 tau_ri=10;                             % t. constant firing rate of I neurons 
    
-b=1;
-c=33;
-beta=b*log(N);                           % quadratic cost constant
-sigmav=c/log(N);                       % standard deviation of the noise
+beta=14;                           % quadratic cost constant
+sigmav=5;                       % standard deviation of the noise
 
 dt=0.02;                               % time step in ms     
 q=4;
@@ -84,10 +82,12 @@ for g=1:n
 end
 
 %%
+
 order=[4,2,1,3];
 dpo=dpn(order,:);
 Co=Ct(order);
 rV=rV_all(order,:);
+
 %%
 if showfig==1
     if type==1
@@ -123,8 +123,8 @@ end
 
 if saveres==1
     
-    param_name={{'N'},{'M'},{'tau_s'},{'b'},{'c'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
-    parameters={{N},{M},{tau_s},{b},{c},{tau_vec},{q},{dt},{nsec},{ntr}};
+    param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
+    parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{dt},{nsec},{ntr}};
     
     savefile='result/connectivity/';
     savename=['corrV_',namep{type}];

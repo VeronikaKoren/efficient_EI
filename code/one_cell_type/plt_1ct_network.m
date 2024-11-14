@@ -1,4 +1,4 @@
-function [] = plt_1ct_network(x,xhat,y,r,dt,tau,pos_vec,savefig,savefile,figname)
+function [] = plt_1ct_network(x,xhat,f,r,dt,tau,pos_vec,savefig,savefile,figname)
  % plot the signal and estimate, spike train and firing rate
 
 %%
@@ -37,7 +37,7 @@ xlimit=[0,nsec*1000];
 %namex={'$x_1(t)$','$x_2(t)$','$x_3(t)$'};
 %namexhat={'$\hat{x}_1(t)$','$\hat{x}_2(t)$','$\hat{x}_3(t)$'};
 
-y=y(1:N,:);
+f=f(1:N,:);
 %% plot
 
 H=figure('name',figname);
@@ -76,7 +76,7 @@ end
 
 subplot(6,1,[4 5])
 hold on
-plot(tindex,(grid.*y)','k.','markersize',ms);
+plot(tindex,(grid.*f)','k.','markersize',ms);
 hold off
 box off
 

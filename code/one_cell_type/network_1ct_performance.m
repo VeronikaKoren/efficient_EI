@@ -18,15 +18,9 @@ N=500;
 
 tau=10;                     % time constant of the membrane potential
 
-b=1.9;
-c=11.02;
-
 nu=0;                       % linear cost
-%beta1=11.4;                % quadratic cost (used for N=400)
-%sigma1=1.84;               % standard deviation of the noise (used for N =400)
-
-beta1=b*log(N);
-sigma1=c/log(N);
+beta1=11.4;                % quadratic cost (used for N=400)
+sigma1=1.84;               % standard deviation of the noise (used for N =400)
 
 dt=0.02;                    % time step  
 

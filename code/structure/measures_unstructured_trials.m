@@ -5,7 +5,7 @@ type=2;
 namet={'structured','perm_full_all','perm_partial_all'};
 const_stim=1;
 
-saveres=1;
+saveres=0;
 showfig=0;
 ntr=200;
 
@@ -40,13 +40,16 @@ which_permuted={'','I to I','E to I','I to E','all'};      % which matrix is shu
 
 % constant stimulus
 if const_stim==1
-T=(nsec*1000)./dt;
-s=ones(M,T).*1.6;
-lambda=1/tau_x;
-x=zeros(M,T);
-for t=1:T-1
-    x(:,t+1)=(1-lambda*dt)*x(:,t)+s(:,t)*dt;  
-end
+
+    T=(nsec*1000)./dt;
+    s=ones(M,T).*1.6;
+    lambda=1/tau_x;
+    
+    x=zeros(M,T);
+    for t=1:T-1
+        x(:,t+1)=(1-lambda*dt)*x(:,t)+s(:,t)*dt;
+    end
+
 end
 %% compute performance with noise in the connectivity
 
@@ -130,8 +133,6 @@ if showfig==1
     subplot(3,2,6)
     boxplot(net_tr)
     ylabel('net current')
-    %}
-    
 
 end
 %%

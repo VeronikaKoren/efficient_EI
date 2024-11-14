@@ -10,7 +10,6 @@ figname='activity_1ct';
 disp('computing spiking activity of the 1CT network ')
 
 addpath('code/function/')
-%addpath([cd,'/code/one_cell_type/plot/'])
 %% parameters
 
 nsec=1;                     % simulation length in seconds
@@ -49,6 +48,7 @@ display(frate,'firing rate');
 %% plot signal, estimate and spikes
 
 pos_vec=[0,0,20,15];
-plt_1ct_nework(x,xhat,f,r,dt,tau,pos_vec,savefig,savefile,figname)
+%plt_1ct_nework(x,xhat,f,r,dt,tau,pos_vec,savefig,savefile,figname)
+plt_1ct_network(x,xhat,f,r,dt,tau,pos_vec,savefig,savefile,figname)
 %}
 

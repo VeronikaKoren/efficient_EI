@@ -4,7 +4,7 @@ clear all
 type=2;
 namet={'structured','perm_full_all','perm_partial_all'};
 
-saveres=1;
+saveres=0;
 showfig=0;
 ntr=200;
 
@@ -27,8 +27,6 @@ tau_i=10;                              % time const I estimate
 tau_re=10;                             % t. const firing rate of E neurons
 tau_ri=10;                             % t. constant firing rate of I neurons 
    
-%b=1;
-%c=33;
 if type==1
     beta=14;
     sigmav=5;
@@ -117,30 +115,6 @@ if showfig==1
     set(gca,'XTick',1:3)
     set(gca,'XTickLabel',{'E','I','net'})
     line([2,4],[-0.43,-0.43])
-
-
-    %{
-    figure()
-    boxplot(net_tr)
-    
-    subplot(3,2,1)
-    boxplot(rmse_tr)
-
-    subplot(3,2,2)
-    boxplot(kappa_tr)
-
-    subplot(3,2,3)
-    boxplot(fr_tr)
-
-    subplot(3,2,4)
-    boxplot(CV_tr)
-
-    subplot(3,2,5)
-    boxplot(r_tr)
-
-    subplot(3,2,6)
-    %}
-    
 
 end
 %%
