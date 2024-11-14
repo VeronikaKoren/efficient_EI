@@ -1,11 +1,11 @@
 # General
-This code is associated with the paper "Efficient coding in biophysically realistic excitatory-inhibitory spiking networks." published in eLife in 2024.
+This code is associated with the paper "Efficient coding in biophysically realistic excitatory-inhibitory spiking networks." authored by Veronika Koren, Simone Blanco Malerba, Tilo Schwalger and Stefano Panzeri, published in eLife in 2024.
 
 The author of the code is Veronika Koren.  
 For any questions, please write to koren.veronika@gmail.com.
 
 # How to open and run a script
-Please do not add all the paths but follow one of the two points described below. 1) with a terminal
+Please do not add all the paths but follow one of the two points described below:
 
 1) in a terminal, cd to the extracted folder "efficient_EI"  
 open matlab desktop from the terminal by typing "matlab" in the same terminal; this opens a matlab desktop  
