@@ -3,12 +3,12 @@ close all
 clear all
 clc
 
-addpath('function/')
 saveres=0;
 showfig=0;
 
 disp('computing balance measures as a function of the adaptation current in E and I neurons')
 
+addpath('code/function/')
 %% parameters
 
 M=3;                                   
@@ -35,7 +35,7 @@ T=(nsec*1000)./dt;
 tic
 ntr=100;
 variable=[5:0.5:10,11:20,25,30:10:100,200]; 
-%variable=[5,10,50,100];
+%variable=[5,10,50,100]; % for testing the code
 n=length(variable);
 
 rms=zeros(n,n,2);

@@ -5,7 +5,7 @@ close all
 saveres=0;
 
 disp('computing measures as a function of sigma');
-addpath([cd,'/function/'])
+addpath([cd,'/code/function/'])
 
 %% parameters
 

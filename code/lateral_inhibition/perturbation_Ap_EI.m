@@ -26,10 +26,8 @@ tau_i=10;                              % time const I estimate
 tau_re=10;                             % t. const firing rate of E neurons
 tau_ri=10;                             % t. constant firing rate of I neurons 
    
-b=1.0;                                 % sets the strength of the regularizer     
-c=33;                                  % sets the strength of the noise 
-beta=b*log(N);                         % quadratic cost constant
-sigmav=c/log(N);                       % noise intensity
+beta=14;                         % quadratic cost constant
+sigmav=5;                       % noise intensity
 
 dt=0.02;                               % time step in ms     
 q=4;                                   % ratio number E to I neurons

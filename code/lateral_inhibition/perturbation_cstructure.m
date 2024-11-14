@@ -3,7 +3,7 @@ close all
 clear all
 clc
 
-saveres=1;
+saveres=0;
 showfig=0;                  
 
 addpath('code/function/')
@@ -18,7 +18,7 @@ Jp=2;   % [2,3,4,5]
 disp(['perturbation experiments with removed conectivity structure with ',ntype{type},' ',Jp_name{Jp}])
 %% parameters
 
-ntr=200;                               % number of trials
+ntr=100;                               % number of trials
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
@@ -34,10 +34,8 @@ tau_i=10;                              % time const I estimate
 tau_re=10;                             % t. const firing rate of E neurons
 tau_ri=10;                             % t. constant firing rate of I neurons 
    
-b=1.0;                                 % sets the strength of the regularizer     
-c=33;                                  % sets the strength of the noise 
-beta=b*log(N);                         % quadratic cost constant
-sigmav=c/log(N);                       % noise intensity
+beta=14;                         % quadratic cost constant
+sigmav=5;                       % noise intensity
 
 dt=0.02;                               % time step in ms     
 q=4;                                   % ratio number E to I neurons

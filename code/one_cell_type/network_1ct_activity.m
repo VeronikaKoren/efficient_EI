@@ -3,13 +3,14 @@
 clear all
 close all
 
-savefig=1;
+savefig=0;
 savefile='/Users/vkoren/ei_net/figure/implementation/';
 figname='activity_1ct';
 
-display('computing spiking activity of the 1CT network ')
+disp('computing spiking activity of the 1CT network ')
 
-addpath([cd,'/function/'])
+addpath('code/function/')
+%addpath([cd,'/code/one_cell_type/plot/'])
 %% parameters
 
 nsec=1;                     % simulation length in seconds
@@ -18,10 +19,9 @@ M=10;                        % number of inputs
 N=400;
 tau=10;                     % time constant of the membrane potential
 
-
 nu=0;                       % linear cost
-beta=11.4                % quadratic cost
-sigmav=1.84            % standard deviation of the noise
+beta=11.4;                % quadratic cost
+sigmav=1.84;            % standard deviation of the noise
 
 sigma_s=2;
 dt=0.02;                    % time step  
@@ -49,6 +49,6 @@ display(frate,'firing rate');
 %% plot signal, estimate and spikes
 
 pos_vec=[0,0,20,15];
-plt_1ct_activity(x,xhat,f,r,dt,tau,pos_vec,savefig,savefile,figname)
+plt_1ct_nework(x,xhat,f,r,dt,tau,pos_vec,savefig,savefile,figname)
 %}
 

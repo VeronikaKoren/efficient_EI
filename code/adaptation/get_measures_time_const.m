@@ -1,10 +1,10 @@
 
-%close all
+close all
 clear all
-%clc
+clc
 
 type=1;
-computing=0;
+computing=1;
 
 ntype={'tau_re','tau_ri'};
 
@@ -19,7 +19,7 @@ end
 
 disp(['computing measures as a function of ',ntype{type}])
 
-addpath('function/')
+addpath('code/function/')
 %% parameters
 
 M=3;                                   % number of input variables    

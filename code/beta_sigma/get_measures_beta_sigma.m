@@ -2,16 +2,16 @@
 clear all
 close all
 
-computing=0;   % testing or computing?
+computing=1;   % testing or computing?
 
-if computing ==1
+if computing==1
     saveres=1;
     showfig=0;
     disp('computing measures as a function of beta and sigma (2D grid search)');
 else
     saveres=0;
     showfig=1;
-    disp('testing measures as a function of beta and sigma (2D grid search)');
+    disp('testing code measures as a function of beta and sigma (2D grid search)');
 end
 
 %% parameters
@@ -38,7 +38,7 @@ d=3;
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 %%
 
-addpath([cd,'/function/'])
+addpath('code/function/')
 
 %% compute measures
 if computing==0
@@ -47,7 +47,7 @@ if computing==0
     sigma_vec=0:5;
 
 else
-    ntr=50;
+    ntr=100;
     beta_vec=0:2:36;
     sigma_vec=0:1:25;
 end

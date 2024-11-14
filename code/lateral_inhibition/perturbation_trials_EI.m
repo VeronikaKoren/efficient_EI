@@ -4,14 +4,14 @@ clear all
 clc
 
 Ap=0.4;   % strength of perturbation wrt firing threshold (1 is at the threshold)
-saveres=1;
+saveres=0;
 showfig=0;                  
 namepop={'different tuning','similar tuning'};
 display(Ap,'ap');
 
 %% parameters
 
-ntr=200;                               % number of trials
+ntr=100;                               % number of trials
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   

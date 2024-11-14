@@ -6,7 +6,7 @@ clc
 a_s=1;  % strength of the stimulus
 a_p=1;   % strength of perturbation wrt firing threshold (1 is at the threshold)
 
-saveres=1;
+saveres=0;
 showfig=0;                  
 namepop={'different tuning','similar tuning'};
 
@@ -16,7 +16,7 @@ addpath('code/function/')
 display(['perturbation strength ',sprintf('%0.1f',a_p),' in presence of a stimulus strength ',sprintf('%0.1f',a_s)]);
 %% parameters
 
-ntr=200;                               % number of trials
+ntr=100;                               % number of trials
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   

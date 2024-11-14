@@ -5,7 +5,7 @@ close all
 g_l=0.7;        % weighting of the error vs cost
 
 savefig=0;
-showfig=1;
+showfig=0;
 namepop={'in E','in I'};
 %%
 

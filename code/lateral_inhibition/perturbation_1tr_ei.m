@@ -21,10 +21,9 @@ tau_i=10;                              % time const I estimate
 tau_re=10;                             % t. const firing rate of E neurons
 tau_ri=10;                             % t. constant firing rate of I neurons 
    
-b=1.0;                                 % sets the strength of the regularizer     
-c=33;                                  % sets the strength of the noise 
-beta=b*log(N);                         % quadratic cost constant
-sigmav=c/log(N);                       % noise intensity
+
+beta=14;                         % quadratic cost constant
+sigmav=5;                       % noise intensity
 
 dt=0.02;                               % time step in ms     
 q=4;                                   % ratio number E to I neurons
@@ -143,7 +142,7 @@ plot(tidx,r_target,'color',red)
 text(0.05,0.9,namen{1},'units','normalized','color',red,'fontsize',fs)
 box off
 
-rectangle('Position',[stim_on-spont_on,max(r_target),stim_off-stim_on,max(r_target)/3],'FaceColor',[0,1,1,0.2],'EdgeColor',[0,1,1,0.2],'Linewidth',1)
+%rectangle('Position',[stim_on-spont_on,max(r_target),stim_off-stim_on,max(r_target)/3],'FaceColor',[0,1,1,0.2],'EdgeColor',[0,1,1,0.2],'Linewidth',1)
 text(stim_on-spont_on,max(r_target)+max(r_target)/6,'stim.','color',red,'fontsize',fs)
 ylabel('z^E_{i}(t)','interpreter','tex','fontsize',14)
 xlim(xlimit)
@@ -164,7 +163,7 @@ for ii=1:2
     text(0.04,0.75+(ii-1)*0.18,namepop{ii},'units','normalized','color',coltxt{ii},'fontsize',fs)
 end
 line([tidx(1) tidx(end)],[0 0],'color',gray,'linestyle','--')
-rectangle('Position',[stim_on-spont_on,-0.015,stim_off-stim_on,0.03],'FaceColor',[0,1,1,0.2],'EdgeColor',[0,1,1,0.2],'Linewidth',1)
+%rectangle('Position',[stim_on-spont_on,-0.015,stim_off-stim_on,0.03],'FaceColor',[0,1,1,0.2],'EdgeColor',[0,1,1,0.2],'Linewidth',1)
 rectangle('Position',[stim_on-spont_on,-0.0135,100,0.0008],'FaceColor','k','EdgeColor',gray,'Linewidth',1)
 text(stim_on-spont_on+50,-0.009,'measured','units','data','color','k','fontsize',fs)
 ylabel('\Delta z^I(t)','Fontsize',fs)
@@ -184,7 +183,7 @@ hold off
 box off
 
 line([tidx(1) tidx(end)],[0 0],'linestyle','--','color',gray)
-rectangle('Position',[stim_on-spont_on,minid-0.01,stim_off-stim_on,stim_zoneI],'FaceColor',[0,1,1,0.2],'EdgeColor',[0,1,1,0.2],'Linewidth',1)
+%rectangle('Position',[stim_on-spont_on,minid-0.01,stim_off-stim_on,stim_zoneI],'FaceColor',[0,1,1,0.2],'EdgeColor',[0,1,1,0.2],'Linewidth',1)
 rectangle('Position',[stim_on-spont_on,minid-0.001,100,0.0003],'FaceColor','k','EdgeColor',gray,'Linewidth',1)
 ylabel('\Delta z^E(t)','Fontsize',fs)
 xlabel('time [ms]','Fontsize',fs)
