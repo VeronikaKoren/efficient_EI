@@ -2,7 +2,7 @@
 close all
 clear all
 
-savefig=[1,1,1,1,1,1];
+savefig=[0,0,0,0,0,0];
 ctype=3;
 
 namet={'structured','perm_full_all','perm_partial_all'};
@@ -16,7 +16,7 @@ figname5=['fr_regular_',namet{ctype}];
 figname6=['CV_regular_',namet{ctype}];
 
 addpath('/Users/vkoren/ei_net/result/connectivity/');
-savefile=['/Users/vkoren/ei_net/figure/structure/',namef{ctype},'/']
+savefile=['/Users/vkoren/ei_net/figure/structure/',namef{ctype},'/'];
 
 ntr=200;
 rmse=zeros(ntr,2,2);
@@ -150,7 +150,7 @@ end
 %% average balance
 
 yt=[-1.5,-0.5];
-ylimit=[-1.8,-0.2]
+ylimit=[-1.8,-0.2];
 
 H=figure('name',figname3,'Position',pos_vec);
 for k=1:2

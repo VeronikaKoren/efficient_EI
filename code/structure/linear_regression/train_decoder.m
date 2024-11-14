@@ -1,13 +1,12 @@
 
 clear all
 
-saveres=1;
+saveres=0;
 
 type=1;
 namep={'structured','perm_full_all','perm_partial_all'};
 
-
-ntr=100;  % number of trials
+ntr=200;  % number of trials
 ptr=0.7;  % proportion of training data
 
 disp(['training a decoder on activity from ',namep{type},' model'])
