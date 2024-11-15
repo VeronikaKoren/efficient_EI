@@ -1,4 +1,13 @@
 
+% computes measures of performance  and dynamics as a
+% function of time constants of single neuron readout of E and I neurons (tau_re and tau_ri)
+% two-dimensional parameter search
+
+% measures of performance: error, cost
+% measures of dynamics: firing rate,
+% coefficient of variation, instantaneous and average E-I balance
+
+
 close all
 clear all
 clc
@@ -11,22 +20,24 @@ disp('computing balance measures as a function of the adaptation current in E an
 addpath('code/function/')
 %% parameters
 
-M=3;                                   
-N=400;                               
-nsec=1;                               
+nsec=1;                                % duration of the trial in seconds   
+dt=0.02;                               % time step in ms 
 
-sigma_s=2;
-tau_s=10;
-tau_x=10;
-tau_e=10;                             
-tau_i=10;                          
+M=3;                                   % number of input variables (stimulus features) 
+N=400;                                 % number of E neurons                                  
 
-beta=14;                           % quadratic cost
-sigmav=5;                       % standard deviation of the noise
+sigma_s=2;                             % strength of the noise for defining the stimulus features (OU processes)
+tau_s=10;                              % time constant of the stimuls (OU process)
+tau_x=10;                              % time constant of the target signal  
 
-q=4;                                   % ratio E to I 
-d=3;
-dt=0.02;                               % time step in ms  
+tau_e=10;                              % time constant of the excitatory estimate
+tau_i=10;                              % time const I estimate 
+
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons
+    
+q=4;                                   % E-I ratio
+d=3;                                   % ratio of mean I-I to E-I connectivity  
 
 T=(nsec*1000)./dt;
 
@@ -168,5 +179,5 @@ if showfig==1
     title('correlation of syn. currents in I')
     
 end
-%}
+
 

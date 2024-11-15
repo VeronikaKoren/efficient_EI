@@ -1,4 +1,4 @@
-% to measure the metabolic cost and the firing rate in the E-I network
+% computes measures of neural dynamics in the optimal E-I network
 
 close all
 clear all

@@ -1,8 +1,9 @@
-% for the plot of the activity
+% simulates and plots the optimal E-I network driven by the stimulus with
+% 3 different time constants
 
 close all
 clear all
-%clc
+clc
 
 savefig=0;
 figname='activity_3taus';
@@ -28,10 +29,10 @@ sigmav=5;                              % noise intensity
 
 dt=0.02;                               % time step in ms     
 q=4;                                   % ratio number E to I neurons
-d=3;                                   % ratio IPSP/EPSP 
+d=3;                                   % ratio mean I-I to mean E-I connectivity
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
-taus_vec=[10,50,300]';               % time constant of the stimulus in dimensions 1, 2 and 3
+taus_vec=[10,50,300]';               % time constant of the OU stimulus in dimensions 1, 2 and 3
 
 %% set the input
 
@@ -44,19 +45,20 @@ T=(nsec*1000)./dt;
 
 [fe,fi,xhat_e,xhat_i,re,ri] =net_fun_complete(dt,sigmav,beta,tau_vec,s,w,J);
 
-%% performance
+%% get performance
 
 [rmse,kappa] = performance_fun(x,xhat_e,xhat_i,re,ri);
 gL=0.7;
 loss=gL*mean(rmse) + (1-gL).*mean(kappa);
 display(loss, 'average loss')
 
-%%
+%% spike count
+
 sc_E=sum(mean(fe,1))./nsec;              % spikes/sec
 sc_I=sum(mean(fi,1))./nsec;
 display([sc_E,sc_I],'average spike count per second in E and I')
 
-%% nice plot signal and E estimate, spikes and pop. firing rate
+%% plot signal, estimates, spikes and average firing rate
 
 savefile='/Users/vkoren/ei_net/figure/implementation/';
 

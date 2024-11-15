@@ -1,4 +1,5 @@
-% to measure the metabolic cost and the firing rate in the E-I network
+
+% gets measures of dynamics of the optimal E-I network across trials 
 
 close all
 clear all
@@ -12,28 +13,28 @@ addpath([cd,'/code/function/'])
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
-nsec=20;                                % duration of the trial in seconds 
+nsec=20;                               % duration of the trial in seconds 
 
-tau_s=10;
-tau_x=10;                              % time constant of the signal  
+tau_s=10;                              % time constant of the stimulus features 
+tau_x=10;                              % time constant of the targets  
 
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons
    
-beta=14;                             % quadratic cost constant
-sigmav=5;                       % standard deviation of the noise
+beta=14;                               % quadratic cost constant
+sigmav=5;                              % standard deviation of the noise
 
 dt=0.02;                               % time step in ms     
-q=4;
-d=3;
+q=4;                                   % E-I ratio 
+d=3;                                   % ratio of mean I-I to E-I connectivity 
 
-sigma_s=2;
+sigma_s=2;                             % strength of the noise for the OU process (to define stimulus feature)
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
-Ni=N/q;
+Ni=N/q;                                 % number of I neurons
 %% simulate network activity in trials (with different realization of random variables)
 
 ntr=10;

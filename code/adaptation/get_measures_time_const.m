@@ -1,10 +1,13 @@
 
+% computes measures of performance  and dynamics as a
+% function of a time constant of single neuron readout of E and I neurons (tau_re OR tau_ri)
+
 close all
 clear all
 clc
 
-type=1;
-computing=1;
+type=1;   % 1 or 2 for selecting the variable tau_re or tau_ri
+computing=1; % 0 for testing, 1 for computing
 
 ntype={'tau_re','tau_ri'};
 
@@ -22,25 +25,24 @@ disp(['computing measures as a function of ',ntype{type}])
 addpath('code/function/')
 %% parameters
 
-M=3;                                   % number of input variables    
-N=400;                                 % number of E neurons   
-nsec=1;                               % duration of the trial in seconds 
+nsec=1;                                % duration of the trial in seconds   
+dt=0.02;                               % time step in ms 
 
-sigma_s=2;                             % sigma of the stimulus (OU process)
-tau_s=10;
-tau_x=10;
+M=3;                                   % number of input variables (stimulus features) 
+N=400;                                 % number of E neurons                                  
 
-tau_e=10;                             
-tau_i=10;                          
-tau_re=10;
-tau_ri=10;
+sigma_s=2;                             % strength of the noise for defining the stimulus features (OU processes)
+tau_s=10;                              % time constant of the stimuls (OU process)
+tau_x=10;                              % time constant of the target signal  
 
-beta=14;                           % quadratic cost
-sigmav=5;                       % standard deviation of the noise
+tau_e=10;                              % time constant of the excitatory estimate
+tau_i=10;                              % time const I estimate 
 
-q=4;                                   % ratio E to I 
-d=3;
-dt=0.02;                               % time step in ms  
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons
+    
+q=4;                                   % E-I ratio
+d=3;                                   % ratio of mean I-I to E-I connectivity   
 
 %% simulate network activity
 

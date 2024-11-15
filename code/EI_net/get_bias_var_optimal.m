@@ -1,4 +1,8 @@
 
+% computes bias of the estimators (E and I population) for the network
+% optimizing the encoding error (type=1) and for the network optimizing the
+% loss (type=2)
+
 close all
 clear all
 %clc
@@ -9,7 +13,7 @@ showfig=0;
 
 ntype={'min_error','min_loss'};
 type=2;
-disp(['computing bias and variance of the estimator in network with ',ntype{type}]);
+disp(['computing bias of the estimator in network with ',ntype{type}]);
 
 %% parameters
 
@@ -19,14 +23,16 @@ nsec=2;                                % duration of the trial in seconds
 
 sigma_s=2;
 tau_s=10;
-tau_x=10;                              % time constant of the signal  
+tau_x=10;                              % time constant of the targets  
 
-tau_e=10;                              % time constant of the excitatory estimate  
-tau_i=10;                              % time const I estimate 
+tau_e=10;                              % time constant of the excitatory estimates  
+tau_i=10;                              % time const I estimates 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons
 
+% metabolic constant and noise strength for the networks optimizing error
+% (type 1) and cost (type 2)
 if type==1
     beta=6;
     sigmav=5.7;
@@ -36,14 +42,17 @@ else
 end
 
 dt=0.02;                               % time step in ms     
-q=4;
-d=3;                                   % ratio of weight amplitudes I to E 
+q=4;                                   % E-I ratio 
+d=3;                                   % ratio of mean I-I to E-I connectivity
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
-%%
+%% compute stimulus features and target signals
 
 [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
+
+%% get decoding weights and recurrent connectivity
+
 [w,J] = w_fun(M,N,q,d);
 
 %% compute performance 

@@ -4,7 +4,7 @@ close all
 clear all
 clc
 
-saveres=1;
+saveres=0;
 addpath([cd,'/code/function/'])
 
 %% parameters
@@ -13,24 +13,24 @@ M=3;                                   % number of input variables
 N=400;                                 % number of E neurons   
 nsec=1;                                % duration of the trial in seconds 
 
-tau_x=10;                              % time constant of the signal  
+tau_x=10;                              % time constant of target signals  
 
-tau_e=10;                              % time constant of the excitatory estimate  
-tau_i=10;                              % time const I estimate 
+tau_e=10;                              % time constant of excitatory estimates  
+tau_i=10;                              % time const I estimates 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons
    
-beta=14;                             % quadratic cost constant
-sigmav=5;                       % standard deviation of the noise
+beta=14;                                % metabolic constant
+sigmav=5;                               % noise strength
 
 dt=0.02;                               % time step in ms     
-q=4;
-d=3;
+q=4;                                   % E-I ratio 
+d=3;                                   % ratio of mean I-I to E-I connectivity  
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
-as=1.6; % strength of the constant sitmulus
+as=1.6;                                % strength of the constant sitmulus
 
 %% define constant stimulus and compute the target signal
 
@@ -42,7 +42,8 @@ x=zeros(M,T);
 for t=1:T-1
     x(:,t+1)=(1-lambda*dt)*x(:,t)+s(:,t)*dt;  
 end
-%% simulate network activity in trials (with different realization of random variables)
+
+%% simulate network across trials (with different realization of random variables)
 
 ntr=200;
 
@@ -57,7 +58,7 @@ CV_tr=zeros(ntr,2);
 for tr=1:ntr
     
     disp(ntr-tr)
-    [w,J] = w_fun(M,N,q,d);             % selectivity weights and synaptic weights
+    [w,J] = w_fun(M,N,q,d);             % decoding weights and synaptic weights
     %[s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
     [I_E,I_I,r,~,~,CV,fr] = current_fun(dt,sigmav,beta,tau_vec,s,N,q,d,x);
 

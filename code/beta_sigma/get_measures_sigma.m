@@ -1,4 +1,7 @@
 
+% computes measures of performance  and dynamics as a
+% function of the noise strength sigma
+
 clear all
 close all
 

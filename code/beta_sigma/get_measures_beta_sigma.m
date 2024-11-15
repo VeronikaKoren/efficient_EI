@@ -1,8 +1,16 @@
 
+% computes measures of performance and dynamics as a
+% function of the metabolic constant beta and the noise strength sigma
+% two-dimensional parameter search
+
+% measures of performance: error, cost
+% measures of dynamics: firing rate,
+% coefficient of variation, instantaneous and average E-I balance
+
 clear all
 close all
 
-computing=1;   % testing or computing?
+computing=1;   % testing (=0) or computing (=1)?
 
 if computing==1
     saveres=1;
@@ -14,33 +22,32 @@ else
     disp('testing code measures as a function of beta and sigma (2D grid search)');
 end
 
+addpath('code/function/')
 %% parameters
 
-nsec=1;                               % duration of the trial in seconds   
+nsec=1;                                % duration of the trial in seconds   
 dt=0.02;                               % time step in ms 
 
-M=3; 
+M=3;                                   % number of input variables (stimulus features) 
 N=400;                                 % number of E neurons                                  
 
-sigma_s=2;                             % sigma of the stimulus (OU process)
+sigma_s=2;                             % strength of the noise for defining the stimulus features (OU processes)
 tau_s=10;                              % time constant of the stimuls (OU process)
 tau_x=10;                              % time constant of the target signal  
 
 tau_e=10;                              % time constant of the excitatory estimate
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons
     
-q=4;                                   % ratio of weight amplitudes I to E 
-d=3;
+q=4;                                   % E-I ratio
+d=3;                                   % ratio of mean I-I to E-I connectivity 
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
-%%
-
-addpath('code/function/')
 
 %% compute measures
+
 if computing==0
     ntr=2;
     beta_vec=[0,12];
@@ -51,7 +58,7 @@ else
     beta_vec=0:2:36;
     sigma_vec=0:1:25;
 end
-%}
+
 n1=length(beta_vec);
 n2=length(sigma_vec);
 

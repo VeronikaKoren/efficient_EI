@@ -1,4 +1,7 @@
 
+
+% computes Pearson's correlation coefficient between the loss and the average balance / instantanoues balance
+
 clear all
 close all
 
@@ -7,6 +10,7 @@ g_l=0.7;        % weighting of the error vs cost
 savefig=0;
 showfig=0;
 namepop={'in E','in I'};
+
 %%
 
 addpath('/Users/vkoren/ei_net/result/adaptation/')

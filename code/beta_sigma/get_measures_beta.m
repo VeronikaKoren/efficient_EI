@@ -1,4 +1,7 @@
 
+% computes measures of performance  and dynamics as a
+% function of the metabolic constant beta
+
 clear all
 close all
 
@@ -21,14 +24,14 @@ tau_x=10;                              % time constant of the target signal
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons
    
-sigmav=5;                       % standard deviation of the noise
+sigmav=5;                              % noise strength
 
 dt=0.02;                               % time step in ms     
-q=4;                                   % ratio of weight amplitudes I to E 
-d=3;
+q=4;                                   % E-I ratio
+d=3;                                   % ratio of mean I-I to E-I connectivity 
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
@@ -36,7 +39,6 @@ tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
 ntr=200;
 beta_vec=0:1:36;                       
-%beta_vec=[0,6,12];
 n=length(beta_vec);
 
 rms=zeros(n,2);

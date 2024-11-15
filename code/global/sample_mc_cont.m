@@ -1,45 +1,46 @@
- 
+
+% Monte-Carlo (random) sampling for the following 6 parameters: time
+% constant of single neurons readout of E and I neurons (tau_re and tau_ri)
+
 clear all
 close all
 
-computing=1;   % testing or computing?
+computing=1;   % testing (=0) or computing (=1)?
 
 if computing==1
     saveres=1;
     showfig=0;
-    disp('computing random parameter search for all relevant parameters; continuous');
+    disp('computing random parameter search for all relevant parameters');
 else
     saveres=0;
     showfig=1;
-    disp('testing random parameter search for all relevant parameters; continuous');
+    disp('testing random parameter search for all relevant parameters');
 end
+
+addpath([cd,'/code/function/'])
 
 %% parameters
 
-nsec=1;                               % duration of the trial in seconds   
+nsec=1;                                % duration of the trial in seconds   
 dt=0.02;                               % time step in ms 
 
-M=3; 
+M=3;                                   % number of input variables (stimulus features) 
 N=400;                                 % number of E neurons                                  
 
-sigma_s=2;                             % sigma of the stimulus (OU process)
+sigma_s=2;                             % strength of the noise for defining the stimulus features (OU processes)
 tau_s=10;                              % time constant of the stimuls (OU process)
 tau_x=10;                              % time constant of the target signal  
 
 tau_e=10;                              % time constant of the excitatory estimate
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
- 
-beta=14;                               % quadratic cost constant
-sigmav=5; 
-
-q=4;                                   % ratio of weight amplitudes I to E 
-d=3;
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons
+    
+q=4;                                   % E-I ratio
+d=3;                                   % ratio of mean I-I to E-I connectivity
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
-addpath([cd,'/code/function/'])
 
 %% parameter ranges
 
@@ -94,9 +95,6 @@ for g=1:nmc+1
     theta=theta_all(:,g);
     tau_vec=cat(1,tau_x,tau_e,tau_i,theta(3), theta(4));
 
-    %rmse_tr=zeros(ntr,2);
-    %kappa_tr=zeros(ntr,2);
-
     for ii=1:ntr
 
         [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);      
@@ -106,9 +104,6 @@ for g=1:nmc+1
         cost_tr(g,ii,:)=kappa;
 
     end
-
-    %rms(g,:)=mean(rmse_tr);
-    %cost(g,:)=mean(kappa_tr);
     
 end
 toc
