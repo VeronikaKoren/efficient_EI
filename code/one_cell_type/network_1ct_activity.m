@@ -1,4 +1,4 @@
-% simple net with function
+% simulates and plots the optimal network with one cell type in one trial
 
 clear all
 close all
@@ -10,6 +10,7 @@ figname='activity_1ct';
 disp('computing spiking activity of the 1CT network ')
 
 addpath('code/function/')
+
 %% parameters
 
 nsec=1;                     % simulation length in seconds
@@ -18,19 +19,19 @@ M=10;                        % number of inputs
 N=400;
 tau=10;                     % time constant of the membrane potential
 
-nu=0;                       % linear cost
-beta=11.4;                % quadratic cost
-sigmav=1.84;            % standard deviation of the noise
+nu=0;                       % linear cost constant
+beta=11.4;                  % quadratic cost constant
+sigmav=1.84;                % noise strength
 
-sigma_s=2;
-dt=0.02;                    % time step  
+                  
+dt=0.02;                    % time step in ms  
 
-%% external input and signal
+%% stimuus features and target signals
 
-%loadname='estimate_non_rectified'; 
-%load(loadname,'s','x')
-tau_s=10;
-tau_x=10;
+sigma_s=2;                  % strength of the noise for generation of OU-processes (stimulus features)
+tau_s=10;                   % time constant for OU-processes
+tau_x=10;                   % time constant of the target
+
 [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
 
 %% simulate network activity
@@ -48,7 +49,5 @@ display(frate,'firing rate');
 %% plot signal, estimate and spikes
 
 pos_vec=[0,0,20,15];
-%plt_1ct_nework(x,xhat,f,r,dt,tau,pos_vec,savefig,savefile,figname)
 plt_1ct_network(x,xhat,f,r,dt,tau,pos_vec,savefig,savefile,figname)
-%}
 

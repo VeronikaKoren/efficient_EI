@@ -1,6 +1,6 @@
-% simple net with function
+% simulates the optimal network with one cell type and measures performance
 
-clear all
+clear
 close all
 clc
 
@@ -14,13 +14,13 @@ disp('computing performance of the optimal 1CT network ')
 nsec=1;                     % simulation length in seconds
 
 M=3;                        % number of inputs
-N=500;
+N=400;                      % number of neruons
 
 tau=10;                     % time constant of the membrane potential
 
 nu=0;                       % linear cost
-beta1=11.4;                % quadratic cost (used for N=400)
-sigma1=1.84;               % standard deviation of the noise (used for N =400)
+beta1=11.4;                 % quadratic cost (for N=400)
+sigma1=1.84;                % noise strength (for N =400)
 
 dt=0.02;                    % time step  
 

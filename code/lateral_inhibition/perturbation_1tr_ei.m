@@ -1,4 +1,6 @@
 
+% testing activity perturbation of a single E (target) neuron on E and I neurons in a single trial
+
 close all
 clear all
 clc
@@ -11,30 +13,28 @@ M=3;                                   % number of input variables
 N=400;                                 % number of E neurons   
 
 nsec=0.7;                                % duration of the trial in seconds 
+dt=0.02;                               % time step in ms
 
-tau_s=10;
-tau_x=10;                              % time constant of the signal  
+tau_s=10;                              % time constant of the stimuls (OU process)
+tau_x=10;                              % time constant of the target signal  
 
-tau_e=10;                              % time constant of the excitatory estimate  
+tau_e=10;                              % time constant of the excitatory estimate
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons
+    
+q=4;                                   % E-I ratio
+d=3;                                   % ratio of mean I-I to E-I connectivity 
    
-
-beta=14;                         % quadratic cost constant
-sigmav=5;                       % noise intensity
-
-dt=0.02;                               % time step in ms     
-q=4;                                   % ratio number E to I neurons
-d=3;                                   % ratio strength of decoding weights 
+beta=14;                                % metabolic constant
+sigmav=5;                               % noise strength
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
-%% set the input, selectivity weights, synaptic weights,...
+%% set the input, decoding weights, synaptic weights,...
 
 T=(nsec*1000)./dt;
-%[s,x]=signal_fun(tau_s,tau_x,M,nsec,dt);
 s=zeros(M,T);
 
 [w,J] = wJ_fun(M,N,q,d);
@@ -48,7 +48,7 @@ cn=100;                                 % choose 1 neuron
 
 %% perturbation windows
 
-Ap=1.5;                  % strength of perturbation wrt firing threshold (1 is at the threshold)
+Ap=2;                  % strength of perturbation wrt firing threshold (1 is at the threshold)
 d_spontaneous = 300;     % duration of interval for measuring the spontaneous firing rate
 d_stim=50;               % duratio of stimulation
 d_measure=100;           % duration of interval for measuing the effect of stimulation

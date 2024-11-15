@@ -13,11 +13,13 @@ disp('computing measures as a function of the metabolic constant');
 
 %% parameters
 
-M=3; 
-N=400;                                 % number of E neurons   
 nsec=1;                                % duration of the trial in seconds 
+dt=0.02;                               % time step in ms
 
-sigma_s=2;                             % sigma of the stimulus (OU process)
+M=3;                                   % numebr of encoded variables     
+N=400;                                 % number of E neurons   
+
+sigma_s=2;                             % strength of the noise for generating the stimulus features (OU processs)
 tau_s=10;                              % time constant of the stimuls (OU process)
 tau_x=10;                              % time constant of the target signal  
 
@@ -28,8 +30,7 @@ tau_re=10;                             % time const single neuron readout in E n
 tau_ri=10;                             % time const single neuron readout in I neurons
    
 sigmav=5;                              % noise strength
-
-dt=0.02;                               % time step in ms     
+     
 q=4;                                   % E-I ratio
 d=3;                                   % ratio of mean I-I to E-I connectivity 
 

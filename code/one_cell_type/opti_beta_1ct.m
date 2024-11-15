@@ -1,4 +1,6 @@
-% simple net with function
+% simulates the network with one cell type net and measures performance as
+% a function of the (quadratic) metabolic constant beta to find the optimal
+% beta
 
 clear all
 close all
@@ -7,19 +9,18 @@ addpath([cd,'/code/function/'])
 saveres=0;
 showfig=0;
 
-disp('computing optimal metabolic cost for the network with 1 cell type')
+disp('computing optimal metabolic constant for the network with 1 cell type')
 
 %% parameters
 
-nsec=1;                  % simulation length in seconds
+nsec=1;                     % simulation length in seconds
 
 M=3;                        % number of inputs
-N=500;
-tau=10;                    % time constant of the membrane potential
+N=400;                      % number of neurons 
+tau=10;                     % time constant of the membrane potential
 
 nu=0;                       % linear cost
-
-sigmav=1.8;            % standard deviation of the noise
+sigmav=1.8;                 % noise strength
 
 dt=0.02;                    % time step  
 
@@ -43,7 +44,7 @@ kappa_tr=zeros(n,ntr);
 for k=1:n
 
     disp(n-k);
-    beta=beta_vec(k);                % quadratic cost
+    beta=beta_vec(k);                
     
     for ii=1:ntr
         [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);

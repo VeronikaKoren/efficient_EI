@@ -1,4 +1,9 @@
 
+% measure effect of activity perturbation of a single E (target) neuron on
+% E and I neurons across trials in networks with shuffled recurrent
+% conenctivity
+% without feedforward input
+
 close all
 clear all
 clc
@@ -15,55 +20,44 @@ Jp_name={'E-E','I-I','E-I','I-E','all'}; % Connetivity matrix that is permuted
 type=3; % [2,3] relevant values
 Jp=2;   % [2,3,4,5]
 
-disp(['perturbation experiments with removed conectivity structure with ',ntype{type},' ',Jp_name{Jp}])
+disp(['perturbation experiments with removed structure in connectivity with ',ntype{type},' ',Jp_name{Jp}])
 %% parameters
 
 ntr=100;                               % number of trials
+dt=0.02;                               % time step in ms   
+nsec=0.7;                                % duration of the trial in seconds 
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
 
-nsec=0.7;                                % duration of the trial in seconds 
-
-tau_s=10;
-tau_x=10;                              % time constant of the signal  
+tau_s=10;                              % time constant of stimulus features 
+tau_x=10;                              % time constant of the target signals  
 
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                              % time const single neuron readout in E neurons
+tau_ri=10;                              % time const single neuron readout in I neurons
    
-beta=14;                         % quadratic cost constant
-sigmav=5;                       % noise intensity
-
-dt=0.02;                               % time step in ms     
+beta=14;                               % metabolic constant
+sigmav=5;                              % noise strength
+ 
 q=4;                                   % ratio number E to I neurons
 d=3;                                   % ratio strength of decoding weights 
 
-%% set the input, selectivity and synaptic weights 
+%% set the input, decoding weights and synaptic weights 
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
-
 T=(nsec*1000)./dt;
+
 s=zeros(M,T);
-%[s,x]=signal_fun(tau_s,tau_x,M,nsec,dt);
 
 [w,J] = w_structure_fun(M,N,q,d,type,Jp);
-%[w,J] = wJ_fun(M,N,q,d);                % randomly draw the selectivity weights and compute the connectivity matrices
 
 cn=100;                                 % choose 1 neuron
-[idx_d,idx_s,phi_vec] = tuning_similarity_idx(w{1},cn);  % index of neurosn with simialr and different selectivity
-[idx_di,idx_si,phi_veci] = tuning_similarity_ei(w{1},w{2},cn);  % find I neurons with similar and different selectivity
+[idx_d,idx_s,phi_vec] = tuning_similarity_idx(w{1},cn);  % index of E neurons with similar and different selectivity
+[idx_di,idx_si,phi_veci] = tuning_similarity_ei(w{1},w{2},cn);  % index of I neurons with similar and different selectivity
 
-%% correlation tuning similarity and synaptic strength E-I
-%{
- Jvec=(J{3}(cn,:))';
- Jvec(cn)=[];
- phiprime=phi_vec';
- phiprime(cn)=[];
- corr(Jvec,phiprime)
-%}
 %% perturbation settings and time windows
 
 Ap=1.0;   % strength of perturbation wrt firing threshold (1 is at the threshold)

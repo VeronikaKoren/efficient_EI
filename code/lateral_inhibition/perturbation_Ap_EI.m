@@ -1,37 +1,41 @@
 
+% measure effect of activity perturbation of a single E (target) neuron on
+% E and I neurons across trials
+% without feedforward input
+
 close all
 clear all
 clc
 
-
 saveres=0;
-showfig=1;                  
+showfig=0;                  
 namepop={'different tuning','similar tuning'};
 addpath('code/function/')
 %% parameters
 
 ntr=200;                               % number of trials
+dt=0.02;                               % time step in ms    
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
 
 nsec=0.7;                                % duration of the trial in seconds 
 
-tau_s=10;
+sigma_s=2;
+tau_s=10;                              % time constant of the stimulus features  
 tau_x=10;                              % time constant of the signal  
 
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons 
    
-beta=14;                         % quadratic cost constant
-sigmav=5;                       % noise intensity
+beta=14;                               % metabolic constant
+sigmav=5;                              % noise strength
 
-dt=0.02;                               % time step in ms     
-q=4;                                   % ratio number E to I neurons
-d=3;                                   % ratio strength of decoding weights 
+q=4;                                   % E-I ratio
+d=3;                                   % ratio of mean I-I to E-I connectivity 
 
 %% set the input, selectivity and synaptic weights 
 
@@ -69,7 +73,7 @@ int_plt=spont_on/dt:T-1;
 
 tidx=[1:length(int_plt)]*dt;
 
-%% network with perturbation of a single neuron in trials
+%% network with activity perturbation of a single neuron in trials
 
 Ni=N/q;
 

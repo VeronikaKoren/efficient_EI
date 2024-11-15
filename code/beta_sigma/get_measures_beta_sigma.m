@@ -10,7 +10,7 @@
 clear all
 close all
 
-computing=1;   % testing (=0) or computing (=1)?
+computing=0;   % testing (=0) or computing (=1)?
 
 if computing==1
     saveres=1;

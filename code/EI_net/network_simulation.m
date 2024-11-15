@@ -9,10 +9,11 @@ addpath([cd,'/code/function/'])
 
 %% parameters
 
-M=3;                                   % number of input variables    
-N=400;                                 % number of E neurons   
-
 nsec=1;                                % duration of the trial in seconds 
+dt=0.02;                               % time step in ms 
+
+M=3;                                   % number of input variables    
+N=400;                                 % number of E neurons       
 
 sigma_s=2;
 tau_s=10;                              % time constant of the stimulus features  
@@ -29,8 +30,6 @@ sigmav=5;                              % noise strength
 
 q=4;                                   % E-I ratio
 d=3;                                   % ratio of mean I-I to E-I connectivity 
-
-dt=0.02;                               % time step in ms     
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 

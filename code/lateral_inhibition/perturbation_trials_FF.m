@@ -1,4 +1,7 @@
 
+% measure effect of activity perturbation of a single E (target) neuron on
+% E and I neurons across trials, in presence of a weak feedforward input
+
 close all
 clear all
 clc
@@ -17,29 +20,26 @@ display(['perturbation strength ',sprintf('%0.1f',a_p),' in presence of a stimul
 %% parameters
 
 ntr=100;                               % number of trials
+nsec=0.7;                                % duration of the trial in seconds 
+dt=0.02;                               % time step in ms 
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
 
-nsec=0.7;                                % duration of the trial in seconds 
-
-tau_s=10;
-tau_x=10;                              % time constant of the signal  
+tau_s=10;                              % time constant of the stimuls (OU process)
+tau_x=10;                              % time constant of the target signal
 
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons 
    
-b=1.0;                                 % sets the strength of the regularizer     
-c=33;                                  % sets the strength of the noise 
-beta=b*log(N);                         % quadratic cost constant
-sigmav=c/log(N);                       % noise intensity
+beta=14;                               % metabolic constant
+sigmav=5;                              % noise strength
 
-dt=0.02;                               % time step in ms     
-q=4;                                   % ratio number E to I neurons
-d=3;                                   % ratio strength of decoding weights 
+q=4;                                   % E-I ratio
+d=3;                                   % ratio of mean I-I to E-I connectivity
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 

@@ -1,13 +1,15 @@
-% one cell type net ; optimization of noise intensity
+% simulates the network with one cell type net and measures performance as
+% a function of noise strength sigma to find the optimal sigma
 
-clear all
+clear
 close all
+clc
 
 addpath([cd,'/code/function/'])
 saveres=0;
 showfig=0;
 
-type=2;
+type=1;
 
 namet={'1pop','1pop_rectified'};
 display(['computing optimal sigma for the network ', namet{type}])
@@ -16,17 +18,17 @@ display(['computing optimal sigma for the network ', namet{type}])
 nsec=1;                     % simulation length in seconds
 
 M=3;                        % number of inputs
-N=400;
-tau=10;                     % time constant of the membrane potential
+N=400;                      % number of neurons
+tau=10;                     % time constant of the membrane potential and of the population readout
 
-nu=0;                       % linear cost
-beta=11.4;              % quadratic cost
+nu=0;                       % linear cost constant
+beta=11.4;                  % quadratic cost constant
 
-dt=0.02;                    % time step  
+dt=0.02;                    % time step  in ms
 
 %% external input and signal
 
-sigma_s=2;
+sigma_s=2;                  
 tau_s=10;
 tau_x=10;
 
@@ -44,8 +46,7 @@ kappa_tr=zeros(n,ntr);
 for k=1:n
 
     disp(n-k);
-    sigmav=sigma_vec(k);                % quadratic cost
-    
+    sigmav=sigma_vec(k);                    
     for ii=1:ntr
         [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
 
