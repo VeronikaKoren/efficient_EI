@@ -1,6 +1,10 @@
 
-clear all
+% computes measures of performance  and dynamics as a
+% function of the number of input variables M
+
+clear
 close all
+clc
 
 addpath([cd,'/code/function/'])
 saveres=0;
@@ -10,25 +14,28 @@ disp('computing measures as a function of M');
 
 %% parameters
 
-N=400;                                 % number of E neurons   
 nsec=1;                                % duration of the trial in seconds 
+dt=0.02;                               % time step in ms 
 
-sigma_s=2;
-tau_s=10;
+M=3;                                   % number of input variables    
+N=400;                                 % number of E neurons       
+
+tau_s=10;                              % time constant of the stimulus features  
 tau_x=10;                              % time constant of the signal  
 
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons 
    
-beta=14;                           % quadratic cost constant
-sigmav=5;                       % standard deviation of the noise
+beta=14;                               % metabolic constant
+sigmav=5;                              % noise strength
 
-dt=0.02;                               % time step in ms     
-q=4;                                   % ratio of weight amplitudes I to E 
-d=3;
+q=4;                                   % E-I ratio
+d=3;                                   % ratio of mean I-I to E-I connectivity 
+
+sigma_s=2;                             % noise strength for the generation of the OU processes (stimulus features)
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 

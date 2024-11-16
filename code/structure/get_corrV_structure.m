@@ -1,10 +1,17 @@
 
-clear all
+% computes time-dependent correlation of membrane ptoentials for pairs of
+% neurons of the same cell type
 
-namet={'normal','perm_full'};
+clear
+clc
+
+namet={'optimal','perm_full'};
 type=1;                         
 
-disp(['computing correlation of membrane potentials with ',namet{type}]);
+typep=1;                        
+namep={'shared','independent'};
+
+disp(['computing correlation of membrane potentials in ',namet{type}, ' model and ', namep{typep}, ' feedforward inputs']);
 
 addpath([cd,'/code/function/'])
 saveres=0;
@@ -12,33 +19,31 @@ showfig=0;
 
 %% parameters
 
+nsec=1;                                % duration of the trial in seconds 
+dt=0.02;                               % time step in ms 
+
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
-nsec=1;                                % duration of the trial in seconds 
 
-tau_s=10;
-tau_x=10;                              % time constant of the signal  
+tau_x=10;                              % time constant of the target signals  
 
-tau_e=10;                              % time constant of the excitatory estimate  
-tau_i=10;                              % time const I estimate 
+tau_e=10;                              % time constant of the excitatory estimates  
+tau_i=10;                              % time const I estimates
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons 
    
-beta=14;                           % quadratic cost constant
-sigmav=5;                       % standard deviation of the noise
+beta=14;                               % metabolic constant
+sigmav=5;                              % noise strength
 
-dt=0.02;                               % time step in ms     
-q=4;
-d=3;                                   % ratio of weight amplitudes I to E 
-
-sigma_s=2;
+q=4;                                   % E-I ratio
+d=3;                                   % ratio of mean I-I to E-I connectivity                          % ratio of weight amplitudes I to E 
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
-mu_s=[0,0,0]';    
 
-typep=1;                        
-namep={'shared','independent'};
+tau_s=10;                              % time constant of the OU process (stimulus features)  
+sigma_s=2;                             % noise strength for the generation of the OU processes (stimulus features) 
+mu_s=[0,0,0]';                         % mean of the OU process (stim. features)
 
  %% compute correlation in membrane potentials with specific perturbation
 

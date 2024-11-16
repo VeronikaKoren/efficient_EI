@@ -1,6 +1,11 @@
+
+% computes the variance over time of the membrane potential in each neuron
+% in the optimal model and in models with fully or partially removed
+% connectivity structure
+
 %close all
-clear all
-%clc
+clear
+clc
 
 saveres=0;
 showfig=0;
@@ -13,29 +18,30 @@ disp(['get variance V ',ntype{type}]);
 %% parameters
 
 ntr=20;
-nsec=10;                                % duration of the trial in seconds 
+nsec=10;                               % duration of the trial in seconds 
+dt=0.02;                               % time step in ms 
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
 
-sigma_s=2;
-tau_s=10;
 tau_x=10;                              % time constant of the signal  
 
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons 
    
-beta=14;                           % quadratic cost constant
-sigmav=5;                       % standard deviation of the noise
+beta=14;                               % metabolic constant
+sigmav=5;                              % noise strength
 
-dt=0.02;                               % time step in ms     
-q=4;
-d=3;
+q=4;                                   % E-I ratio
+d=3;                                   % ratio of mean I-I to E-I connectivity 
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
+
+tau_s=10;                              % time constant of the stimulus features  
+sigma_s=2;                             % noise strength for the generation of the OU processes (stimulus features)
 
 %% simulate network activity
 
@@ -66,6 +72,7 @@ stdV{1}=reshape(stdV_tr_E,N*ntr,1);
 stdV{2}=reshape(stdV_tr_I,Ni*ntr,1);
 
 cellfun(@mean, stdV)
+
 %%
 if showfig==1
     %%

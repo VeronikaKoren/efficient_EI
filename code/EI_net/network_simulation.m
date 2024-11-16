@@ -1,7 +1,7 @@
 % simulates and plots the optimal E-I network in one trial
 
 close all
-clear all
+clear
 clc
 
 savefig=0; % save figure?
@@ -15,8 +15,6 @@ dt=0.02;                               % time step in ms
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons       
 
-
-tau_s=10;                              % time constant of the stimulus features  
 tau_x=10;                              % time constant of the signal  
 
 tau_e=10;                              % time constant of the excitatory estimate  
@@ -31,8 +29,10 @@ sigmav=5;                              % noise strength
 q=4;                                   % E-I ratio
 d=3;                                   % ratio of mean I-I to E-I connectivity 
 
-sigma_s=2;                             % noise strength for the generation of the OU processes (stimulus features) 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
+
+tau_s=10;                              % time constant of the stimulus features  
+sigma_s=2;                             % noise strength for the generation of the OU processes (stimulus features) 
 
 %% get decoding weights and connectivity weights
 

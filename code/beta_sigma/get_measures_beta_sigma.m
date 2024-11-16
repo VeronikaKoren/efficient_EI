@@ -7,8 +7,9 @@
 % measures of dynamics: firing rate,
 % coefficient of variation, instantaneous and average E-I balance
 
-clear all
+clear
 close all
+clc
 
 computing=0;   % testing (=0) or computing (=1)?
 

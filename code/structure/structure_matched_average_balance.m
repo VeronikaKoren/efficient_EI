@@ -1,3 +1,6 @@
+% computes measure of performance and dynamics for optimal E-I network and
+% for network with removed connectivity structure
+% for matching levels of the average E-I balance
 
 clear all
 
@@ -6,41 +9,43 @@ namet={'structured','perm_full_all','perm_partial_all'};
 
 saveres=0;
 showfig=0;
-ntr=200;
 
 addpath([cd,'/code/function/'])
 disp(['computing measures matching average E-I balance with ',namet{type}]);
 
 %% parameters
 
-M=3;                                   % number of input variables    
-N=400;                                 % number of E neurons   
-nsec=1;                                % duration of the trial in seconds 
+ntr=200;                               % number of trials 
+nsec=1;                                % duration of the trial in seconds
+dt=0.02;                               % time step in ms 
 
-sigma_s=2;
-tau_s=10;
+M=3;                                   % number of input variables    
+N=400;                                 % number of E neurons    
+
 tau_x=10;                              % time constant of the signal  
 
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons
    
 if type==1
     beta=14;
     sigmav=5;
 else
-    beta=16.3;                           % quadratic cost constant
-    sigmav=3;                       % standard deviation of the noise
+    beta=16.3;                          % metabolic constant
+    sigmav=3;                           % noise strength
 end
 
-dt=0.02;                               % time step in ms     
 q=4;
-d=3.0;                                   % ratio of weight amplitudes I to E 
+d=3.0;                                  % ratio of weight amplitudes I to E 
+
+tau_s=10;                              % time constant of the stimulus features  
+sigma_s=2;                             % noise strength for the generation of the OU processes (stimulus features) 
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re,tau_ri);
-which_permuted={'I to I','E to I','I to E','all'};      % which matrix is shuffled
+which_permuted={'I to I','E to I','I to E','all'};      % which connectivity matrix is shuffled
 
 %% compute performance with noise in the connectivity
 

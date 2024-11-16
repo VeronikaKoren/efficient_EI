@@ -1,3 +1,6 @@
+% train a linear decoder on spike trains from the optimal network and the
+% network with removed conenctivity structure
+
 
 clear all
 
@@ -11,33 +14,35 @@ ptr=0.7;  % proportion of training data
 
 disp(['training a decoder on activity from ',namep{type},' model'])
 addpath([cd,'/code/function/'])
-%% get activity
-% parameters
+
+%% parameters
+
+nsec=1;                                % duration of the trial in seconds 
+dt=0.02;                               % time step in ms
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
-nsec=1;                                % duration of the trial in seconds 
 
-tau_s=10;
 tau_x=10;                              % time constant of the signal  
 
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons
 
-beta=14;                               % quadratic cost constant
-sigmav=5;                              % standard deviation of the noise
+beta=14;                               % metabolic constant
+sigmav=5;                              % noise strength
 
-dt=0.02;                               % time step in ms     
 q=4;
 d=3;
 
-sigma_s=2;
+tau_s=10;                              % time constant of the stimulus features  
+sigma_s=2;                             % noise strength for the generation of the OU processes (stimulus features)
+
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
-f=5; % 5 = all 3 connectivity matrices
-%Jp={'','I to I','E to I','I to E','all'}; % connectivity submatrix that is permuted
+f=5; % 5 = shuffle all 3 connectivity matrices
+%Jp={'','I to I','E to I','I to E','all'}; % connectivity (sub)matrix that is permuted
 
 %%
 

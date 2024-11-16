@@ -1,6 +1,11 @@
 
-clear all
+% computes measures of performance  and dynamics as a
+% function of the time constant of the stimuli (OU processes)
+% with different time constant across stimuli
+
+clear
 close all
+clc
 
 addpath([cd,'/code/function/'])
 
@@ -19,32 +24,33 @@ disp(['computing measures as a function of ',vari]);
 
 %% parameters
 
-M=3; 
-N=400;                                 % number of E neurons   
-nsec=1;                                % duration of the trial in seconds 
+nsec=1;                                % duration of the trial in seconds
+dt=0.02;                               % time step in ms     
 
-sigma_s=2;
-tau_x=10;                              % time constant of the signal  
+M=3;                                   % number of input features 
+N=400;                                 % number of E neurons   
+
+tau_x=10;                              % time constant of the target signal  
 
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons 
    
+beta=14;                               % metabolic constant
+sigmav=5;                              % noise strength
 
-beta=14;                           % quadratic cost constant
-sigmav=5;                       % standard deviation of the noise
+q=4;                                   % E-I ratio
+d=3;                                   % ratio of mean I-I to E-I connectivity 
 
-dt=0.02;                               % time step in ms     
-q=4;                                   % ratio of weight amplitudes I to E 
-d=3;
+sigma_s=2;                             % noise strength for the generation of the OU processes (stimulus features)  
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
 %% compute measures
 
-taus1=10;
+taus1=10; % fiw the time constant in the first dimension
 if computing==0
 
     taus2=1:20:101;                      % time constant of input features
@@ -60,8 +66,6 @@ n=length(taus2);
 
 taus_dim=cat(1,repmat(taus1,1,n),taus2,taus3);
 %%
-%ntr=2;
-%taus_vec=[1,10]
 
 mse_dim=zeros(n,M,2);
 cost=zeros(n,2);
