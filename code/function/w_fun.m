@@ -1,6 +1,6 @@
 function [w,J] = w_fun(M,N,q,d)
 
-%% selectivity weights
+%% decoding weights
 
 Ni=round(N/q);                            % ratio E to I neurons is q to 1
 N_all=[N,Ni];

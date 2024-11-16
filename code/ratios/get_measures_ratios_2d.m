@@ -1,8 +1,14 @@
 
-clear all
+% computes measures of performance and dynamics as a
+% function of the E-I ratio and the ratio of mean I-I to E-I connectivity
+% (ratios q and d)
+% 2-dimensional parameter search
 
+close all
+clear
+clc
 
-computing=0; % testing or computing?
+computing=0; % testing (==0) or computing (==1)?
 
 if computing==1
 
@@ -12,34 +18,37 @@ if computing==1
 else
     saveres=0;
     showfig=1;
+    disp('testing the code on a small example');
 end
 
+addpath([cd,'/code/function/'])
 
 %% parameters
 
+nsec=1;                                % duration of the trial in seconds 
+dt=0.02;                               % time step in ms
+
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
-nsec=1;                                % duration of the trial in seconds 
 
-sigma_s=2;
 tau_s=10;
 tau_x=10;                              % time constant of the signal  
 
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons  
    
 beta=14;                           % quadratic cost constant
 sigmav=5;                       % standard deviation of the noise
-
-dt=0.02;                               % time step in ms     
+     
 d=3.00;                                   % ratio of weight amplitudes I to E 
+
+sigma_s=2;
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
-addpath([cd,'/code/function/'])
 %% compute measures
 
 if computing==0
@@ -67,12 +76,12 @@ meanE=zeros(n1,n2,2);
 meanI=zeros(n1,n2,2);
 
 for g=1:n1
-    %disp(n1-g)
+    disp(n1-g)
     
-    q=qvec(g)
+    q=qvec(g);
 
     for k=1:n2
-        d=dvec(k)
+        d=dvec(k);
 
         r_tr=zeros(ntr,2);
         currE_tr=zeros(ntr,2);

@@ -1,15 +1,22 @@
 
+% computes measures of performance and dynamics as a
+% function of the ratio of the number of E to I neurons (called q)
+% by changing the number of I neurons (the number of E neurons stays fixed)
+
 clear all
 
 addpath([cd,'/code/function/'])
 saveres=0;
 
 disp('computing measures as a function of q=ratio of E to I neurons');
+
 %% parameters
+
+nsec=1;                                % duration of the trial in seconds 
+dt=0.02;                               % time step in ms
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
-nsec=5;                                % duration of the trial in seconds 
 
 tau_s=10;
 tau_x=10;                              % time constant of the signal  
@@ -17,24 +24,21 @@ tau_x=10;                              % time constant of the signal
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons
    
-beta=14;                           % quadratic cost constant
-sigmav=5;                       % standard deviation of the noise
+beta=14;                              % metabolic constant (quadratic cost constant)
+sigmav=5;                             % noise strength
+ 
+d=3.0;                                 % ratio of mean I-I to E-I connectivity  
 
-dt=0.02;                               % time step in ms     
-d=3.00;                                   % ratio of weight amplitudes I to E 
-
-sigma_s=2;
+sigma_s=2;                             % noise strength for the generation of the OU processes (stimulus features)  
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
 %% compute measures
 
 ntr=100;
 qvec=1:0.25:8;
-%ntr=3 % for testing
-%qvec=1:2:5
 n=length(qvec);
 
 frate=zeros(n,2);
@@ -48,7 +52,7 @@ meanE=zeros(n,2);
 meanI=zeros(n,2);
 
 for g=1:n
-    %disp(n-g)
+    disp(n-g)
     
     q=qvec(g);
     

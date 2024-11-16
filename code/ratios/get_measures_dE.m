@@ -1,41 +1,49 @@
 
-clear all
+% computes measures of performance and dynamics as a
+% function of the ratio of mean I-I to E-I connectivity called (dE)
+% by changing the parameter sigma_w^E (sigma_w^I stays fixed)
 
+close all
+clear
+clc
 
 saveres=0;
 showfig=0;
 
 addpath([cd,'/code/function/'])
-disp('computing measures as a function of ratio of sigma of decoding weights changing d^E ');
+disp('computing measures as a function of ratio of sigma of decoding weights changing the spread of distribution of decoding weights for E neurons');
+
 %% parameters
+
+nsec=1;                                % duration of the trial in seconds 
+dt=0.02;                               % time step in ms     
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
-nsec=1;                                % duration of the trial in seconds 
 
-sigma_s=2;
 tau_s=10;
 tau_x=10;                              % time constant of the signal  
 
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % t. const firing rate of E neurons
-tau_ri=10;                             % t. constant firing rate of I neurons 
+tau_re=10;                             % time const single neuron readout in E neurons
+tau_ri=10;                             % time const single neuron readout in I neurons 
    
-beta=14;                           % quadratic cost constant
-sigmav=5;                       % standard deviation of the noise
+beta=14;                               % metabolic constant
+sigmav=5;                              % noise strength
 
-dt=0.02;                               % time step in ms     
-q=4;                                   % ratio of weight amplitudes I to E 
-dI=3;
+q=4;                                   % E-I ratio 
+dI=3;                                  % spread of the distribution of decoding weights in I neurons     
+
+sigma_s=2;                             % noise strength for the generation of the OU processes (stimulus features) 
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 Ni=N/q;
+
 %% compute measures
 
 ntr=100;
-%devec=0.3:0.5:3;
 devec=0.3:0.1:3;
 n=length(devec);
 

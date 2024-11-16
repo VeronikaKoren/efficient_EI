@@ -1,8 +1,6 @@
-function [w,J] = w_fun_dE(M,N,q,dI,dE)
+function [w,J] = w_fun_ratios(M,N,q,dI,dE)
 
-%% weights
-
-%format long
+%% decoding weights
 
 Ni=round(N/q);                            % ratio E to I neurons is q to 1
 N_all=[N,Ni];
@@ -19,10 +17,6 @@ for ii=1:2
                           
     w{ii}=weight.*d_all(ii);
     
-    %{
-    w_ran=randn(M,N_all(ii)); % no normalization
-    w{ii}=w_ran./M;
-    %}
     
 end
 
