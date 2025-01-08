@@ -1,7 +1,7 @@
 function [Vmm,Vstd,frate,rVm] = net_fun_V2(dt,sigmav,beta,tau_vec,w,J,typep,nsec,tau_s,mu_s)
 % integration of the membrane potential for E and I neurons
 
-format short
+%format short
 M=size(w{1},1);
 T=(nsec*1000)./dt;
 
@@ -16,6 +16,7 @@ delta_i=lambda_i-lambda_ri;            % in I
 
 N=size(w{1},2);
 Ni=size(w{2},2);
+
 %% weights
 
 Jii=J{2};
@@ -43,6 +44,7 @@ beta_pfi=beta*delta_i;
 sigma_s=2;
 we=w{1};
 if typep==1
+
     s=signal_mus_fun(tau_s,sigma_s,tau_x,M,nsec,dt,mu_s);
     ffe=we'*s*dt;
 

@@ -1,15 +1,17 @@
+%% plots metabolic cost for networks with and without connectivity structure
+% with matched level of the net current
 
 close all
-clear
+clear 
+clc
 
-savefig=[0,1,1];
+savefig=[0,0,0];
 figname1='net_matched';
 figname2='mc_matched';
-figname3='r_matched';
 
 namet={'structured','perm_full_all','perm_partial_all'};
-addpath('/Users/vkoren/ei_net/result/connectivity/');
-savefile='/Users/vkoren/ei_net/figure/structure/matched_net/';
+addpath([cd,'/result/structure/']);
+savefile=pwd;
 
 rmse=cell(2,1);
 mc=cell(2,1);
@@ -35,19 +37,18 @@ end
 
 %% fig. stuff
 
-tit={'in Exc','in Inh'};
+tit={'in Excitatory','in Inhibitory'};
 ntr=size(net{1},1);
 namex={'structured','shuffled'};
 %pos_vec=[0,0,10,12];
-fs=14;
+fs=15;
 
 red=[0.85,0.32,0.1];
 blue=[0,0.48,0.74];
 col={red,blue};
-lwa=1;
+gray=[0.2,0.2,0.2];
 
-%[~,pe]=kstest2(y(:,1),y(:,2));
-%[~,pi]=kstest2(y(:,1),y(:,2));
+lwa=1;
 
 %% compare the metabolic cost
 
@@ -96,90 +97,46 @@ set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_ve
 if savefig(1)==1
     print(H,[savefile,figname1],'-dpng','-r300');
 end
-
+%}
 %%
 pos_vec=[0,0,8,12];
 
 H=figure('name',figname2,'Position',pos_vec);
 subplot(2,1,1)
-boxplot(mce,'symbol','g.','MedianStyle','target')
+h=boxplot(mce,'symbol','.','MedianStyle','target','color','m');
 box off
-
-op=get(gca,'OuterPosition');
-set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.01 op(3)-0.02 op(4)+0.01]);
+set(h,{'linew'},{1.5})
 
 set(gca,'XTickLabel',[])
-set(gca,'YTick',[4,5])
+set(gca,'YTick',[4,5],'fontsize',fs)
 set(gca,'YTicklabel',[4,5 ])
 title(tit{1},'fontsize',fs)
 
+op=get(gca,'OuterPosition');
+set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.01 op(3)-0.02 op(4)+0.01]);
+
 subplot(2,1,2)
-boxplot(mci,namex,'symbol','g.','MedianStyle','target')
+h=boxplot(mci,namex,'symbol','.','MedianStyle','target','color','m');
+set(h,{'linew'},{1.5})
 box off
+
+set(gca,'YTick',[2.8,3.2])
+set(gca,'YTicklabel',[2.8,3.2],'fontsize',fs)
+title(tit{2},'fontsize',fs)
 
 op=get(gca,'OuterPosition');
 set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.01 op(3)-0.02 op(4)+0.01]);
-title(tit{2},'fontsize',fs)
-
-set(gca,'YTick',[2.8,3.2])
-set(gca,'YTicklabel',[2.8,3.2])
 
 set(H, 'Units','centimeters', 'Position', pos_vec)
 set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_vec(3), pos_vec(4)]) % for saving in the right size
 
 axes
-h2 = ylabel ('metabolic cost (matching net input)','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs+1);
+h2 = ylabel ('metabolic cost (matched net input)','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h2,'visible','on')
 
 if savefig(2)==1
     print(H,[savefile,figname2],'-dpng','-r300');
-end
-
-%%
-
-H=figure('name',figname3,'Position',pos_vec);
-subplot(2,1,1)
-boxplot(re,'symbol','g.','MedianStyle','target')
-box off
-
-set(gca,'XTickLabel',[])
-set(gca,'YTick',[0,0.5])
-set(gca,'YTicklabel',[0,0.5])
-ylim([-0.05,0.5])
-title(tit{1},'fontsize',fs)
-
-op=get(gca,'OuterPosition');
-set(gca,'OuterPosition',[op(1)+0.06 op(2)+0.0 op(3)-0.05 op(4)+0.02]);
-set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
-set(gca,'TickDir','out')
-
-subplot(2,1,2)
-boxplot(ri,namex,'symbol','g.','MedianStyle','target')
-box off
-
-title(tit{2},'fontsize',fs)
-set(gca,'YTick',[0,0.5])
-set(gca,'YTicklabel',[0,0.5])
-ylim([-0.05,0.5])
-
-op=get(gca,'OuterPosition');
-set(gca,'OuterPosition',[op(1)+0.06 op(2)+0.0 op(3)-0.05 op(4)+0.02]);
-set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
-set(gca,'TickDir','out')
-
-
-set(H, 'Units','centimeters', 'Position', pos_vec)
-set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_vec(3), pos_vec(4)]) % for saving in the right size
-
-axes
-h2 = ylabel ('instantaneous balance (matching net input)','units','normalized','Position',[-0.08,0.5,0],'fontsize',fs+1);
-set(gca,'Visible','off')
-set(h2,'visible','on')
-
-
-if savefig(3)==1
-    print(H,[savefile,figname3],'-dpng','-r300');
 end
 
 %%

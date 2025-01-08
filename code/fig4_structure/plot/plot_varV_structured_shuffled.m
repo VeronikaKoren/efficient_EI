@@ -1,16 +1,18 @@
+%% plots the distribution of the standard deviation of the membrane potential over time for the structured and unstructured networks
 
-clear all
+clear
 close all
+clc
 
 savefig=0;
 figname='stdV_structured_shuffled';
 
-addpath('result/connectivity/')
+addpath([cd,'/result/structure/'])
 savefile=[cd,'/figure/structure/fully_permuted/'];
 
 %% load structured and shuffled 
 
-ntype={'structured','full_perm_all','partial_perm_all'};
+ntype={'structured','full_perm_all'};
 
 stdve=cell(2,1);
 stdvi=cell(2,1);
@@ -22,6 +24,7 @@ for t=1:2
 end
 
 stdv=cat(2,stdve,stdvi);
+
 %%
 
 fs=14;
@@ -33,13 +36,9 @@ pos_vec=[0,0,8,10];
 darkred=[0.8,0,0.1];
 green=[0.2,0.7,0];
 orange=[1,0.5,0];
-%col={'m',green,orange,darkred};
 col={'k',darkred};
-%red=[0.85,0.32,0.1];
-%blue=[0,0.48,0.74];
-%colpop={red,blue};
 
-texts={'structured','shuffled'}
+texts={'structured','shuffled'};
 %%
 
 maxi=max(max(cellfun(@max,stdvi)));
@@ -47,6 +46,7 @@ mini=min(min(cellfun(@min,stdvi)));
 xvec=linspace(mini-1,maxi+1,200);
 
 %%
+
 namepop={'E neurons','I neurons'};
 xt=7:7:21;
 yt=0:1:2;

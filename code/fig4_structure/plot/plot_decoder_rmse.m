@@ -1,15 +1,19 @@
+%% plots the RMSE of a linear decoder trained to minimize the encoding error
+% using spikes from the optimal network vs
+% using spikes from the network with unstructured connectivity
 
-clear all
+clear
 close all
+clc
 
-savefig=1;
+savefig=0;
 
 ntr=200;
 figname=['rmse_decoder_',sprintf('%1.0i',ntr)];
-savefile='/Users/vkoren/ei_net/figure/structure/train_decoder/';
+savefile=pwd;
 
 namep={'structured','perm_full_all'};
-addpath([cd,'/result/linear_regression/'])
+addpath([cd,'/result/structure/'])
 
 %%
 
@@ -76,6 +80,6 @@ set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_ve
 if savefig(1)==1
     print(H,[savefile,figname],'-dpng','-r300');
 end
-%%
+
 
 %%

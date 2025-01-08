@@ -1,6 +1,6 @@
 %% plots the tuning similarity as a function of effective conenctivity in E
-% and I neurons with ativity perturbation of a single E neuron 
-% with partially permuted connectivity structure
+% and I neurons with activity perturbation of a single E neuron 
+% in unstructured networks
 
 clear
 close all
@@ -14,12 +14,12 @@ addpath([cd,'/result/perturbation/'])
 ntype={'noiseJ','full_perm','partial_perm'};
 Jp_name={'E-E','I-I','E-I','I-E','all'}; % Connetivity matrix that is permuted
 
-type=3; 
-Jp=5;   
-Ap=1.0;
+type=2; % 2~ full permutation, 3~ partial permutation
+Jp=5; % 2,3,4, or 5 for permuted I-I, E-I, I-E and all   
 
 %% load result
 
+Ap=1.0;
 figname=['influence_tuning_',ntype{type},'_',Jp_name{Jp}];
 
 F=cell(2,1);
