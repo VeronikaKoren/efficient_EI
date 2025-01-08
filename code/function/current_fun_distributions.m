@@ -1,4 +1,4 @@
-function [Ie,Ii,re,ri,CVe,CVi,fre,fri,kappa] = current_fun_distributions(dt,sigmav,beta,tau_vec,s,N,q,d)
+function [Ie,Ii,re,ri,CVe,CVi,fre,fri] = current_fun_distributions(dt,sigmav,beta,tau_vec,s,N,q,d)
 % compute performance measures, CV and E-I balance measures
 
 M=size(s,1);

@@ -1,4 +1,4 @@
-function [r] = balance_fun(ce,ci,dt)
+function [r,rcurr] = balance_fun(ce,ci,dt)
 
 % r is the measure of temporal correlation of currents coming to single I neurons, averaged across neurons 
 % mean_ei is the mean E and I current
