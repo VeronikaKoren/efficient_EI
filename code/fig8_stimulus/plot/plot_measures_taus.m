@@ -1,5 +1,5 @@
 
-clear all
+clear
 close all
 clc
         
@@ -12,8 +12,8 @@ figname1=strcat('loss_',vari);
 figname2=strcat('fr_cv_',vari);
 figname3=strcat('EI_balance_',vari);
 
-addpath('/Users/vkoren/ei_net/result/stimulus/')
-savefile='/Users/vkoren/ei_net/figure/stimulus/tau_s/';
+addpath('result/stimulus/')
+savefile=pwd;
 
 loadname=strcat('measures_',vari);
 load(loadname)
@@ -42,27 +42,10 @@ namepop={'Exc','Inh'};
 
 plt1=[0,0,9,7];
 plt2=[0,0,9,10];
-xt=[xvec(1),50,100,150]
+xt=[xvec(1),50,100,150];
 xlab='time const. stimuli \tau_s';
 
-%%
-
-g_e = 0.5;
-g_k = 0.5;
-g_l=0.7;
-
-eps=(rms-min(rms))./max(rms-min(rms));
-kappa= (cost-min(cost))./max(cost - min(cost));
-error=(g_e*eps(:,1)) + ((1-g_e)*eps(:,2));
-mcost=(g_k*kappa(:,1)) + ((1-g_k)*kappa(:,2));
-loss=(g_l*error) + ((1-g_l) * mcost);
-
-[~,idx]=min(loss);
-optimal_param=xvec(idx);
-display(optimal_param,'best param')
-
 %% plot loss =measures
-
 
 name_error={'RMSE^E','RMSE^I'};
 name_cost={'MC^E','MC^I'};
@@ -108,12 +91,6 @@ for ii=1:2
     plot(xvec,cost(:,ii),'color',colpop{ii});
     text(0.1,0.9-(ii-1)*0.17,name_cost{ii},'units','normalized','color',colpop{ii},'fontsize',fs)
 end
-%{
-plot(xvec,mcost,'color',green)
-plot(xvec,loss,'color','k')
-text(0.1,0.9,'cost','units','normalized','color',green,'fontsize',fs)
-text(0.1,0.75,'loss','units','normalized','color','k','fontsize',fs)
-%}
 
 hold off
 box off
@@ -209,20 +186,20 @@ if savefig2==1
 end
 
 %% E-I balance
+
 yt=-4:2:0;
 pos_vec=plt2;
 
-a=0.3;
 rec=zeros(length(xvec),2);
-rec(:,1)=meanE(:,1).*a+meanE(:,2).*a;
-rec(:,2)=meanI(:,1).*a+meanI(:,2).*a;
+rec(:,1)=meanE(:,1)+meanE(:,2);
+rec(:,2)=meanI(:,1)+meanI(:,2);
 
 H=figure('name',figname3,'visible',vis{3});
 subplot(2,1,1)
 hold on
 for ii=1:2
     plot(xvec,rec(:,ii),'color',colpop{ii})
-    text(0.7, 0.43-(ii-1)*0.18,['to ', namepop{ii}],'units','normalized','color',colpop{ii},'fontsize',fs)
+    text(0.7, 0.9-(ii-1)*0.18,['to ', namepop{ii}],'units','normalized','color',colpop{ii},'fontsize',fs)
 end
 
 hold off

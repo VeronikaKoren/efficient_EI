@@ -1,5 +1,5 @@
 
-clear all
+clear
 close all
 clc
         
@@ -11,8 +11,8 @@ savefig2=0;
 figname1=strcat('error_',vari);
 figname2=strcat('loss_',vari);
 
-addpath('/Users/vkoren/ei_net/result/stimulus/')
-savefile='/Users/vkoren/ei_net/figure/stimulus/taus_dim/';
+addpath('result/stimulus/')
+savefile=pwd;
 
 loadname=strcat('measures_',vari);
 load(loadname)
@@ -47,7 +47,6 @@ namepop={'Exc','Inh'};
 plt1=[0,0,9,7];
 plt2=[0,0,9,10];
 xt=50:100:350;
-%xt=[50,100,150];
 xlab='time const. stim. 3 \tau^s_3 [ms]';
 
 %% plot error in every dimension
@@ -73,7 +72,6 @@ end
 hold off
 text(0.08,1.35,'time const. stim. 2 \tau^s_2 [ms]','units','normalized','fontsize',fs)
 text(1.02,0.5,'E','units','normalized','fontsize',fs)
-%text(0.1,-.3,'time const. stimulus 3 \tau^s_3','units','normalized','fontsize',fs)
 
 box on
 for jj=1:length(xt)
@@ -109,7 +107,7 @@ for jj=1:length(xt)
     text(xt(jj)-11,maxi+2, sprintf('%1.0i', xt(jj)/2),'fontsize',fs)
 end
 xlim([xvec(1),xvec(end)])
-%text(0.1,1.3,'time const. stimulus 2 \tau^s_2','units','normalized','fontsize',fs)
+
 text(0.08,-.4,'time const. stim. 3 \tau^s_3 [ms]','units','normalized','fontsize',fs)
 text(1.02,0.5,'I','units','normalized','fontsize',fs)
 
@@ -126,10 +124,8 @@ set(gca,'TickDir','out')
 
 axes
 h1 = ylabel ('mean squared error (\tau_1^s=10 ms)','units','normalized','Position',[-0.04,0.5,0],'fontsize',fs+1);
-%h2 = xlabel (xlab,'units','normalized','Position',[0.5,-0.01,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h1,'visible','on')
-%set(h2,'visible','on')
 
 set(H, 'Units','centimeters', 'Position', pos_vec)
 set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_vec(3), pos_vec(4)]) % for saving in the right size
@@ -211,10 +207,8 @@ set(gca,'TickDir','out')
 
 axes
 h1 = ylabel ('loss measures (\tau_1^s=10 ms)','units','normalized','Position',[-0.04,0.5,0],'fontsize',fs+1);
-%h2 = xlabel (xlab,'units','normalized','Position',[0.5,-0.01,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h1,'visible','on')
-%set(h2,'visible','on')
 
 set(H, 'Units','centimeters', 'Position', pos_vec)
 set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_vec(3), pos_vec(4)]) % for saving in the right size

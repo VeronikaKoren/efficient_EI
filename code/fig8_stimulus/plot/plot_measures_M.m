@@ -17,16 +17,16 @@ figname2=strcat('fr_cv_',vari);
 figname3=strcat('EI_balance_',vari);
 figname4='weighting';
 
-addpath('/Users/vkoren/ei_net/result/stimulus/')
-savefile='/Users/vkoren/ei_net/figure/stimulus/dimensionality_M/';
+addpath('result/stimulus/')
+savefile=pwd;
 
-loadname=strcat('measures_',vari)
+loadname=strcat('measures_',vari);
 load(loadname)
 
 %%
 
 xvec=Mvec;
-vis={'off','off','off','on'};
+vis={'on','on','on','on'};
 
 fs=14;
 msize=6;
@@ -50,8 +50,8 @@ xlimit=[xvec(1),xvec(end-10)];
 best_rmse=zeros(2,1);
 for ii=1:2
 
-    [~,idxrmse]=min(rms(:,ii))
-    best_rmse(ii)=xvec(idxrmse)
+    [~,idxrmse]=min(rms(:,ii));
+    best_rmse(ii)=xvec(idxrmse);
 end
 display(best_rmse,'best param according to RMSE E and I')
 
@@ -67,7 +67,6 @@ display(optimal_param,'best param')
 
 cost_ei_norm= (cost-min(cost))./max(cost - min(cost));
 cost_norm=mean(cost_ei_norm,2);
-
 loss_norm=(avloss-min(avloss))./max(avloss - min(avloss));
 
 %% plot loss measures
@@ -115,14 +114,12 @@ plot(xvec,loss_norm,'color','k')
 text(0.30,0.9,'cost','units','normalized','color',green,'fontsize',fs)
 text(0.30,0.75,'loss','units','normalized','color','k','fontsize',fs)
 
-%ylim([2,6])
 % arrow
 line([optimal_param optimal_param],[mini mini+2*delta],'color','k')
 plot(optimal_param,mini,'kv','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
 hold off
 
 box off
-%text(0.25,0.8,'(RMSE^E + RMSE^I ) / 2','units','normalized','fontsize',fs)
 xlim(xlimit)
 ylim([-0.1,1.1])
 
@@ -215,16 +212,15 @@ end
 
 %% E-I balance
 
-pos_vec=plt2;
-a=1;
 rec=zeros(length(xvec),2);
-rec(:,1)=meanE(:,1).*a + meanE(:,2).*a;
-rec(:,2)=meanI(:,1).*a + meanI(:,2).*a;
+rec(:,1)=meanE(:,1) + meanE(:,2);
+rec(:,2)=meanI(:,1) + meanI(:,2);
 
+pos_vec=plt2;
 mini=-1.7;
 maxi=-2.5;
-
 yt=[-2,0];
+
 H=figure('name',figname3,'visible',vis{3});
 subplot(2,1,1)
 hold on
@@ -233,7 +229,7 @@ for ii=1:2
     text(0.7, 0.45-(ii-1)*0.18,['to ', namepop{ii}],'units','normalized','color',colpop{ii},'fontsize',fs)
 end
 line([optimal_param optimal_param],[mini maxi],'color','k')
-hh=plot(optimal_param,mini,'k^','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
+plot(optimal_param,mini,'k^','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
 
 hold off
 box off
@@ -301,7 +297,6 @@ if savefig3==1
     print(H,[savefile,figname3],'-dpng','-r300');
 end
 
-%%
 %% weighting E vs. I
 
 g_ei_vec=0:0.01:1;
@@ -316,6 +311,7 @@ for ii=1:length(g_ei_vec)
 end
 
 display([optimal_ratio_ei(1),optimal_ratio_ei(end)],'range of optimal parameters for different weighting of E and I loss')
+
 %% full range of optimal parameters as a function of weighting of error and cost
 
 glvec=0:0.01:1;
@@ -333,7 +329,6 @@ display([optimal_ratio_gl(1),optimal_ratio_gl(end)],'range of optimal parameters
 
 %% plot optimal param as a function of weighting
 
-
 xlab_sh='nb. encoded variables M';
 hidx=find(g_ei_vec==g_eps);
 glidx=find(glvec==g_l);
@@ -342,8 +337,9 @@ pos_vec=[0,0,8,10];
 xt=0:0.5:1;
 yt=[2,4];
 
-H=figure('name',figname4,'visible','on');
 %%%%%%%%%%%%%%%%%%
+H=figure('name',figname4,'visible','on');
+
 subplot(2,1,1)
 hold on
 stem(g_ei_vec,optimal_ratio_ei,'color',red)
@@ -398,6 +394,6 @@ set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_ve
 if savefig4==1
     print(H,[savefile,figname4],'-dpng','-r300');
 end
-%}
+
 %%
 

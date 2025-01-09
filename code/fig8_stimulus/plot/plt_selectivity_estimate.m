@@ -1,11 +1,18 @@
+%% plots the tuning curves in E and I neurons for changing levels of a constant stimulus in E and I neurons
+% plots the selectivity index in E and I neurons
+
+close all
+clear
+clc
 
 savefig=0;
-savefig2=1;
+savefig2=0;
+
 figname1='tuning_curves';
 figname2='selectivity_EI_boxplt';
-savefile='/Users/vkoren/ei_net/figure/stimulus/selectivity/';
 
 addpath([cd,'/result/stimulus/'])
+savefile=[pwd,'/'];
 
 loadname='tuning_curves';
 load(loadname)
@@ -62,13 +69,14 @@ if savefig==1
 end
 
 %% for all neurons
+
 car=ones(1,10)./10;
 N=size(tuningE,2);
 
 selE=zeros(N,1);
 for ii=1:N
     y=tuningE(:,ii)./max(tuningE(:,ii));
-    yc=conv(y,car,'same'); % smooth
+    yc=conv(y,car,'same'); % smoothing
     selE(ii)=mean(abs(diff(yc)))./0.1;
 end
 
@@ -90,6 +98,7 @@ display(p,'p-value for t-test difference between E and I')
 
 [~,pvar]=vartest2(selE,selI);
 display(pvar,'p-value for f-test on difference in variance between E and I')
+
 %% plot selectivity of E and I
 
 pos_vec=[0,0,8,7];
@@ -99,7 +108,7 @@ blue=[0,0.48,0.74];
 xt=[1,1.5];
 yt=0:0.1:0.2;
 
-H=figure('name',figname2);
+H=figure('name',figname2,'Position',pos_vec);
 hold on
 h=boxplot(selE,'Position',1,'colors',red,'Outliersize',3,'Symbol','.');
 set(h,{'linew'},{2})
@@ -126,27 +135,3 @@ set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_ve
 if savefig2==1
     print(H,[savefile,figname2],'-dpng','-r300');
 end
-%%
-%% abs(dr/dt) try on one neuron
-%{
-
-nidx=7;
-y=tuningE(:,nidx)./max(tuningE(:,nidx));
-yc=conv(y,car,'same');
-
-figure()
-subplot(3,1,1)
-hold on
-plot(y)
-plot(yc)
-hold off
-
-subplot(3,1,2)
-hold on
-plot(diff(y))
-plot(diff(yc))
-hold off
-
-subplot(3,1,3)
-plot(abs(diff(yc)))
-%}

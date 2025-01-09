@@ -1,5 +1,5 @@
 
-%clear all
+clear
 close all
 clc
 
@@ -10,15 +10,13 @@ g_eps=0.5;
 savefig1=0;
 savefig2=0;
 savefig3=0;
-savefig4=0;
 
 figname1=strcat('loss_',vari,'_',sprintf('%1.0i',g_l*10));
 figname2=strcat('fr_cv_',vari);
 figname3=strcat('EI_balance_',vari);
-figname4='weighting';
 
-addpath('/Users/vkoren/ei_net/result/stimulus/');
-savefile=['/Users/vkoren/ei_net/figure/stimulus/taux/'];
+addpath('result/stimulus/')
+savefile=pwd;
 
 loadname=strcat('measures_',vari);
 load(loadname)
@@ -41,7 +39,6 @@ green=[0.2,0.7,0];
 olive=[0.1,0.6,0.3];
 colcost={green,olive};
 colloss={'k',[0.5,0.5,0.5]};
-
 
 namepop={'Exc','Inh'};
 
@@ -68,14 +65,6 @@ avloss=mean(loss_ei,2); % average across E and I neurons
 optimal_param=xvec(idx);
 display(optimal_param,'best param')
 
-%% normalized for plotting
-
-%{
-cost_ei_norm= (cost-min(cost))./max(cost - min(cost));
-cost_norm=mean(cost_ei_norm,2);
-
-loss_norm=(avloss-min(avloss))./max(avloss - min(avloss));
-%}
 %% plot loss measures
 
 name_error={'RMSE^E','RMSE^I'};
@@ -192,8 +181,6 @@ for ii=1:2
     plot(xvec,frate(:,ii),'color',colerror{ii});
     text(0.8,0.8-(ii-1)*0.17,namepop{ii},'units','normalized','color',colerror{ii},'fontsize',fs)
 end
-%line([optimal_param optimal_param],[mini+delta mini+3*delta],'color','k')
-%plot(optimal_param,mini+delta,'kv','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
 hold off
 box off
 xlim(xlimit)
@@ -216,8 +203,6 @@ hold on
 for ii=1:2
     plot(xvec,CVs(:,ii),'color',colerror{ii});
 end
-%line([optimal_param optimal_param],[0.58 0.75],'color','k')
-%plot(optimal_param,0.76,'k^','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
 hold off
 box off
 
@@ -241,10 +226,9 @@ end
 %% E-I balance
 
 pos_vec=plt2;
-a=1;
 rec=zeros(length(xvec),2);
-rec(:,1)=meanE(:,1).*a + meanE(:,2).*a;
-rec(:,2)=meanI(:,1).*a + meanI(:,2).*a;
+rec(:,1)=meanE(:,1) + meanE(:,2);
+rec(:,2)=meanI(:,1) + meanI(:,2);
 
 yt=[-2,0];
 
@@ -255,8 +239,6 @@ for ii=1:2
     plot(xvec,rec(:,ii),'color',colerror{ii})
     text(0.1, 0.4-(ii-1)*0.18,['in ', namepop{ii}],'units','normalized','color',colerror{ii},'fontsize',fs)
 end
-%line([optimal_param optimal_param],[mini maxi],'color','k')
-%hh=plot(optimal_param,mini,'k^','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
 
 hold off
 box off
@@ -288,9 +270,6 @@ hold on
 for ii=1:2
     plot(xvec,abs(r_ei(:,ii)),'color',colerror{ii},'linewidth',lw)
 end
-%line([optimal_param optimal_param],[mini maxi],'color','k')
-%hh=plot(optimal_param,maxi,'k^','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
-
 hold off
 box off
 
@@ -307,9 +286,6 @@ ylabel('corr. coefficient','fontsize',fs+1)
 op=get(gca,'OuterPosition');
 set(gca,'OuterPosition',[op(1)+0.0 op(2)+0.03 op(3)-0.0 op(4)+0.02]);
 
-%op=get(gca,'OuterPosition');
-%set(gca,'OuterPosition',[op(1)+0.07 op(2)+0.02 op(3)-0.07 op(4)-0.02]);
-
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 set(gca,'TickDir','out')
 
@@ -325,103 +301,5 @@ if savefig3==1
     print(H,[savefile,figname3],'-dpng','-r300');
 end
 
-%%
-%% weighting E vs. I
-
-g_ei_vec=0.01:0.01:1;
-optimal_ratio_ei=zeros(length(g_ei_vec),1);
-
-for ii=1:length(g_ei_vec)
-
-    avloss_g_ei=g_ei_vec(ii).*loss_ei(:,1) + (1-g_ei_vec(ii)).*loss_ei(:,2);
-
-    [~,idx_ei]=min(avloss_g_ei);
-    optimal_ratio_ei(ii)=xvec(idx_ei);
-end
-
-display([optimal_ratio_ei(1),optimal_ratio_ei(end)],'range of optimal parameters for different weighting of E and I loss')
-%% full range of optimal parameters as a function of weighting of error and cost
-
-glvec=0.01:0.01:1;
-optimal_ratio_gl=zeros(length(glvec),1);
-for ii=1:length(glvec)
-
-    loss_ei_gl=glvec(ii).*rms + ((1-glvec(ii)).*cost);
-    avloss_gl=mean(loss_ei_gl,2); % average across E and I neurons (assuming equal weighting of the loss across E and I neurons)
-    [~,idx_gl]=min(avloss_gl);
-    optimal_ratio_gl(ii)=xvec(idx_gl);
-
-end
-
-display([optimal_ratio_gl(1),optimal_ratio_gl(end)],'range of optimal parameters for different weighting of error vs. cost')
-
-%% plot optimal param as a function of weighting
-
-xlab_sh='time constant of the stimulus';
-hidx=find(g_ei_vec==g_eps);
-glidx=find(glvec==g_l);
-
-pos_vec=[0,0,8,10];
-xt=0:0.5:1;
-yt=0:10:30;
-ylimit=[0,15];
-
-H=figure('name',figname4,'visible','on');
-%%%%%%%%%%%%%%%%%%
-subplot(2,1,1)
-hold on
-stem(g_ei_vec,optimal_ratio_ei,'color',red)
-plot(g_eps,optimal_ratio_ei(hidx)+2,'kv','markersize',13)
-hold off
-box off
-
-xlabel('weighting loss E vs. I','fontsize',fs)
-ylim(ylimit)
-xlim([-0.1,1.1])
-
-set(gca,'XTick',xt)
-set(gca,'XTicklabel',[])
-set(gca,'YTick',yt)
-set(gca,'YTicklabel',yt,'fontsize',fs)
-
-op=get(gca,'OuterPosition');
-set(gca,'OuterPosition',[op(1)+0.07 op(2)+0.00 op(3)-0.05 op(4)-0.0]);
-
-set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
-%%%%%%%%%%%%%%%%
-
-subplot(2,1,2)
-hold on
-stem(glvec,optimal_ratio_gl,'k')
-plot(g_l,optimal_ratio_gl(glidx)+2,'kv','markersize',13)
-hold off
-box off
-
-xlabel('weighting error vs. cost','fontsize',fs)
-ylim(ylimit)
-xlim([-0.1,1.1])
-
-set(gca,'XTick',xt)
-set(gca,'XTicklabel',xt,'fontsize',fs)
-set(gca,'YTick',yt)
-set(gca,'YTicklabel',yt,'fontsize',fs)
-
-op=get(gca,'OuterPosition');
-set(gca,'OuterPosition',[op(1)+0.07 op(2)+0.00 op(3)-0.05 op(4)-0.0]);
-
-set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
-
-axes
-h1 = ylabel (['optimal ',xlab_sh],'units','normalized','Position',[-0.05,0.5,0],'fontsize',fs+1);
-set(gca,'Visible','off')
-set(h1,'visible','on')
-
-set(H, 'Units','centimeters', 'Position', pos_vec)
-set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_vec(3), pos_vec(4)]) % for saving in the right size
-
-if savefig4==1
-    print(H,[savefile,figname4],'-dpng','-r300');
-end
-%}
 %%
 
