@@ -4,8 +4,10 @@ This code is associated with the paper "Efficient coding in biophysically realis
 The author of the code is Veronika Koren.  
 For any questions, please write to koren.veronika@gmail.com.
 
+The repository has a DOI: 10.5281/zenodo.14623182
+
 # How to open and run a script
-Please do not add all the paths but follow point 1) and 2)":
+Please do not add all the paths but follow point 1) or 2)":
 
 1) in a terminal, cd to the extracted folder "efficient_EI"  
 a) open matlab desktop from the terminal by typing "matlab" in the same terminal; this opens a matlab desktop  
