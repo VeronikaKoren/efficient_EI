@@ -1,20 +1,17 @@
-%% plots the performance and activity measures as a function of the ratio of mean I-I to E-I connectivity
-% measured as a function of the sigma_w^I (spread of tuning parameters in I neurons)
+%% plots pe
 
-clear
+clear 
 close all
-clc
 
-vari='d'; 
-g_l=0.7;
-g_eps=0.5;
+vari='de';
+g_l=0.7;            % weighting error vs. cost
+g_eps=0.5;          % weighting error E vs. I
 
 savefig1=0;
 savefig2=0;
-savefig3=0;
+savefig3=1;
 savefig4=0;
-savefig5=0; 
-
+savefig5=0;
 
 figname1=strcat('loss_',vari,'_',sprintf('%1.0i',g_l*10));
 figname2=strcat('fr_cv_',vari);
@@ -25,13 +22,31 @@ figname5=strcat('weightings_',vari);
 addpath('result/ratios/')
 savefile=pwd;
 
-loadname='measures_d';
+loadname='measures_dE';
 load(loadname)
 
-%%
-
-xvec=dvec;
 vis={'on','on','on','on','on'};
+
+%% compute optimal parameter
+
+loss_ei=g_l.*ms + ((1-g_l).*cost);
+avloss=mean(loss_ei,2); % average across E and I neurons
+[~,idx]=min(avloss);
+optimal_dE=devec(idx);
+display(optimal_dE,'best parameter dE')
+
+dI=parameters{8}{:};
+optimal_ratio=dI/optimal_dE;
+display(optimal_ratio,'best ratio sigmawI: sigmawE')
+xvec=dI./devec;
+
+%% normalized for plotting
+
+cost_ei_norm= (cost-min(cost))./max(cost - min(cost));
+cost_norm=mean(cost_ei_norm,2);
+loss_norm=(avloss-min(avloss))./max(avloss - min(avloss));
+
+%%
 
 fs=14;
 msize=6;
@@ -52,39 +67,15 @@ namepop={'Exc','Inh'};
 
 plt1=[0,0,9,7];
 plt2=[0,0,9,10];
-xt=xvec(1):2:xvec(end);
-xlab='mean I-I : mean E-I';
-xlimit=[xvec(1),xvec(end-2)];
-
-%% optimal parameter
-
-loss_ei=g_l.*ms + ((1-g_l).*cost);
-avloss=mean(loss_ei,2); % average across E and I neurons
-[~,idx]=min(avloss);
-optimal_param=xvec(idx);
-display(optimal_param,'best param')
-
-[~,idx2]=min(mean(ms,2));
-optimal_param_error=xvec(idx2);
-display(optimal_param_error,'best param with respect to error')
-
-%% normalized for plotting
-
-cost_ei_norm= (cost-min(cost))./max(cost - min(cost));
-cost_norm=mean(cost_ei_norm,2);
-
-loss_norm=(avloss-min(avloss))./max(avloss - min(avloss));
+xt=[3,6,9];
+xlab='mean I-I : mean E-I (vary E-I)';
+xlab_opt='mean E-I : mean I-I (vary E-I)';
+xlimit=[xvec(end),xvec(1)];
 
 %% plot loss
 
-name_error={'RMSE^E','RMSE^I'};
-
-mini=min(loss_norm);
-maxi=max(loss_norm);
-delta= (maxi-mini)/5;
-
+name_error={'RMSE^E','RMSE^I','(RMSE^E + RMSE^I)/2'};
 pos_vec=plt2;
-yt=3:3:6;
 yt2=[0,1];
 %%%%%%%%%%%%%
 
@@ -98,13 +89,10 @@ end
 
 hold off
 box off
-ylim([2.3,7.7])
 xlim(xlimit)
 
-set(gca,'YTick',yt)
-set(gca,'YTicklabel',yt,'fontsize',fs)
 set(gca,'XTick',xt)
-set(gca,'XTicklabel',[])
+set(gca,'XTicklabel',[],'fontsize',fs)
     
 op=get(gca,'OuterPosition');
 set(gca,'OuterPosition',[op(1)+0.04 op(2)+0.03 op(3)-0.02 op(4)-0.01]);
@@ -116,14 +104,12 @@ subplot(2,1,2)
 hold on
 plot(xvec,cost_norm,'color',green)
 plot(xvec,loss_norm,'color','k')
-text(0.7,0.86,'cost','units','normalized','color',green,'fontsize',fs)
-text(0.7,0.7,'loss','units','normalized','color','k','fontsize',fs)
+text(0.05,0.9,'cost','units','normalized','color',green,'fontsize',fs)
+text(0.05,0.75,'loss','units','normalized','color','k','fontsize',fs)
 
-% arrow
-line([optimal_param optimal_param],[mini+delta mini+2.5*delta],'color','k')
-plot(optimal_param,mini+delta,'kv','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
 hold off
 box off
+
 xlim(xlimit)
 ylim([-0.1,1.1])
 
@@ -138,7 +124,7 @@ set(gca,'OuterPosition',[op(1)+0.04 op(2)+0.03 op(3)-0.02 op(4)+0.01]);
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 
 axes
-h1 = ylabel ('loss measures','units','normalized','Position',[-0.05,0.5,0],'fontsize',fs+2);
+h1 = ylabel ('loss measures','units','normalized','Position',[-0.07,0.5,0],'fontsize',fs+2);
 h2 = xlabel (xlab,'units','normalized','Position',[0.5,-0.01,0],'fontsize',fs+2);
 set(gca,'Visible','off')
 set(h1,'visible','on')
@@ -153,28 +139,25 @@ end
 
 %% firing rate and CV
 
-mini=frate(idx,2);
-maxi=max(frate(:));
-delta= (maxi-mini)/3;
-
 pos_vec=plt2;
 yt=0:20:40;
+
+mini=frate(idx,2);
+maxi=max(frate(:));
 
 H=figure('name',figname2,'visible',vis{2});
 subplot(2,1,1)
 hold on
 for ii=1:2
-    plot(xvec,frate(:,ii),'color',col{ii});
-    text(0.75,0.85-(ii-1)*0.17,namepop{ii},'units','normalized','fontsize',fs,'color',colI{ii})
+    plot(xvec,frate(:,ii),'color',colI{ii});
+    text(0.1,0.85-(ii-1)*0.17,namepop{ii},'units','normalized','fontsize',fs,'color',colI{ii})
 end
-% arrow
-line([optimal_param optimal_param],[mini+delta mini+2*delta],'color','k')
-plot(optimal_param,mini+delta,'kv','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
+
 hold off
 box off
 
 xlim(xlimit)
-ylim([0,57])
+ylim([0,40])
 
 ylabel('firing rate [Hz]','fontsize',fs)
 
@@ -184,22 +167,17 @@ set(gca,'XTick',xt)
 set(gca,'XTicklabel',[])
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
+%set(gca,'TickDir','out')
 
 %%%%%%%%%%%%%%%%%%%%%
-
-mini=CVs(idx,2);
-maxi=1.4;
-delta= (maxi-mini)/3;
-yt=1.0:0.5:1.5;
+yt=1:0.5:1.5;
 
 subplot(2,1,2)
 hold on
 for ii=1:2
-    plot(xvec,CVs(:,ii),'color',col{ii});
+    plot(xvec,CVs(:,ii),'color',colI{ii});
 end
-% arrow
-line([optimal_param optimal_param],[mini+delta mini+2.5*delta],'color','k')
-plot(optimal_param,mini+delta,'kv','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
+
 hold off
 box off
 
@@ -214,7 +192,6 @@ set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
-%set(gca,'TickDir','out')
 
 set(H, 'Units','centimeters', 'Position', pos_vec)
 set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_vec(3), pos_vec(4)]) % for saving in the right size
@@ -225,44 +202,35 @@ end
 
 %% E-I balance
 
-a=1;
 pos_vec=plt2;
-rec(:,1)=meanE(:,1).*a +meanE(:,2).*a;
-rec(:,2)=meanI(:,1).*a +meanI(:,2).*a;
-
-mini=-2;
-maxi=-4;
-delta= (maxi-mini)/3;
+rec(:,1)=meanE(:,1)+meanE(:,2);
+rec(:,2)=meanI(:,1)+meanI(:,2);
 
 H=figure('name',figname3,'visible',vis{3});
 subplot(2,1,1)
 hold on
 for ii=1:2
     plot(xvec,rec(:,ii),'color',col{ii})
-    text(0.03,0.35-(ii-1)*0.18,0.9,['to ',namepop{ii}],'units','normalized','fontsize',fs,'color',col{ii})
+    text(0.05,0.95-(ii-1)*0.18,0.9,['to ',namepop{ii}],'units','normalized','fontsize',fs,'color',col{ii})
 end
-% arrow
-line([optimal_param optimal_param],[mini mini+2.5*delta],'color','k')
-plot(optimal_param,mini+0*delta,'k^','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
 hold off
 box off
 
 title('average imbalance','fontsize',fs)
 ylabel('net syn. input [mV]','fontsize',fs)
 xlim(xlimit)
-ylim([-4.3,0])
+ylim([-4,1])
 
 set(gca,'XTick',xt)
 set(gca,'XTicklabel',[])
 set(gca,'YTick',[-2,0],'fontsize',fs)
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
-%set(gca,'TickDir','out')
-
 %%%%%%%%%%%%
-mini=0.26;
-maxi=0.4;
-delta= (maxi-mini)/3;
+
+mini=0;
+maxi=0.23;
+delta= (maxi-mini)/4;
 yt=0:.25:.5;
 
 subplot(2,1,2)
@@ -270,16 +238,15 @@ hold on
 for ii=1:2
     plot(xvec,abs(r_ei(:,ii)),'color',col{ii})
 end
-% arrow
-line([optimal_param optimal_param],[mini mini+2.5*delta],'color','k')
-plot(optimal_param,mini+2.5*delta,'k^','markersize',msize+2,'Color','k','MarkerFaceColor','k','LineWidth',lw-0.5);
 hold off
 box off
+
 title('instantaneous balance','fontsize',fs)
-xlim(xlimit)
-ylim([0.1,0.55])
 ylabel('corr. coefficient','fontsize',fs)
 xlabel (xlab,'fontsize',fs);
+
+xlim(xlimit)
+ylim([0.0,0.7])
 
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
@@ -287,7 +254,6 @@ set(gca,'XTick',xt)
 set(gca,'XTicklabel',xt,'fontsize',fs)
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
-%set(gca,'TickDir','out')
 
 set(H, 'Units','centimeters', 'Position', pos_vec)
 set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_vec(3), pos_vec(4)]) % for saving in the right size
@@ -296,31 +262,25 @@ if savefig3==1
     print(H,[savefile,figname3],'-dpng','-r300');
 end
 
-
 %% mean syn. current
 
-mce=cat(2,meanE.*a,meanE(:,1).*a+meanE(:,2).*a);
 pos_vec=plt2;
-rec=meanE(:,1).*a+meanE(:,2).*a;
-yt=[0,2];
+mce=cat(2,meanE,meanE(:,1)+meanE(:,2));
+yt=[-3,0];
 
 H=figure('name',figname4,'visible',vis{4});
 subplot(2,1,1)
 hold on
-for ii=1:2
+for ii=1:3
     plot(xvec,mce(:,ii),'color',colE{ii})
-    text(0.05+ (ii-1)*0.13,0.8,nameE{ii},'fontsize',fs,'units','normalized','color',colE{ii})
-    
+    text(0.05+ (ii-1)*0.13,0.85,nameE{ii},'fontsize',fs,'units','normalized','color',colE{ii})
 end
-plot(xvec,rec,'--','color',colE{3})
-text(0.05+ (3-1)*0.15,0.8,nameE{3},'fontsize',fs,'units','normalized','color',colE{3})
-
 hold off
 box off
 
 title('to Excitatory','Fontsize',fs-1)
-xlim([xvec(1),xvec(end-2)])
-ylim([-2.5,2.5])
+xlim(xlimit)
+ylim([-4,1.5])
 
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
@@ -328,31 +288,29 @@ set(gca,'XTick',xt)
 set(gca,'XTicklabel',[])
 
 op=get(gca,'OuterPosition');
-set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.02 op(3)-0.05 op(4)+0.0]);
+set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.02 op(3)-0.05 op(4)-0.02]);
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 %set(gca,'TickDir','out')
 %%%%%%%%%%%%
 
-rec=meanI(:,1).*a + meanI(:,2).*a;
-yt=0:8:12;
+mci=cat(2,meanI,meanI(:,1)+meanI(:,2));
+rec=meanI(:,1)+meanI(:,2);
+yt=[0,4];
 
 subplot(2,1,2)
 hold on
-for ii=1:2
-    plot(xvec,meanI(:,ii).*a,'color',colI{ii})
-end
-plot(xvec,rec,'--','color',colI{3})
 for ii=1:3
-    text(0.05+ (ii-1)*0.15,0.9,nameI{ii},'fontsize',fs,'units','normalized','color',colI{ii})
+    plot(xvec,mci(:,ii),'color',colI{ii})
+    text(0.05+(ii-1)*0.15,0.9,nameI{ii},'fontsize',fs,'units','normalized','color',colI{ii})
 end
 
 hold off
 box off
 
 title('to Inhibitory','Fontsize',fs-1)
-xlim([xvec(1),xvec(end-2)])
-%ylim([-4,4])
+xlim(xlimit)
+ylim([-6,6])
 
 set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
@@ -365,7 +323,7 @@ set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.02 op(3)-0.05 op(4)+0.02]);
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 
 axes
-h1 = ylabel ('net synaptic input [mV]','units','normalized','Position',[-0.05,0.5,0],'fontsize',fs+1);
+h1 = ylabel ('mean synaptic input [mV]','units','normalized','Position',[-0.05,0.5,0],'fontsize',fs+1);
 h2 = xlabel (xlab,'units','normalized','Position',[0.55,-0.01,0],'fontsize',fs+1);
 set(gca,'Visible','off')
 set(h2,'visible','on')
@@ -380,6 +338,19 @@ end
 
 %% weighting E vs. I
 
+%{
+loss_ei=g_l.*ms + ((1-g_l).*cost);
+avloss=mean(loss_ei,2); % average across E and I neurons
+[~,idx]=min(avloss);
+optimal_dE=devec(idx);
+display(optimal_dE,'best parameter dE')
+
+dI=parameters{8}{:};
+optimal_ratio=dI/optimal_dE;
+display(optimal_ratio,'best ratio sigmawI: sigmawE')
+xvec=dI./devec;
+%}
+
 g_ei_vec=0:0.01:1;
 optimal_ratio_ei=zeros(length(g_ei_vec),1);
 
@@ -387,8 +358,8 @@ for ii=1:length(g_ei_vec)
 
     avloss_g_ei=g_ei_vec(ii).*loss_ei(:,1) + (1-g_ei_vec(ii)).*loss_ei(:,2);
 
-    [~,idx_ei]=min(avloss_g_ei);
-    optimal_ratio_ei(ii)=xvec(idx_ei);
+    [~,idx_ei]=min(avloss_g_ei); % index of the best dE
+    optimal_ratio_ei(ii)=xvec(idx_ei); % best ratio
 end
 
 display([optimal_ratio_ei(1),optimal_ratio_ei(end)],'range of optimal parameters for different weighting of E and I loss')
@@ -404,31 +375,32 @@ for ii=1:length(glvec)
     [~,idx_gl]=min(avloss_gl);
     optimal_ratio_gl(ii)=xvec(idx_gl);
 
+
 end
 
 display([optimal_ratio_gl(1),optimal_ratio_gl(end)],'range of optimal parameters for different weighting of error vs. cost')
 
 %% plot optimal param as a function of weightings
 
-
 hidx=find(g_ei_vec==g_eps);
 glidx=find(glvec==g_l);
 
 pos_vec=[0,0,8,10];
 xt=0:0.5:1;
-yt=[3,6];
+yt=[3,6,9];
+ylimit=[0,11];
 
 H=figure('name',figname5,'visible','on');
 %%%%%%%%%%%%%%%%%%
 subplot(2,1,1)
 hold on
 stem(g_ei_vec,optimal_ratio_ei,'color',red)
-plot(g_eps,optimal_ratio_ei(hidx)+0.6,'kv','markersize',13)
+plot(g_eps,optimal_ratio_ei(hidx)+2,'kv','markersize',13)
 hold off
 box off
 
 xlabel('weighting loss E vs. I','fontsize',fs)
-ylim([0,4])
+ylim(ylimit)
 xlim([-0.1,1.1])
 
 set(gca,'XTick',xt)
@@ -445,12 +417,12 @@ set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
 subplot(2,1,2)
 hold on
 stem(glvec,optimal_ratio_gl,'k')
-plot(g_l,optimal_ratio_gl(glidx)+1.9,'kv','markersize',13)
+plot(g_l,optimal_ratio_gl(glidx)+3,'kv','markersize',13)
 hold off
 box off
 
 xlabel('weighting error vs. cost','fontsize',fs)
-ylim([0,9])
+ylim(ylimit)
 xlim([-0.1,1.1])
 
 set(gca,'XTick',xt)
@@ -474,5 +446,3 @@ set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_ve
 if savefig5==1
     print(H,[savefile,figname5],'-dpng','-r300');
 end
-
-

@@ -1,6 +1,8 @@
+%% plots the performance and activity measures as a function of the ratio of the number of E-I neurons
 
-clear all
+clear
 close all
+clc
 
 vari='q';
 g_l=0.7;
@@ -17,8 +19,8 @@ figname3=strcat('balance_',vari);
 figname4=strcat('currents_',vari);
 figname5=strcat('optimal_',vari);
 
-addpath('/Users/vkoren/ei_net/result/ratios/')
-savefile='/Users/vkoren/ei_net/figure/ratios/measure_NI/';
+addpath('result/ratios/')
+savefile=pwd;
 
 loadname='measures_q';
 load(loadname)
@@ -26,7 +28,7 @@ load(loadname)
 %%
 
 xvec=qvec;
-vis={'off','off','off','off','on'};
+vis={'on','on','on','on','on'};
 
 %%
 fs=14;
@@ -60,7 +62,7 @@ avloss=mean(loss_ei,2); % average across E and I neurons
 optimal_param=xvec(idx);
 display(optimal_param,'best param')
 
-
+%{
 [~,idx2]=min(mean(ms,2));
 optimal_param_error=xvec(idx2);
 display(optimal_param_error,'best param with respect to error')
@@ -91,8 +93,6 @@ for ii=1:2
     plot(xvec,ms(:,ii),'color',col{ii});
     text(0.15,0.95-(ii-1)*0.17,name_error{ii},'units','normalized','color',col{ii},'fontsize',fs)
 end
-%plot(xvec,(ms(:,1)+ms(:,2))./2,'--','color','k')
-%text(0.15,0.99-(3-1)*0.17,name_error{3},'units','normalized','color','m','fontsize',fs)
 
 hold off
 box off
@@ -108,7 +108,6 @@ op=get(gca,'OuterPosition');
 set(gca,'OuterPosition',[op(1)+0.04 op(2)+0.03 op(3)-0.02 op(4)-0.01]);
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
-%set(gca,'TickDir','out')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 subplot(2,1,2)
@@ -136,7 +135,6 @@ op=get(gca,'OuterPosition');
 set(gca,'OuterPosition',[op(1)+0.04 op(2)+0.03 op(3)-0.02 op(4)+0.01]);
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
-%set(gca,'TickDir','out')
 
 axes
 h1 = ylabel ('loss measures','units','normalized','Position',[-0.07,0.5,0],'fontsize',fs+2);
@@ -187,7 +185,6 @@ set(gca,'XTick',xt)
 set(gca,'XTicklabel',[])
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
-%set(gca,'TickDir','out')
 
 %%%%%%%%%%%%%%%%%%%%%
 yt=1:0.5:1.5;
@@ -216,7 +213,6 @@ set(gca,'YTick',yt)
 set(gca,'YTicklabel',yt,'fontsize',fs)
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
-%set(gca,'TickDir','out')
 
 set(H, 'Units','centimeters', 'Position', pos_vec)
 set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_vec(3), pos_vec(4)]) % for saving in the right size
@@ -228,10 +224,9 @@ end
 
 %% E-I balance
 
-a=1;
 pos_vec=plt2;
-rec(:,1)=meanE(:,1).*a +meanE(:,2).*a;
-rec(:,2)=meanI(:,1).*a +meanI(:,2).*a;
+rec(:,1)=meanE(:,1) +meanE(:,2);
+rec(:,2)=meanI(:,1) +meanI(:,2);
 
 mini=-1;
 maxi=-0.1;
@@ -289,7 +284,6 @@ set(gca,'XTick',xt)
 set(gca,'XTicklabel',xt,'fontsize',fs)
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
-%set(gca,'TickDir','out')
 
 set(H, 'Units','centimeters', 'Position', pos_vec)
 set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_vec(3), pos_vec(4)]) % for saving in the right size
@@ -333,7 +327,6 @@ op=get(gca,'OuterPosition');
 set(gca,'OuterPosition',[op(1)+0.05 op(2)+0.02 op(3)-0.05 op(4)-0.02]);
 
 set(gca,'LineWidth',lwa,'TickLength',[0.015 0.015]);
-%set(gca,'TickDir','out')
 
 %%%%%%%%%%%%
 rec=meanI(:,1).*a+meanI(:,2).*a;
@@ -474,5 +467,5 @@ set(H,'PaperPositionMode','Auto','PaperUnits', 'centimeters','PaperSize',[pos_ve
 if savefig5==1
     print(H,[savefile,figname5],'-dpng','-r300');
 end
-%}
+
 %%

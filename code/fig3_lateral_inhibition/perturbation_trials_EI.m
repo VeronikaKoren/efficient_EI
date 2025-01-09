@@ -1,68 +1,64 @@
 
-% measures effect of activity perturbation of a single E (target) neuron on
-% E and I neurons across trials, in presence of a weak feedforward input
-% stimulation strength a_p
+% measure effect of activity perturbation of a single E (target) neuron on
+% E and I neurons across trials
+% without feedforward input
+% for stimulation strength Ap 
 
 close all
 clear
 clc
 
-a_s=1;  % strength of the stimulus
-a_p=1;   % strength of perturbation wrt firing threshold (1 is at the threshold)
-
+Ap=1.0;   % strength of perturbation wrt firing threshold (1 is at the threshold)
 saveres=0;
 showfig=0;                  
-namepop={'different tuning','similar tuning'};
 
 addpath('code/function/')
+namepop={'different tuning','similar tuning'};
+display(Ap,' strength of stimulation wrt threshold');
 
-display(['perturbation strength ',sprintf('%0.1f',a_p),' in presence of a stimulus strength ',sprintf('%0.1f',a_s)]);
 %% parameters
 
 ntr=100;                               % number of trials
-nsec=0.7;                                % duration of the trial in seconds 
-dt=0.02;                               % time step in ms 
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons   
 
-tau_s=10;                              % time constant of the stimuls (OU process)
-tau_x=10;                              % time constant of the target signal
+nsec=0.7;                                % duration of the trial in seconds 
+
+tau_s=10;
+tau_x=10;                              % time constant of the signal  
 
 tau_e=10;                              % time constant of the excitatory estimate  
 tau_i=10;                              % time const I estimate 
 
-tau_re=10;                             % time const single neuron readout in E neurons
-tau_ri=10;                             % time const single neuron readout in I neurons 
+tau_re=10;                             % t. const firing rate of E neurons
+tau_ri=10;                             % t. constant firing rate of I neurons 
    
 beta=14;                               % metabolic constant
 sigmav=5;                              % noise strength
 
-q=4;                                   % E-I ratio
-d=3;                                   % ratio of mean I-I to E-I connectivity
+q=4;                                   % ratio number E to I neurons
+d=3;                                   % ratio strength of decoding weights 
+
+dt=0.02;                               % time step in ms  
+%% set the input, selectivity and synaptic weights 
 
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
-%% set the input, selectivity and synaptic weights 
+T=(nsec*1000)./dt;
+s=zeros(M,T);
 
 [w,J] = w_fun(M,N,q,d);                % randomly draw the selectivity weights and compute the connectivity matrices
 
-cn=randi(N,1);                         % choose 1 neuron
-[idx_d,idx_s,phi_vec] = tuning_similarity_idx(w{1},cn);  % index of E neurons with similar / different selectivity
-[idx_di,idx_si,phi_veci] = tuning_similarity_ei(w{1},w{2},cn);  % index I neurons with similar / different selectivity
-
-%% design a stimulus that the target neuron is strongly responsive to
-
-T=(nsec*1000)./dt;
-
-w_tar=w{1}(:,cn);
-s=ones(M,T).*w_tar*a_s; % static features proportional to the selectivity vector of the target neuron
+cn=randi(N,1);                                 % choose 1 E neuron
+[idx_d,idx_s,phi_vec] = tuning_similarity_idx(w{1},cn);  % index of neurosn with simialr and different selectivity
+[idx_di,idx_si,phi_veci] = tuning_similarity_ei(w{1},w{2},cn);  % find I neurons with similar and different selectivity
 
 %% timings
 
 d_spontaneous = 300;     % duration of interval for measuring the spontaneous firing rate
 d_stim=50;               % duratio of stimulation
-d_measure=d_stim+50;           % duration of interval for measuing the effect of stimulation
+d_measure=100;           % duration of interval for measuing the effect of stimulation
 
 spont_on=100;            % start measuring the spontaneus firing rate
 spont_off=spont_on + d_spontaneous;          % stop measuring the spontaneous firing rate
@@ -78,7 +74,7 @@ int_stim=stim_on/dt:stim_off/dt -1;           % interval of stimulation
 int_measure=measure_on/dt: measure_off/dt -1; % interval for measurement of influence
 int_plt=spont_on/dt:T-1;
 
-tidx=(1:length(int_plt))*dt;
+tidx=[1:length(int_plt)]*dt;
 
 %% network with perturbation of a single neuron in trials
 
@@ -95,7 +91,7 @@ dFI=zeros(ntr,Ni);                        % time averaged I
 for jj=1:ntr
 
     disp(jj)
-    [fe,fi,~,~,re,ri] =p_fun(dt,sigmav,beta,tau_vec,s,w,J,cn,int_stim,a_p);
+    [fe,fi,~,~,re,ri] =p_fun(dt,sigmav,beta,tau_vec,s,w,J,cn,int_stim,Ap);
 
     sc_target(jj)=sum(fe(cn,:))./nsec;                        % mean firing rate of the target neuron  
     fe(cn,:)=NaN;                                             % remove stimulated neuron  
@@ -164,59 +160,61 @@ infI=mean(dFI,1);
 
 if saveres==1
     savefile='result/perturbation/';
-    savename=['perturbation_ap',sprintf('%1.0i',a_p*10),'_stim',sprintf('%1.0i',a_s*10)];
-    save([savefile,savename],'tidx','infE','infI','phi_vec','phi_veci','mdri','mdre','semdri','semdre','namepop','ntr','c','spont_on','spont_off','stim_on','stim_off','int_plt','a_p','dt','nsec','msc_target','msc');
+    savename=['perturbation_spont_EI_Ap',sprintf('%1.0i',Ap*10)];
+    save([savefile,savename],'tidx','infE','infI','phi_vec','phi_veci','mdri','mdre','semdri','semdre','namepop','ntr','c','spont_on','spont_off','stim_on','stim_off','int_plt','Ap','dt','nsec','msc_target','msc');
 end
 
-%% prepare figure
+%% check result
 
 if showfig==1
+
 
     red=[0.7,0.2,0.1];
     green=[0.1,0.82,0.1];
     gray=[0.7,0.7,0.7];
     col={gray,green};  % for {"different", "similar"}
 
-    figure('name','influence','Position',[0,0,20,16]);
-    
-    
-    % plot time-dependent traces similar / different tuning
-    subplot(3,2,[1 2])
-    hold on
-    for k=1:2
-        plot(tidx,mdri{k}-semdri{k},'color',col{k})
-        plot(tidx,mdri{k}+semdri{k},'color',col{k})
-    end
-    hold off
+    figure('name','influence','Position',[0,0,12,12]);
 
-    subplot(3,2,[3 4])
-    hold on
-    for k=1:2
-        plot(tidx,mdre{k}-semdre{k},'color',col{k})
-        plot(tidx,mdre{k}+semdre{k},'color',col{k})
-    end
-    hold off
-
-    subplot(3,2,5)
+    subplot(2,1,1)
     plot(infI,phi_veci,'ko')
     hl=lsline;
     hl.Color='m';
     title('I neurons')
-    ylabel('tuning similarity')
     box off
-    xlabel('influence')
-        
-    subplot(3,2,6)
+
+    subplot(2,1,2)
     plot(infE,phi_vec,'ko')
     hl=lsline;
     hl.Color='m';
 
     title('E neurons')
-   
+    ylabel('tuning similarity')
     %set(gca,'XTick',xt)
     %axis([xt(1)-0.005,xt(end)+0.005,-1.1,1.1])
     box off
     xlabel('influence')
+    
+    %% plot time-dependent traces similar / different tuning
+
+    figure()
+    subplot(2,1,1)
+    hold on
+    for k=1:2
+        plot(mdri{k}-semdri{k},'color',col{k})
+        plot(mdri{k}+semdri{k},'color',col{k})
+    end
+    hold off
+
+    subplot(2,1,2)
+    hold on
+    for k=1:2
+        plot(mdre{k}-semdre{k},'color',col{k})
+        plot(mdre{k}+semdre{k},'color',col{k})
+    end
+    hold off
+   
+
 
 end
 

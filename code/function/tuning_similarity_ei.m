@@ -1,8 +1,9 @@
 function [idx_di,idx_si,phi_veci] = tuning_similarity_ei(we,wi,cn)
 
 %%
-% compute dot product of weight vectors and gives the index of neurons with
-% similar and with dissimilar weight to a selected neuron
+% computes dot product of weight vectors and gives the index of neurons with
+% similar and dissimilar weight to a selected neuron cn
+
 maxnorm=max(max(we'*wi));
 
 phi=(we'*wi)./maxnorm;

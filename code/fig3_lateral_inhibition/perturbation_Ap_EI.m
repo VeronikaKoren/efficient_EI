@@ -2,15 +2,17 @@
 % measure effect of activity perturbation of a single E (target) neuron on
 % E and I neurons across trials
 % without feedforward input
+% for a range of stimulation strengths given by apvec
 
 close all
-clear all
+clear
 clc
 
 saveres=0;
 showfig=0;                  
 namepop={'different tuning','similar tuning'};
 addpath('code/function/')
+
 %% parameters
 
 ntr=200;                               % number of trials
@@ -45,9 +47,9 @@ T=(nsec*1000)./dt;
 s=zeros(M,T);
 %[s,x]=signal_fun(tau_s,tau_x,M,nsec,dt);
 
-[w,J] = wJ_fun(M,N,q,d);                % randomly draw the selectivity weights and compute the connectivity matrices
+[w,J] = w_fun(M,N,q,d);                % randomly draw the selectivity weights and compute the connectivity matrices
 
-cn=100;                                 % choose 1 neuron
+cn=randi(N,1);                                 % choose one E neuron
 [idx_d,idx_s,phi_vec] = tuning_similarity_idx(w{1},cn);  % index of neurosn with simialr and different selectivity
 [idx_di,idx_si,phi_veci] = tuning_similarity_ei(w{1},w{2},cn);  % find I neurons with similar and different selectivity
 
@@ -150,7 +152,7 @@ if saveres==1
     save([savefile,savename],'minfE','minfI','semfE','semfI','mtar','semtar','namepop','ntr','apvec');
 end
 
-%% prepare figure
+%% check result
 
 if showfig==1
 

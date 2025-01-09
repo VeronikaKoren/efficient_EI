@@ -1,42 +1,54 @@
-function [idx_d_sorted,idx_s_sorted,phi_vec] = tuning_similarity_idx(w1,cn)
 
-%%
-% compute dot product of weight vectors and gives the index of neurons with
-% similar and with dissimilar weight to a selected neuron
+%% computes tuning similarity and gives the index of neurons with
+% similar and with dissimilar weight to a target neuron
 
-%w1=w{1}
+close all
+clear
+clc
+
+savefig=0; % save figure?
+figname='tuning_similarity_props';
+addpath([cd,'/code/function/'])
+
+%% parameters
+
+M=3;                                   % number of input variables    
+N=400;                                 % number of E neurons   
+q=4;                                   % E-I ratio
+d=3;                                   % ratio of mean I-I to E-I connectivity 
+
+%% get tuning similarity
+
+w = w_fun(M,N,q,d);
+
+cn=randi(N,1);  % randomly pick one E neuron
+
+w1=w{1};
 phi=w1'*w1;
 phi_vec=phi(cn,:);
 phi_vec(cn)=NaN;
 
-%%
-
 idx_d=find(phi_vec<0);
 n1=length(idx_d);
-%idx_s=find(Avec>0);
-%n2=length(idx_s)
 
-%%
 [~,idx_sorted]=sort(phi_vec,'ascend','MissingPlacement','first');
 
 idx_d_sorted=idx_sorted(2:n1+1);
 idx_s_sorted=idx_sorted(n1+2:end);
-%%
-%{
+
+%% plot
+
 magenta=[0.8,0,0.7,0.6];
 gray=[0.5,0.5,0.5];
 col={gray,magenta};   
 
-savefig=1;
-figname='tuning_similarity_props';
 pos_vec=[0,0,46,9];
 xt=-1:1;
 fs=14;
 
 namepop={'different tuning','similar tuning'};
 
-
-H=figure('name',figname)
+H=figure('name',figname);
 
 subplot(1,4,1)
 imagesc(1:N,1:N,tril(phi)-eye(N,N),[-1,1])
@@ -46,7 +58,7 @@ axis xy
 set(gca,'Xtick',[100,300],'fontsize',fs)
 set(gca,'Ytick',[100,300],'fontsize',fs)
 
-title('pair-wise tuning similarity','fontsize',fs)
+title('pairwise tuning similarity','fontsize',fs)
 ylabel('neuron index E','fontsize',fs)
 xlabel('neuron index E','fontsize',fs)
 colormap pink
@@ -57,11 +69,11 @@ set(cb,'YTick',xt,'fontsize',fs)
 subplot(1,4,2)
 histogram(nonzeros(tril(phi-eye(N,N))),25,'FaceColor',[0.6,0.6,0.6],'FaceAlpha',0.3)
 xlabel('tuning similarity','fontsize',fs)
-ylabel('number of neurons','fontsize',fs)
+ylabel('number of pairs','fontsize',fs)
 set(gca,'XTick',xt,'fontsize',fs)
-set(gca,'YTick',[3000],'fontsize',fs)
+set(gca,'YTick',3000,'fontsize',fs)
 box off
-title('histogram tuning simil. (all)','fontsize',fs)
+title('histogram tuning simil. (all pairs)','fontsize',fs)
 
 subplot(1,4,3)
 hold on
@@ -95,7 +107,5 @@ if savefig==1
     savefile=[cd,'/figure/lateral/'];
     print(H,[savefile,figname],'-dpng','-r300');
 end
-%}
 
-end
 %%
