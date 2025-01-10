@@ -1,10 +1,10 @@
 # General
 This code is associated with the paper "Efficient coding in biophysically realistic excitatory-inhibitory spiking networks." authored by Veronika Koren, Simone Blanco Malerba, Tilo Schwalger and Stefano Panzeri, published in eLife in 2025 (version of record).
 
-The author of this computer code is Veronika Koren.  
-For any questions, please write to koren.veronika@gmail.com.
+The author of this computer code is Veronika Koren. For any questions, please write to koren.veronika@gmail.com.
 
-The repository has a DOI: 10.5281/zenodo.14623182
+This repository is licensed under : CC BY-NC-SA 4.0 (see LICENSE.txt)
+The repository has a DOI: 10.5281/zenodo.14623182. Any reuse should cite the repository as specified at https://zenodo.org/records/14628492
 
 # How to open and run a script
 Please do not add all the paths but follow point 1) or 2)":
