@@ -1,10 +1,12 @@
+%% computes the pairwise correlation of membrane potentials and tuning similarity
+% for the network with unstructured connectivity
 
 clear
 clc
 close all
 
 saveres=0;
-showfig=1;
+showfig=0;
 type=2;         
 
 namet={'','perm_full','perm_partial'};
@@ -90,7 +92,7 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{dt},{nsec},{ntr}};
     
-    savefile='result/perturbation/';
+    savefile='result/lateral_inhibition/';
     savename=['corr_Vm_',namet{type}];
     save([savefile,savename],'f','dp','rVm','Jpermuted','parameters','param_name')
 end

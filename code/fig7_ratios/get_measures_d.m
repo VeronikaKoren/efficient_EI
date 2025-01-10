@@ -2,7 +2,9 @@
 % function of the ratio of mean I-I to E-I connectivity (called d)
 % by changing the parameter sigma_w^I (sigma_w^E stays fixed)
 
-clear all
+clear
+close all
+clc
 
 addpath([cd,'/code/function/'])
 saveres=0;

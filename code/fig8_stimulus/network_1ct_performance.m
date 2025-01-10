@@ -56,7 +56,7 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'beta1'},{'sigmav1'},{'tau'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{tau_s},{beta1},{sigma1},{tau},{dt},{nsec},{ntr}};
 
-    savefile='/Users/vkoren/ei_net/result/implementation/';
+    savefile='result/EI_net/';
     savename=['loss_measures_optimal_1CT_',sprintf('%1.0i',N)];
     save([savefile,savename],'rmse1','kappa1','sc1','beta1','sigma1','param_name','parameters');
 end

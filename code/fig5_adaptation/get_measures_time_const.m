@@ -3,7 +3,7 @@
 % function of a time constant of single neuron readout of E and I neurons (tau_re OR tau_ri)
 
 close all
-clear all
+clear
 clc
 
 type=1;   % 1 or 2 for selecting the variable tau_re or tau_ri
@@ -41,6 +41,9 @@ tau_i=10;                              % time const I estimate
 tau_re=10;                             % time const single neuron readout in E neurons
 tau_ri=10;                             % time const single neuron readout in I neurons
     
+sigmav=5;
+beta=14;
+
 q=4;                                   % E-I ratio
 d=3;                                   % ratio of mean I-I to E-I connectivity   
 

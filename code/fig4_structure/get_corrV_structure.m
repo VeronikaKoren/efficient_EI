@@ -131,7 +131,7 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{dt},{nsec},{ntr}};
     
-    savefile='result/connectivity/';
+    savefile='result/structure/';
     savename=['corrV_',namep{type}];
     save([savefile,savename],'dpo','rV','Co','parameters','param_name')
 end

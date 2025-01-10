@@ -2,7 +2,9 @@
 % network with removed conenctivity structure
 
 
-clear all
+clear
+close all
+clc
 
 saveres=0;
 
@@ -146,27 +148,11 @@ for ii=1:2
 end
 toc
 
-%% test on held out data concatenated
-%{
-X_test=cell(2,1);
-y_test=cell(2,1);
-for ii=1:2
-    
-    y_test{ii}=cell2mat(target(ntrain+1:ntrain+ntest,ii)');
-    X_test{ii}=cell2mat(rtr(ntrain+1:ntrain+ntest,ii)');
-end
-
-yhat=cellfun(@(a,b) a'*b,w_d,X_test,'un',0);
-rmse_d=cellfun(@(a,b) sqrt(mean(mean((b-a).^2,2))),yhat,y_test,'un',1);
-display(rmse_d,'testing error E and I');
-%}
-
-
 %% save result?
 
 if saveres==1
 
-    savefile='result/linear_regression/';
+    savefile='result/structure/';
     savename=['rmse_w_',namep{type},'_',sprintf('%1.0i',ntr)];
     save([savefile,savename],'rmse_shuffled','rmse_opti','rmse_d','rmse_train','w_d','w','ptr','ntr');
 end

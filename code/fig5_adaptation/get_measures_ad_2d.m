@@ -9,7 +9,7 @@
 
 
 close all
-clear all
+clear
 clc
 
 saveres=0;
@@ -35,7 +35,10 @@ tau_i=10;                              % time const I estimate
 
 tau_re=10;                             % time const single neuron readout in E neurons
 tau_ri=10;                             % time const single neuron readout in I neurons
-    
+ 
+sigmav=5;
+beta=14;
+
 q=4;                                   % E-I ratio
 d=3;                                   % ratio of mean I-I to E-I connectivity  
 
@@ -46,7 +49,6 @@ T=(nsec*1000)./dt;
 tic
 ntr=100;
 variable=[5:0.5:10,11:20,25,30:10:100,200]; 
-%variable=[5,10,50,100]; % for testing the code
 n=length(variable);
 
 rms=zeros(n,n,2);

@@ -3,7 +3,7 @@
 % in the optimal model and in models with fully or partially removed
 % connectivity structure
 
-%close all
+close all
 clear
 clc
 
@@ -92,7 +92,7 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'d'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{d},{dt},{nsec},{ntr}};
     
-    savefile='result/connectivity/';
+    savefile='result/structure/';
     savename= ['stdV_',ntype{type}];
     save([savefile,savename],'stdV','parameters','param_name','nsec','ntr')
 end

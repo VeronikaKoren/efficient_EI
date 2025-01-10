@@ -9,7 +9,7 @@ clc
 %format long
 addpath([cd,'/code/function/'])
 saveres=0;
-showfig=1;
+showfig=0;
 
 type=2;
 namet={'normal','independent'};
@@ -76,7 +76,7 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'}};
     parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{dt},{nsec}};
     
-    savefile='result/statistics/Vm/';
+    savefile='result/lateral_inhibition/';
     savename=['corr_Vm_',namet{type}];
     save([savefile,savename],'dp','rVm','parameters','param_name') 
 end

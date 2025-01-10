@@ -46,7 +46,6 @@ sigmav=5;                       % standard deviation of the noise
 d=3.00;                                   % ratio of weight amplitudes I to E 
 
 sigma_s=2;
-
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
 %% compute measures

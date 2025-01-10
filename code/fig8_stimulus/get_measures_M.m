@@ -43,8 +43,6 @@ tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
 ntr=100;
 Mvec=[[1:10],[12:2:20],[25:5:100]];                      % number of input variables    
-%ntr=2
-%Mvec=[1,5]
 n=length(Mvec);
 
 rms=zeros(n,2);

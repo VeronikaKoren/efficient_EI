@@ -3,8 +3,11 @@
 % random jittering ot he connectivity (type=1),
 % network with fully removed connectivity structure (type=2) and partially removed
 % connectivity structure (type=3)
+% OU stimulus
 
-clear all
+clear
+close all
+clc
 
 type=3;
 namet={'perturbation','perm_full','perm_partial'};
@@ -114,7 +117,7 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{dt},{nsec},{ntr}};
     
-    savefile='result/connectivity/';
+    savefile='result/structure/';
     savename=['measures_',namet{type}];
     save([savefile,savename],'fvec','frate','CVs','ms','cost','r_ei','meanE','meanI','which_permuted','parameters','param_name')
 end

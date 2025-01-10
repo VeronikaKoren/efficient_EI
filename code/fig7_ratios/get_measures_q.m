@@ -3,7 +3,9 @@
 % function of the ratio of the number of E to I neurons (called q)
 % by changing the number of I neurons (the number of E neurons stays fixed)
 
-clear all
+clear
+close all
+clc
 
 addpath([cd,'/code/function/'])
 saveres=0;

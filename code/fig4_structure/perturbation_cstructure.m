@@ -5,20 +5,19 @@
 % without feedforward input
 
 close all
-clear all
+clear
 clc
 
 saveres=0;
 showfig=0;                  
 
 addpath('code/function/')
-addpath('code/lateral_inhibition/')
 
 ntype={'noiseJ','full_perm','partial_perm'};
 Jp_name={'E-E','I-I','E-I','I-E','all'}; % Connetivity matrix that is permuted
 
 type=3; % [2,3] relevant values
-Jp=2;   % [2,3,4,5]
+Jp=2;   % [2,3,4,5] for [I-I, E-I, I-E, all]
 
 disp(['perturbation experiments with removed structure in connectivity with ',ntype{type},' ',Jp_name{Jp}])
 %% parameters
@@ -165,7 +164,7 @@ infI=mean(dFI,1);
 %% save result?
 
 if saveres==1
-    savefile='result/perturbation/Jstructure/';
+    savefile='result/structure/';
     savename=[ntype{type},'_',Jp_name{Jp},'_ap',sprintf('%1.0i',Ap*10)];
     save([savefile,savename],'tidx','infE','infI','phi_vec','phi_veci','mdri','mdre','semdri','semdre','namepop','ntr','c','spont_on','spont_off','stim_on','stim_off','int_plt','Ap','dt','nsec','msc_target','msc');
 end
@@ -173,7 +172,6 @@ end
 %% prepare figure
 
 if showfig==1
-
 
     red=[0.7,0.2,0.1];
     gray=[0.7,0.7,0.7];
@@ -195,8 +193,6 @@ if showfig==1
 
     title('E neurons')
     ylabel('tuning similarity')
-    %set(gca,'XTick',xt)
-    %axis([xt(1)-0.005,xt(end)+0.005,-1.1,1.1])
     box off
     xlabel('influence')
     
@@ -213,12 +209,9 @@ if showfig==1
     hold on
     for k=1:2
         plot(mdre{k},'color',col{k})
-        %plot(mdre{k}+semdre{k},'color',col{k})
     end
     hold off
    
-
-
 end
 
 

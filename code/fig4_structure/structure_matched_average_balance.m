@@ -2,7 +2,9 @@
 % for network with removed connectivity structure
 % for matching levels of the average E-I balance
 
-clear all
+clear
+close all
+clc
 
 type=2;
 namet={'structured','perm_full_all','perm_partial_all'};
@@ -69,8 +71,7 @@ for ii=1:ntr
         
     else
         [w,J] = w_structure_fun(M,N,q,d,type,f);
-        %J{3}=J{3}.*1.5; % increase excitation to I
-        %J{4}=J{4}.*1.0;  % decrease inhibition to E
+        
     end
     [rmse,kappa,fr,CV,r,I_E,I_I] = current_fun_matching(dt,sigmav,beta,tau_vec,s,N,q,w,J,x);
     
@@ -99,7 +100,7 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{dt},{nsec},{ntr}};
     
-    savefile='result/connectivity/';
+    savefile='result/structure/';
     savename=['measures_matching_average2_',namet{type}];
     save([savefile,savename],'fr_tr','CV_tr','r_tr','net_tr','kappa_tr','rmse_tr','parameters','param_name')
 end

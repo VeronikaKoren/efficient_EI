@@ -159,7 +159,7 @@ infI=mean(dFI,1);
 %% save result?
 
 if saveres==1
-    savefile='result/perturbation/';
+    savefile='result/lateral_inhibition/';
     savename=['perturbation_spont_EI_Ap',sprintf('%1.0i',Ap*10)];
     save([savefile,savename],'tidx','infE','infI','phi_vec','phi_veci','mdri','mdre','semdri','semdre','namepop','ntr','c','spont_on','spont_off','stim_on','stim_off','int_plt','Ap','dt','nsec','msc_target','msc');
 end

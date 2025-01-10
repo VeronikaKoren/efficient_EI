@@ -2,8 +2,9 @@
 % computes measures of performance  and dynamics as a
 % function of the metabolic constant beta
 
-clear all
+clear
 close all
+clc
 
 addpath([cd,'/code/function/'])
 saveres=0;

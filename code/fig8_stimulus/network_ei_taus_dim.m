@@ -2,7 +2,7 @@
 % 3 different time constants
 
 close all
-clear all
+clear
 clc
 
 savefig=0;
@@ -60,9 +60,9 @@ display([sc_E,sc_I],'average spike count per second in E and I')
 
 %% plot signal, estimates, spikes and average firing rate
 
-savefile='/Users/vkoren/ei_net/figure/implementation/';
-
+savefile=[pwd,'/'];
 pos_vec=[0,0,20,17];
+
 plt_network_taus(x,xhat_e,xhat_i,fe,fi,re,ri,dt,tau_re,tau_ri,figname, savefig,savefile,pos_vec,taus_vec)
 
 

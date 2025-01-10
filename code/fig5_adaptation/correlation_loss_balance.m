@@ -2,7 +2,7 @@
 
 % computes Pearson's correlation coefficient between the loss and the average balance / instantanoues balance
 
-clear all
+clear
 close all
 
 g_l=0.7;        % weighting of the error vs cost
@@ -13,14 +13,9 @@ namepop={'in E','in I'};
 
 %%
 
-addpath('/Users/vkoren/ei_net/result/adaptation/')
+addpath('result/adaptation/')
 loadname= 'adaptation_2d_measures';
 load(loadname,'rms','meanE','meanI','r_ei','variable','cost')
-
-figname1='correlation_error_balance';
-figname2='correlation_efficiency_balance';
-
-savefile='/Users/vkoren/ei_net/figure/adaptation/';
 
 idx=find(variable==10);
 vec=idx:length(variable);

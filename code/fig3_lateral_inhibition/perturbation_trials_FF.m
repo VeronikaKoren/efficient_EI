@@ -154,8 +154,7 @@ msc=mean(sc);                           % mean sc E and I neurons (excluding the
 display(msc_target,'firing rate stimulated neuron')
 display(msc,'average firing rate E and I')
 
-% time-averaged delta r
-
+% time-averaged delta activity
 dFE(:,cn)=NaN;                         % remove the target neuron  
 infE=mean(dFE,1,'omitnan');            % average across trials
 infI=mean(dFI,1);
@@ -163,7 +162,7 @@ infI=mean(dFI,1);
 %% save result?
 
 if saveres==1
-    savefile='result/perturbation/';
+    savefile='result/lateral_inhibition/';
     savename=['perturbation_ap',sprintf('%1.0i',a_p*10),'_stim',sprintf('%1.0i',a_s*10)];
     save([savefile,savename],'tidx','infE','infI','phi_vec','phi_veci','mdri','mdre','semdri','semdre','namepop','ntr','c','spont_on','spont_off','stim_on','stim_off','int_plt','a_p','dt','nsec','msc_target','msc');
 end
@@ -210,11 +209,7 @@ if showfig==1
     plot(infE,phi_vec,'ko')
     hl=lsline;
     hl.Color='m';
-
     title('E neurons')
-   
-    %set(gca,'XTick',xt)
-    %axis([xt(1)-0.005,xt(end)+0.005,-1.1,1.1])
     box off
     xlabel('influence')
 

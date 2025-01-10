@@ -1,7 +1,7 @@
 % to measure the metabolic cost and the firing rate in the E-I network
 
 close all
-clear all
+clear
 clc
 
 saveres=0;
@@ -59,7 +59,6 @@ for tr=1:ntr
     
     disp(ntr-tr)
     [w,J] = w_fun(M,N,q,d);             % decoding weights and synaptic weights
-    %[s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
     [I_E,I_I,r,~,~,CV,fr] = current_fun(dt,sigmav,beta,tau_vec,s,N,q,d,x);
 
     currE_tr(tr,:)=I_E;
@@ -78,7 +77,7 @@ if saveres==1
     param_name={{'N'},{'M'},{'as'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'d'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{as},{beta},{sigmav},{tau_vec},{q},{d},{dt},{nsec},{ntr}};
 
-    savefile='result/implementation/';
+    savefile='result/EI_net/';
     savename='activity_measures_const_stim';
     save([savefile,savename],'fr_tr','CV_tr','r_tr','currE_tr','currI_tr','param_name','parameters','ntr');
 end

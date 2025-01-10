@@ -4,7 +4,7 @@
 % strongly positive, while the stimuli in dimensions 2 and 3 do not
 % change
 
-%close all
+close all
 clear
 clc
 

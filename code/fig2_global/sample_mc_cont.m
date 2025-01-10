@@ -2,10 +2,11 @@
 % Monte-Carlo (random) sampling for the following 6 parameters: time
 % constant of single neurons readout of E and I neurons (tau_re and tau_ri)
 
-clear all
+clear
 close all
+clc
 
-computing=1;   % testing (=0) or computing (=1)?
+computing=0;   % testing (=0) or computing (=1)?
 
 if computing==1
     saveres=1;
@@ -36,7 +37,10 @@ tau_i=10;                              % time const I estimate
 
 tau_re=10;                             % time const single neuron readout in E neurons
 tau_ri=10;                             % time const single neuron readout in I neurons
-    
+   
+sigmav=5;
+beta=14;
+
 q=4;                                   % E-I ratio
 d=3;                                   % ratio of mean I-I to E-I connectivity
 
@@ -44,7 +48,7 @@ tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
 %% parameter ranges
 
-param0=[sigmav, beta, tau_re, tau_ri,q,d]';  % parameter values to initialize
+param0=[sigmav, beta, tau_re, tau_ri,q,d]';  % first parameter setting is from Table 1
 np=length(param0);                                  % number of parameters 
 list_tested={'sigmav','beta','tau_re','tau_ri','q','d'};
 range={[1,10];[2,29];[5,50];[5,50];[1,8];[1,8]}; % all parameter ranges
@@ -139,7 +143,7 @@ if showfig==1
     ylabel('log(loss)')
     xlabel('iteration index')
 
-    cit1=5
+    cit1=5;
     loss1=mean(squeeze((gL.*rmse_tr(cit1,:,:)) + ((1-gL).*cost_tr(cit1,:,:))),2);
     cit2=10;
     loss2=mean(squeeze((gL.*rmse_tr(cit2,:,:)) + ((1-gL).*cost_tr(cit2,:,:))),2);

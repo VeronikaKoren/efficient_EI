@@ -2,12 +2,12 @@
 % a function of the (quadratic) metabolic constant beta to find the optimal
 % beta
 
-clear all
+clear
 close all
+clc
 
 addpath([cd,'/code/function/'])
 saveres=0;
-showfig=0;
 
 disp('computing optimal metabolic constant for the network with 1 cell type')
 
@@ -48,8 +48,8 @@ for k=1:n
     
     for ii=1:ntr
         [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
-        
-        [xhat,f,r] = network_1ct_fun(N,s,dt,tau,beta,sigmav);    
+        [xhat,f,r] = network_1pop_fun(N,s,dt,tau,beta,nu,sigmav);
+            
         [rmse,kappa] = performance_fun1(x,xhat,r);
 
         rmse_tr(k,ii)=rmse;
@@ -78,21 +78,8 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{tau_s},{},{sigmav},{tau},{dt},{nsec},{ntr}};
 
-    savefile='result/implementation/';
+    savefile='result/EI_net/';
     savename='optimization_1ct_beta_500';
     save([savefile,savename],'beta_vec','beta_star','ms','mc','error','cost','loss','gl','param_name','parameters');
 end
 
-%% show figure?
-if showfig==1
-
-    figure()
-    hold on
-    plot(beta_vec,error,'r')
-    plot(beta_vec,cost,'g')
-    plot(beta_vec,loss,'k')
-    hold off
-    xlabel('b parameter')
-    ylabel('loss measures')
-
-end

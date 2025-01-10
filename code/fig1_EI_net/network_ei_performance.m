@@ -1,7 +1,7 @@
 % computes performance measures in the optimal E-I network
 
 close all
-clear all
+clear
 clc
 
 saveres=0;
@@ -21,21 +21,17 @@ tau_i=10;                              % time const I estimate
 
 tau_re=10;                             % t. const firing rate of E neurons
 tau_ri=10;                             % t. constant firing rate of I neurons 
-   
-%b=2.18;
-%c=30;
 
 beta=14;                             % quadratic cost constant
 sigmav=5;                       % standard deviation of the noise
 
 dt=0.02;                               % time step in ms     
-q=3.75;
+q=4;
 d=3;
 
 sigma_s=2;
 tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
-%T=(nsec*1000)./dt;
 %% simulate network activity in trials (with different realization of random variables)
 
 ntr=100;
@@ -70,7 +66,7 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'d'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{d},{dt},{nsec},{ntr}};
 
-    savefile='result/implementation/';
+    savefile='result/EI_net/';
     savename='loss_measures_optimal_ei';
     save([savefile,savename],'rmse','cost','sc','param_name','parameters','ntr');
 end

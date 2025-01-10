@@ -2,8 +2,9 @@
 % computes measures of performance  and dynamics as a
 % function of the noise strength sigma
 
-clear all
+clear
 close all
+clc
 
 saveres=0;
 

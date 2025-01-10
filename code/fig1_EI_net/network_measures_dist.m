@@ -2,11 +2,10 @@
 % gets measures of dynamics of the optimal E-I network across trials 
 
 close all
-clear all
+clear
 clc
 
 saveres=0;
-showfig=0;
 addpath([cd,'/code/function/'])
 
 %% parameters
@@ -82,35 +81,14 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'d'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{d},{dt},{nsec},{ntr}};
 
-    savefile='result/implementation/';
+    savefile='result/EI_net/';
     savename='activity_measures_distribution';
     save([savefile,savename],'fre_tr','CVe_tr','re_tr','Ie_tr','fri_tr','CVi_tr','ri_tr','Ii_tr','param_name','parameters','ntr');
     disp('saved')
 end
 
 %%
-if showfig==1
-    figure()
-    subplot(4,2,1)
-    histogram(fre_tr)
-    subplot(4,2,2)
-    histogram(fri_tr)
 
-    subplot(4,2,3)
-    histogram(CVe_tr)
-    subplot(4,2,4)
-    histogram(CVi_tr)
-
-    subplot(4,2,5)
-    histogram(re_tr)
-    subplot(4,2,6)
-    histogram(ri_tr)
-
-    subplot(4,2,7)
-    histogram(sum(Ie_tr,3))
-    subplot(4,2,8)
-    histogram(sum(Ii_tr,3))
-end
 
 
 

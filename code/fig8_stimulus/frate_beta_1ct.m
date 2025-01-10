@@ -7,8 +7,7 @@ clc
 saveres=0;
 
 addpath([cd,'/code/function/'])
-
-disp('computing RMSE, cost, sc for the network 1ct')
+disp('computing RMSE, cost, sc for the network with one cell type (1CT)')
 
 %% parameters
 
@@ -42,15 +41,15 @@ Rmse=zeros(n,1);
 cost=zeros(n,1);
 
 for ii=1:n
-    mu=muvec(ii)
+    beta1=muvec(ii);
 
     sc_tr=zeros(ntr,1);
     e=zeros(ntr,1);
     c=zeros(ntr,1);
 
     for tr=1:ntr
-
-        [xhat,f,r] = network_1pop_fun(N,s,dt,tau,mu,nu,sigma1);
+                     
+        [xhat,f,r] = network_1pop_fun(N,s,dt,tau,beta1,nu,sigma1);
         sc_tr(tr,1)=sum(mean(f,1))./nsec;              % spike count in 1 sec
         
         [rmse,kappa] = performance_fun1(x,xhat,f);

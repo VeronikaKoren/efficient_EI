@@ -55,10 +55,12 @@ if computing==0
 
     taus2=1:20:101;                      % time constant of input features
     ntr=5;
+
 else
 
     taus2=3:3:202;
     ntr=200;
+    
 end
 
 taus3=taus2.*2;

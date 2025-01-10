@@ -1,14 +1,16 @@
 % computes measures of performance  and dynamics for the network with
-% random jittering ot he connectivity (type=1),
+% random jittering of the connectivity (type=1),
 % network with fully removed connectivity structure (type=2) and partially removed
 % connectivity structure (type=3)
 % for constant stimulus
 
-clear all
+clear
+close all
+clc
 
 type=2;
 namet={'structured','perm_full_all','perm_partial_all'};
-const_stim=1;
+const_stim=1; 
 
 saveres=0;
 showfig=0;
@@ -21,7 +23,6 @@ disp(['computing measures in trials with ',namet{type}]);
 
 nsec=1;                                % duration of the trial in seconds 
 dt=0.02;                               % time step in ms  
-
 
 M=3;                                   % number of input variables    
 N=400;                                 % number of E neurons       
@@ -105,7 +106,7 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{dt},{nsec},{ntr}};
     
-    savefile='result/connectivity/';
+    savefile='result/structure/';
     if const_stim==1
         savename=['measures_trials_constant_',namet{type}];
     else

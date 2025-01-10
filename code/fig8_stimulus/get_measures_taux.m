@@ -2,7 +2,6 @@
 % function of the time constant of the targets tau_x
 % tau_x is the same across M=3 target signals
 
-
 clear
 close all
 clc

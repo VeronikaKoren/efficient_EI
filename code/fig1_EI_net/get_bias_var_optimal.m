@@ -1,11 +1,11 @@
 
 % computes bias of the estimators (E and I population) for the network
 % optimizing the encoding error (type=1) and for the network optimizing the
-% loss (type=2)
+% loss (type=2) or the error (type=1)
 
 close all
-clear all
-%clc
+clear
+clc
 
 addpath([cd,'/code/function/'])
 saveres=0;
@@ -82,15 +82,6 @@ bigx=permute(repmat(x,1,1,ntr),[3,1,2]);
 Bky{1}=squeeze(mean(estE-bigx));
 Bky{2}=squeeze(mean(estE-estI)); 
 
-% time-and dimension dependent variance of estimates
-Vky=cell(2,1);
-
-Vky{1}=squeeze(mean((bigx-estE).^2));
-
-mean_estE=squeeze(mean(estE)); % trial average
-mbigE=permute(repmat(mean_estE,1,1,ntr),[3,1,2]);
-Vky{2}=squeeze(mean(estI - mbigE).^2);
-
 % prepare for boxplot
 Bploty=cellfun(@(x) x(:),Bky,'un',0);
 Vploty=cellfun(@(x) x(:),Vky,'un',0);
@@ -117,7 +108,7 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'d'},{'dt'},{'nsec'}};
     parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{d},{dt},{nsec}};
     
-    savefile='result/statistics/bias/';
+    savefile='result/EI_net/';
     savename=['bias_var_',ntype{type}];
     save([savefile,savename],'Bky','Bploty','Vky','Vploty','tidx','sigE','sigI','parameters','param_name')
     

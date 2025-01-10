@@ -45,7 +45,6 @@ tau_vec=cat(1,tau_x,tau_e,tau_i,tau_re, tau_ri);
 
 T=(nsec*1000)./dt;
 s=zeros(M,T);
-%[s,x]=signal_fun(tau_s,tau_x,M,nsec,dt);
 
 [w,J] = w_fun(M,N,q,d);                % randomly draw the selectivity weights and compute the connectivity matrices
 
@@ -147,7 +146,7 @@ semtar=std(sc_target,1,2)./sqrt(size(sc_target,2));
 %% save result?
 
 if saveres==1
-    savefile='result/perturbation/';
+    savefile='result/lateral_inhibition/';
     savename='perturbation_Ei_spont_apvec';
     save([savefile,savename],'minfE','minfI','semfE','semfI','mtar','semtar','namepop','ntr','apvec');
 end

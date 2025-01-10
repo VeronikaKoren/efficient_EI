@@ -1,7 +1,7 @@
 % computes measures of neural dynamics in the optimal E-I network
 
 close all
-clear all
+clear
 clc
 
 saveres=0;
@@ -67,7 +67,7 @@ if saveres==1
     param_name={{'N'},{'M'},{'tau_s'},{'beta'},{'sigmav'},{'tau_vec:X,E,I,rE,rI'},{'q'},{'d'},{'dt'},{'nsec'},{'ntrial'}};
     parameters={{N},{M},{tau_s},{beta},{sigmav},{tau_vec},{q},{d},{dt},{nsec},{ntr}};
 
-    savefile='result/implementation/';
+    savefile='result/EI_net/';
     savename='activity_measures_optimal_ei';
     save([savefile,savename],'fr_tr','CV_tr','r_tr','currE_tr','currI_tr','param_name','parameters','ntr');
 end

@@ -49,8 +49,8 @@ for k=1:n
     sigmav=sigma_vec(k);                    
     for ii=1:ntr
         [s,x]=signal_fun(tau_s,sigma_s,tau_x,M,nsec,dt);
-
-        [xhat,f,r] = network_1ct_fun(N,s,dt,tau,beta,sigmav);     
+       
+        [xhat,f,r] = network_1pop_fun(N,s,dt,tau,beta,nu,sigmav);     
         [rmse,kappa] = performance_fun1(x,xhat,r);
         
         rmse_tr(k,ii)=rmse;
